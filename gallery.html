@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexus Motion — Stage 1 Review Gallery (All 14 Treatments)</title>
+  <title>Nexus Motion — Stage 2 Typography & Visual Review Gallery</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #03080f;
@@ -26,7 +26,7 @@
       line-height: 1.5;
     }
     .container {
-      max-width: 1400px;
+      max-width: 1440px;
       margin: 0 auto;
     }
     header {
@@ -72,7 +72,7 @@
       color: var(--text-muted);
       font-size: 15px;
       margin-top: 6px;
-      max-width: 720px;
+      max-width: 820px;
     }
     .header-actions {
       display: flex;
@@ -98,13 +98,58 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 24px rgba(6, 182, 212, 0.5);
     }
+    .hero-section {
+      margin-bottom: 48px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title span {
+      color: var(--cyan);
+    }
+    .viewport-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .viewport-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .viewport-card img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+    }
+    .viewport-header {
+      padding: 14px 18px;
+      background: rgba(3, 8, 15, 0.6);
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+    }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(640px, 1fr));
       gap: 32px;
     }
     @media (max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
+      .viewport-grid { grid-template-columns: 1fr; }
     }
     .card {
       background: var(--card-bg);
@@ -154,12 +199,20 @@
       color: var(--text-muted);
       font-weight: 500;
     }
+    .card-images {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      background: #000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    @media (max-width: 600px) {
+      .card-images { grid-template-columns: 1fr; }
+    }
     .card-img-link {
       display: block;
       position: relative;
-      background: #000;
       overflow: hidden;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 16 / 10;
     }
     .card-img-link img {
       width: 100%;
@@ -169,7 +222,21 @@
       transition: transform 0.3s ease;
     }
     .card-img-link:hover img {
-      transform: scale(1.02);
+      transform: scale(1.03);
+    }
+    .img-label {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(3, 8, 15, 0.85);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--cyan);
+      backdrop-filter: blur(6px);
+      z-index: 2;
     }
     .card-footer {
       padding: 14px 22px;
@@ -178,7 +245,6 @@
       justify-content: space-between;
       align-items: center;
       font-size: 13px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
     .status-pill {
       display: inline-flex;
@@ -210,11 +276,10 @@
   <div class="container">
     <header>
       <div>
-        <div class="badge">Stage 1 Verified • 100% Lockstep Sync</div>
+        <div class="badge">Stage 2 Verified • Typography & Zero Clipping</div>
         <h1>Nexus Motion — Visual Review Gallery</h1>
         <p class="subtitle">
-          Actual rendered screenshots of the live 3D WebGL website across all 14 clinical treatments.
-          Inspect active frosted-white glass cards, cyan background orbital cards, anatomical focus synchronization, and spine rendering.
+          High-resolution browser captures across all 14 clinical treatments. Inspect Euclidean planar UV coordinates, 3-tier typography hierarchy (pill badge, 2-line bold title, CTA link), dark charcoal text on active milky-white glass, crisp white text on inactive cyan glass, and backface culling.
         </p>
       </div>
       <div class="header-actions">
@@ -222,25 +287,61 @@
       </div>
     </header>
 
-    <div class="grid" id="galleryGrid"></div>
+    <div class="hero-section">
+      <div class="section-title"><span>01 //</span> Laptop Viewports (1440 × 900)</div>
+      <div class="viewport-grid">
+        <div class="viewport-card">
+          <div class="viewport-header">
+            <span>Initial Viewport (Treatment 01)</span>
+            <span style="color: var(--cyan)">1440 × 900</span>
+          </div>
+          <a href="/stage2-previews/stage2-1440p-initial.png" target="_blank">
+            <img src="/stage2-previews/stage2-1440p-initial.png" alt="1440p Initial Viewport">
+          </a>
+        </div>
+        <div class="viewport-card">
+          <div class="viewport-header">
+            <span>Mid-Scroll (Treatment 07: Thoracic Mobility)</span>
+            <span style="color: var(--cyan)">1440 × 900</span>
+          </div>
+          <a href="/stage2-previews/stage2-1440p-mid.png" target="_blank">
+            <img src="/stage2-previews/stage2-1440p-mid.png" alt="1440p Mid-Scroll">
+          </a>
+        </div>
+        <div class="viewport-card">
+          <div class="viewport-header">
+            <span>Deep-Scroll (Treatment 14: Post-Surgical)</span>
+            <span style="color: var(--cyan)">1440 × 900</span>
+          </div>
+          <a href="/stage2-previews/stage2-1440p-deep.png" target="_blank">
+            <img src="/stage2-previews/stage2-1440p-deep.png" alt="1440p Deep-Scroll">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-section">
+      <div class="section-title"><span>02 //</span> All 14 Treatments (Full Viewport & Foreground Card Crop)</div>
+      <div class="grid" id="galleryGrid"></div>
+    </div>
   </div>
 
   <script>
     const items = [
-      { id: "01", title: "Cervical Decompression", region: "Cervical Spine (C1–C7)", file: "treatment-01-cervical-decompression.png" },
-      { id: "02", title: "Manual Joint Therapy", region: "Thoracic Spine & Facets", file: "treatment-02-manual-joint-therapy.png" },
-      { id: "03", title: "Myofascial Release", region: "Cervicothoracic & Soft Tissue", file: "treatment-03-myofascial-release.png" },
-      { id: "04", title: "Dry Needling Therapy", region: "Neuromuscular Trigger Points", file: "treatment-04-dry-needling-therapy.png" },
-      { id: "05", title: "Postural Realignment", region: "Thoracic Spine (T1–T6)", file: "treatment-05-postural-realignment.png" },
-      { id: "06", title: "Rotator Cuff Rehab", region: "Shoulder & Scapular Girdle", file: "treatment-06-rotator-cuff-rehab.png" },
-      { id: "07", title: "Thoracic Mobility Therapy", region: "Mid-Spine & Ribcage (T6–T12)", file: "treatment-07-thoracic-mobility-therapy.png" },
-      { id: "08", title: "Sciatica & Nerve Therapy", region: "Lumbar Nerve Roots (L1–L4)", file: "treatment-08-sciatica---nerve-therapy.png" },
-      { id: "09", title: "Lumbar Disc Rehab", region: "Lower Back (L4–L5)", file: "treatment-09-lumbar-disc-rehab.png" },
-      { id: "10", title: "Spinal Stabilization", region: "Lumbosacral Core (L3–S1)", file: "treatment-10-spinal-stabilization.png" },
-      { id: "11", title: "SI Joint & Pelvic Rehab", region: "Sacroiliac & Pelvic Girdle (S1–S5)", file: "treatment-11-si-joint---pelvic-rehab.png" },
-      { id: "12", title: "Hip Mobility Rehab", region: "Hip Joint & Pelvis", file: "treatment-12-hip-mobility-rehab.png" },
-      { id: "13", title: "Sports Injury & ACL Rehab", region: "Knee & Lower Kinetic Chain", file: "treatment-13-sports-injury---acl-rehab.png" },
-      { id: "14", title: "Post-Surgical Rehab", region: "Orthopedic Reconstruction", file: "treatment-14-post-surgical-rehab.png" }
+      { id: "01", title: "Cervical Decompression", tag: "01 · C1–C7 CERVICAL", region: "Cervical Spine (C1–C7)", num: "01" },
+      { id: "02", title: "Manual Joint Therapy", tag: "02 · T1–T12 THORACIC", region: "Thoracic Spine & Facets", num: "02" },
+      { id: "03", title: "Myofascial Release", tag: "03 · MYOFASCIAL", region: "Cervicothoracic & Soft Tissue", num: "03" },
+      { id: "04", title: "Dry Needling Therapy", tag: "04 · TRIGGER POINT", region: "Neuromuscular Trigger Points", num: "04" },
+      { id: "05", title: "Postural Realignment", tag: "05 · T1–T6 POSTURE", region: "Thoracic Spine (T1–T6)", num: "05" },
+      { id: "06", title: "Rotator Cuff Rehab", tag: "06 · GLENOHUMERAL", region: "Shoulder & Scapular Girdle", num: "06" },
+      { id: "07", title: "Thoracic Mobility Therapy", tag: "07 · THORACIC CAGE", region: "Mid-Spine & Ribcage (T6–T12)", num: "07" },
+      { id: "08", title: "Sciatica & Nerve Therapy", tag: "08 · L4–S1 SCIATICA", region: "Lumbar Nerve Roots (L1–L4)", num: "08" },
+      { id: "09", title: "Lumbar Disc Rehab", tag: "09 · L1–L5 LUMBAR", region: "Lower Back (L4–L5)", num: "09" },
+      { id: "10", title: "Spinal Stabilization", tag: "10 · CORE STABILIZATION", region: "Lumbosacral Core (L3–S1)", num: "10" },
+      { id: "11", title: "SI Joint & Pelvic Rehab", tag: "11 · SACROILIAC JOINT", region: "Sacroiliac & Pelvic Girdle (S1–S5)", num: "11" },
+      { id: "12", title: "Hip Mobility Rehab", tag: "12 · COXOFEMORAL", region: "Hip Joint & Pelvis", num: "12" },
+      { id: "13", title: "Sports Injury & ACL Rehab", tag: "13 · SPORTS MEDICINE", region: "Knee & Lower Kinetic Chain", num: "13" },
+      { id: "14", title: "Post-Surgical Rehabilitation", tag: "14 · RECOVERY PROTOCOL", region: "Orthopedic Reconstruction", num: "14" }
     ];
 
     const grid = document.getElementById('galleryGrid');
@@ -251,14 +352,21 @@
             <span class="card-num">${item.id} / 14</span>
             <span class="card-title">${item.title}</span>
           </div>
-          <span class="card-tag">${item.region}</span>
+          <span class="card-tag">${item.tag}</span>
         </div>
-        <a href="/stage1-previews/${item.file}" target="_blank" class="card-img-link" title="Click to view full-resolution image">
-          <img src="/stage1-previews/${item.file}" alt="${item.title}" loading="lazy">
-        </a>
+        <div class="card-images">
+          <a href="/stage2-previews/stage2-1080p-treatment-${item.num}.png" target="_blank" class="card-img-link" title="Full 1920x1080 Viewport">
+            <img src="/stage2-previews/stage2-1080p-treatment-${item.num}.png" alt="${item.title} Full View" loading="lazy">
+            <span class="img-label">1920 × 1080 Full</span>
+          </a>
+          <a href="/stage2-previews/stage2-card-crop-${item.num}.png" target="_blank" class="card-img-link" title="Card Detail Crop">
+            <img src="/stage2-previews/stage2-card-crop-${item.num}.png" alt="${item.title} Card Detail" loading="lazy">
+            <span class="img-label">Card Detail</span>
+          </a>
+        </div>
         <div class="card-footer">
-          <span class="status-pill">Active White Glass Blend: 0.99–1.00</span>
-          <a href="/stage1-previews/${item.file}" target="_blank">Open Full PNG ↗</a>
+          <span class="status-pill">Active White Glass • Zero Clipping</span>
+          <a href="/stage2-previews/stage2-1080p-treatment-${item.num}.png" target="_blank">Full PNG ↗</a>
         </div>
       </div>
     `).join('');

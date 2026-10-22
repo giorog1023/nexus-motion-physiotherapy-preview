@@ -5295,8 +5295,10 @@ uniform float uPhone;
 
 #!VARYINGS
 varying vec2 vUv;
+varying vec2 vCardUV;
 varying float vBackface;
 varying float vSide;
+varying float vFrontFace;
 varying vec3 vWorldPos;
 varying vec3 vNormal;
 varying vec3 vViewDir;
@@ -5311,13 +5313,18 @@ varying float vDist;
 
 void main() {
     vec3 pos = position;
-    pos.z += sin(time * 0.5 + abs(0.5-pos.x) * 3.0) * 0.1 + uHover * 0.2;
-    pos.y -= pos.x * mix(0.08, 0.14, uPhone);
+
+    // Planar front-face UV mapping directly from local Euclidean Cartesian coordinates:
+    // pos.x in [-0.37639, +0.37639] maps to [1.0, 0.0] (matching front-facing orientation)
+    // pos.y in [-0.37639, +0.37639] maps to [1.0, 0.0] bottom-to-top (matching image rows)
+    vCardUV = vec2(0.5 - pos.x / 0.75278, 0.5 - pos.y / 0.75278);
+    vFrontFace = normal.z > 0.5 ? 1.0 : 0.0;
+
+    pos.z += sin(time * 0.5 + abs(0.5-pos.x) * 3.0) * 0.05 + uHover * 0.1;
 
     vec4 worldPos = modelMatrix * vec4(pos, 1.0);
 
     vUv = uv;
-    vUv.y += pos.x * mix(0.08, 0.2, uPhone) * 0.2;
     vReflection = reflection(worldPos);
     vRefraction = refraction(worldPos, uRefractionRatio);
 
@@ -5354,18 +5361,18 @@ void main() {
     ruv -= 0.028 * vNormal.xy;
     vec3 spineRefr = radialBlur(tRefraction, ruv, 5.0, 5.0).rgb;
 
-    // Normalized front-face card UV (cube.bin front face has U in [0.0, 0.64646])
-    vec2 cardUV;
-    cardUV.x = clamp(vUv.x / 0.64646, 0.0, 1.0);
-    cardUV.y = clamp(vUv.y, 0.0, 1.0);
-
+    // Sample card texture using the planar front-face coordinates
+    vec2 cardUV = clamp(vCardUV, 0.0, 1.0);
     vec4 cardTex = texture2D(tMap, cardUV);
+
+    // Front-facing mask to keep typography strictly on the front face of the 3D card slab
+    float frontFacing = vFrontFace * smoothstep(0.10, 0.45, vNormal.z);
 
     // Channel-isolated masks:
     // White text has high R and high A
-    float textMask = smoothstep(0.40, 0.85, cardTex.r) * smoothstep(0.15, 0.85, cardTex.a);
+    float textMask = smoothstep(0.25, 0.65, cardTex.r) * smoothstep(0.10, 0.50, cardTex.a) * frontFacing;
     // Cyan border has low R, high B, and high A
-    float borderMask = (1.0 - smoothstep(0.15, 0.40, cardTex.r)) * smoothstep(0.35, 0.80, cardTex.b) * smoothstep(0.15, 0.85, cardTex.a);
+    float borderMask = (1.0 - smoothstep(0.15, 0.40, cardTex.r)) * smoothstep(0.25, 0.65, cardTex.b) * smoothstep(0.10, 0.50, cardTex.a) * frontFacing;
 
     // uAhead: 1.0 when card is in active foreground focus, 0.0 when orbiting in background
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
@@ -5375,7 +5382,7 @@ void main() {
     vec3 cyanBlue = mix(spineRefr * 0.82, vec3(0.04, 0.15, 0.26), 0.55);
     cyanBlue += vec3(0.03, 0.18, 0.30);
     vec3 inactiveTextColor = vec3(0.96, 0.98, 1.0); // Pure crisp white
-    vec3 inactiveBorderColor = vec3(0.15, 0.88, 1.0); // Luminous cyan
+    vec3 inactiveBorderColor = vec3(0.0, 0.90, 1.0); // Luminous cyan
 
     // 2. ACTIVE FOREGROUND CARD: Frosted milky-white glass
     // - Soft blurred refraction of the spine vertebrae visible through milky veil
@@ -5388,7 +5395,7 @@ void main() {
     frostedWhite += vec3(0.85, 0.95, 1.0) * fresnel * 0.25;
 
     vec3 activeTextColor = vec3(0.04, 0.09, 0.16); // Deep clinical charcoal navy
-    vec3 activeBorderColor = vec3(0.15, 0.82, 0.95);
+    vec3 activeBorderColor = vec3(0.0, 0.82, 0.95);
 
     // Smooth orbital blend
     vec3 glassBody = mix(cyanBlue, frostedWhite, uAhead);
