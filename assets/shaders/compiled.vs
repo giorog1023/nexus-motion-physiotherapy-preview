@@ -4974,45 +4974,24 @@ uniform float uSyncTouch;
 
 varying vec2 vUv;
 
-float bokeh(vec2 uv, vec2 center, float r) {
-    float d = length(uv - center);
-    return smoothstep(r, r * 0.3, d) * 0.65 + exp(-pow(d / (r * 1.35), 2.0)) * 0.35;
-}
-
 void main() {
     vec4 scene = texture2D(tDiffuse, vUv);
 
-    // Deep clinical slate-navy studio background strictly matching reference image (#0e1728)
-    vec3 bgCorner = vec3(0.055, 0.090, 0.155); // #0e1728
-    vec3 bgMid    = vec3(0.075, 0.120, 0.200); // #131f33
+    // Deep clinical slate-navy studio background strictly matching reference image (#09111e to #0d1726)
+    vec3 bgCorner = vec3(0.055, 0.090, 0.155);
+    vec3 bgMid    = vec3(0.075, 0.120, 0.200);
     vec3 studioBg = mix(bgMid, bgCorner, smoothstep(0.15, 0.65, length(vUv - 0.5)));
 
     // Luminous cervical backlight directly behind C1-C7 vertebrae (#b7c6ca to #c4cace in ref)
     vec2 lightPos = vec2(0.50, 0.68);
     float dLight = length((vUv - lightPos) * vec2(1.0, 1.25));
     float halo = exp(-pow(dLight / 0.28, 2.0));
-    float core = exp(-pow(dLight / 0.13, 2.0));
+    float core = exp(-pow(dLight / 0.12, 2.0));
 
-    vec3 haloColor = vec3(0.20, 0.55, 0.75); // Soft cool cyan halo
-    vec3 coreColor = vec3(0.78, 0.86, 0.92); // Silvery porcelain white core (#c4cace)
+    vec3 haloColor = vec3(0.20, 0.60, 0.85); // Soft cool cyan halo
+    vec3 coreColor = vec3(0.85, 0.92, 0.98); // Silvery porcelain white core
 
-    studioBg += haloColor * halo * 0.70 + coreColor * core * 0.95;
-
-    // Atmospheric camera depth bokeh particles (Cyan and Emerald)
-    vec3 cyanBokeh = vec3(0.20, 0.78, 0.98);
-    vec3 emeraldBokeh = vec3(0.06, 0.78, 0.55);
-
-    float b1 = bokeh(vUv, vec2(0.38, 0.38), 0.022);
-    float b2 = bokeh(vUv, vec2(0.35, 0.44), 0.015);
-    float b3 = bokeh(vUv, vec2(0.66, 0.38), 0.026);
-    float b4 = bokeh(vUv, vec2(0.70, 0.42), 0.018);
-    float b5 = bokeh(vUv, vec2(0.64, 0.55), 0.016);
-    float b6 = bokeh(vUv, vec2(0.48, 0.28), 0.020);
-    float b7 = bokeh(vUv, vec2(0.55, 0.26), 0.028);
-    float b8 = bokeh(vUv, vec2(0.33, 0.52), 0.019);
-
-    studioBg += cyanBokeh * (b1 * 0.45 + b3 * 0.50 + b6 * 0.40 + b8 * 0.35);
-    studioBg += emeraldBokeh * (b2 * 0.40 + b4 * 0.45 + b5 * 0.35 + b7 * 0.50);
+    studioBg += haloColor * halo * 0.75 + coreColor * core * 1.05;
 
     // Blend 3D scene over studio background
     float objMask = smoothstep(0.005, 0.04, max(scene.r, max(scene.g, scene.b)));
@@ -5149,7 +5128,7 @@ void main() {
     vScale *= mix(1.0, 3.0, vRipple);
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = (0.0275) * DPR * 2.0 * vScale * (1000.0 / length(mvPosition.xyz)) * uSizeBias;
+    gl_PointSize = (0.016) * DPR * 2.0 * vScale * (1000.0 / length(mvPosition.xyz)) * uSizeBias;
     gl_Position = projectionMatrix * mvPosition;
 }
 
@@ -5160,16 +5139,25 @@ void main() {
     float d = length(uv - 0.5);
     if (d > 0.5) discard;
 
-    vec3 cyan = vec3(0.20, 0.82, 0.98);
-    vec3 emerald = vec3(0.06, 0.85, 0.55);
-    vec3 color = mix(cyan, emerald, sin(vRandom.x * 6.28 + time * 0.8) * 0.5 + 0.5);
+    vec3 cyan = vec3(0.25, 0.86, 0.98);
+    vec3 emerald = vec3(0.10, 0.90, 0.65);
+    vec3 color = mix(cyan, emerald, sin(vRandom.x * 6.28 + time * 0.4) * 0.5 + 0.5);
 
-    // Soft bokeh circular falloff
-    float alpha = smoothstep(0.5, 0.06, d);
-    color *= alpha * 1.5;
+    // Soft Gaussian bokeh falloff
+    float alpha = (exp(-d * d * 14.0) * 0.45 + smoothstep(0.5, 0.08, d) * 0.20) * 0.38;
+
+    // Near camera distance fade
+    float nearFade = smoothstep(2.5, 5.0, vDist);
+    alpha *= nearFade;
+
+    // Foreground card clearance: fade particles near the active card zone
+    float cardClearance = smoothstep(0.8, 2.2, length(vec3(vWorldPos.x - 3.8, vWorldPos.y, vWorldPos.z)));
+    alpha *= mix(0.15, 1.0, cardClearance);
+
+    color *= alpha * 1.2;
 
     #drawbuffer Color gl_FragColor = vec4(color, alpha);
-    #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.5, alpha);
+    #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.3, alpha);
 }
 {@}LogoShader.glsl{@}#!ATTRIBUTES
 #!UNIFORMS
@@ -5363,45 +5351,61 @@ void main() {
 void main() {
     // Optical frosted refraction of the spine behind the card
     vec2 ruv = gl_FragCoord.xy / resolution;
-    ruv -= 0.025 * vNormal.xy;
+    ruv -= 0.028 * vNormal.xy;
     vec3 spineRefr = radialBlur(tRefraction, ruv, 5.0, 5.0).rgb;
 
-    // Card UI Texture (transparent PNG with border, badge, title, link)
-    vec2 cardUV = vec2(vUv.x, (vUv.y - 0.5) * 2.0);
-    vec4 cardTex = texture2D(tMap, clamp(cardUV, 0.0, 1.0));
+    // Normalized front-face card UV (cube.bin front face has U in [0.0, 0.64646])
+    vec2 cardUV;
+    cardUV.x = clamp(vUv.x / 0.64646, 0.0, 1.0);
+    cardUV.y = clamp(vUv.y, 0.0, 1.0);
 
-    // Distinguish Cyan Border vs White Typography
-    float isCyanBorder = smoothstep(0.12, 0.35, cardTex.b - cardTex.r) * smoothstep(0.10, 0.80, cardTex.a);
-    float isText = smoothstep(0.45, 0.85, min(cardTex.r, min(cardTex.g, cardTex.b))) * smoothstep(0.15, 0.80, cardTex.a) * (1.0 - isCyanBorder);
+    vec4 cardTex = texture2D(tMap, cardUV);
 
-    // 1. See-Through Dark Glass Body (Orbiting in background)
-    vec3 darkGlass = mix(spineRefr * 0.70, vec3(0.06, 0.14, 0.22), 0.65);
-    vec3 darkTextColor = vec3(1.0, 1.0, 1.0); // Pure crisp white typography
+    // Channel-isolated masks:
+    // White text has high R and high A
+    float textMask = smoothstep(0.40, 0.85, cardTex.r) * smoothstep(0.15, 0.85, cardTex.a);
+    // Cyan border has low R, high B, and high A
+    float borderMask = (1.0 - smoothstep(0.15, 0.40, cardTex.r)) * smoothstep(0.35, 0.80, cardTex.b) * smoothstep(0.15, 0.85, cardTex.a);
 
-    // 2. Frosted Ice-White Glass Body (When ahead in front)
-    vec3 whiteGlass = mix(spineRefr * 0.50 + vec3(0.08, 0.14, 0.20), vec3(0.92, 0.96, 0.98), 0.85);
-    vec3 whiteTextColor = vec3(0.05, 0.08, 0.13); // Deep charcoal slate typography
-
-    // Smooth transition from dark see-through glass to frosted white
+    // uAhead: 1.0 when card is in active foreground focus, 0.0 when orbiting in background
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
-    vec3 glassBody = mix(darkGlass, whiteGlass, uAhead);
-    vec3 textColor = mix(darkTextColor, whiteTextColor, uAhead);
 
-    // Composite body and typography
+    // 1. INACTIVE BACKGROUND CARDS: Translucent cyan-blue glass
+    // - Clear transmission of spine through oceanic glass (82% refraction)
+    vec3 cyanBlue = mix(spineRefr * 0.82, vec3(0.04, 0.15, 0.26), 0.55);
+    cyanBlue += vec3(0.03, 0.18, 0.30);
+    vec3 inactiveTextColor = vec3(0.96, 0.98, 1.0); // Pure crisp white
+    vec3 inactiveBorderColor = vec3(0.15, 0.88, 1.0); // Luminous cyan
+
+    // 2. ACTIVE FOREGROUND CARD: Frosted milky-white glass
+    // - Soft blurred refraction of the spine vertebrae visible through milky veil
+    vec3 frostedWhite = mix(spineRefr * 0.48 + vec3(0.12, 0.18, 0.24), vec3(0.92, 0.96, 0.99), 0.76);
+    // Surface specular glaze & Fresnel highlight
+    vec3 viewDir = normalize(vViewDir);
+    float spec = pow(max(dot(reflect(-normalize(vec3(0.35, 0.75, 0.55)), vNormal), viewDir), 0.0), 20.0);
+    frostedWhite += vec3(0.95, 0.99, 1.0) * spec * 0.32;
+    float fresnel = pow(1.0 - clamp(dot(normalize(vNormal), viewDir), 0.0, 1.0), 2.5);
+    frostedWhite += vec3(0.85, 0.95, 1.0) * fresnel * 0.25;
+
+    vec3 activeTextColor = vec3(0.04, 0.09, 0.16); // Deep clinical charcoal navy
+    vec3 activeBorderColor = vec3(0.15, 0.82, 0.95);
+
+    // Smooth orbital blend
+    vec3 glassBody = mix(cyanBlue, frostedWhite, uAhead);
+    vec3 textColor = mix(inactiveTextColor, activeTextColor, uAhead);
+    vec3 borderColor = mix(inactiveBorderColor, activeBorderColor, uAhead);
+
+    // Composite layers
     vec3 color = glassBody;
-    color = mix(color, textColor, isText);
-
-    // Glowing cyan neon border on perimeter
-    vec3 cyanGlow = vec3(0.14, 0.88, 0.98);
-    vec3 borderColor = mix(cyanGlow, vec3(0.35, 0.82, 0.94), uAhead * 0.5);
-    color = mix(color, borderColor, isCyanBorder);
+    color = mix(color, borderColor, borderMask);
+    color = mix(color, textColor, textMask);
 
     // Specular cyan rim on the 3D beveled edge of the physical card slab
-    float bevel = pow(vSide, 2.5);
-    color += cyanGlow * bevel * (0.85 - 0.35 * uAhead);
+    float bevel = pow(vSide, 2.2);
+    color += borderColor * bevel * (0.85 - 0.30 * uAhead);
 
     // Interactive hover response
-    color += cyanGlow * uHover * 0.15;
+    color += vec3(0.08, 0.25, 0.35) * uHover;
 
     #drawbuffer Color gl_FragColor = vec4(color, 1.0);
     #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.40, 1.0);
