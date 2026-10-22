@@ -1,0 +1,3 @@
+# Exclude heavy legacy portfolio videos not used by the Physiotherapy experience
+_external/storage.googleapis.com/
+_external/cdn.jsdelivr.net/

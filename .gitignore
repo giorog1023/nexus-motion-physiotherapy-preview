@@ -1,0 +1,8 @@
+# Vercel & local development
+.vercel/
+node_modules/
+*.log
+
+# Exclude heavy legacy portfolio media unused by physiotherapy section
+_external/storage.googleapis.com/
+_external/cdn.jsdelivr.net/
