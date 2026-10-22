@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion — Stage 1 Review Gallery (All 14 Treatments)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #03080f;
+      --card-bg: rgba(9, 21, 37, 0.7);
+      --card-border: rgba(34, 211, 238, 0.25);
+      --text: #f0f6fc;
+      --text-muted: #94a3b8;
+      --cyan: #22d3ee;
+      --emerald: #34d399;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      padding: 40px 24px;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+      padding-bottom: 28px;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-top: 6px;
+      max-width: 720px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(6, 182, 212, 0.5);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+      gap: 32px;
+    }
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(34, 211, 238, 0.6);
+    }
+    .card-header {
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(3, 8, 15, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--cyan);
+      background: rgba(34, 211, 238, 0.12);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(34, 211, 238, 0.3);
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .card-tag {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .card-img-link {
+      display: block;
+      position: relative;
+      background: #000;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+    }
+    .card-img-link img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .card-img-link:hover img {
+      transform: scale(1.02);
+    }
+    .card-footer {
+      padding: 14px 22px;
+      background: rgba(3, 8, 15, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--emerald);
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .status-pill::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+    }
+    .card-footer a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .card-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="badge">Stage 1 Verified • 100% Lockstep Sync</div>
+        <h1>Nexus Motion — Visual Review Gallery</h1>
+        <p class="subtitle">
+          Actual rendered screenshots of the live 3D WebGL website across all 14 clinical treatments.
+          Inspect active frosted-white glass cards, cyan background orbital cards, anatomical focus synchronization, and spine rendering.
+        </p>
+      </div>
+      <div class="header-actions">
+        <a href="/work" class="btn btn-primary" target="_blank">Launch Live 3D Website ↗</a>
+      </div>
+    </header>
+
+    <div class="grid" id="galleryGrid"></div>
+  </div>
+
+  <script>
+    const items = [
+      { id: "01", title: "Cervical Decompression", region: "Cervical Spine (C1–C7)", file: "treatment-01-cervical-decompression.png" },
+      { id: "02", title: "Manual Joint Therapy", region: "Thoracic Spine & Facets", file: "treatment-02-manual-joint-therapy.png" },
+      { id: "03", title: "Myofascial Release", region: "Cervicothoracic & Soft Tissue", file: "treatment-03-myofascial-release.png" },
+      { id: "04", title: "Dry Needling Therapy", region: "Neuromuscular Trigger Points", file: "treatment-04-dry-needling-therapy.png" },
+      { id: "05", title: "Postural Realignment", region: "Thoracic Spine (T1–T6)", file: "treatment-05-postural-realignment.png" },
+      { id: "06", title: "Rotator Cuff Rehab", region: "Shoulder & Scapular Girdle", file: "treatment-06-rotator-cuff-rehab.png" },
+      { id: "07", title: "Thoracic Mobility Therapy", region: "Mid-Spine & Ribcage (T6–T12)", file: "treatment-07-thoracic-mobility-therapy.png" },
+      { id: "08", title: "Sciatica & Nerve Therapy", region: "Lumbar Nerve Roots (L1–L4)", file: "treatment-08-sciatica---nerve-therapy.png" },
+      { id: "09", title: "Lumbar Disc Rehab", region: "Lower Back (L4–L5)", file: "treatment-09-lumbar-disc-rehab.png" },
+      { id: "10", title: "Spinal Stabilization", region: "Lumbosacral Core (L3–S1)", file: "treatment-10-spinal-stabilization.png" },
+      { id: "11", title: "SI Joint & Pelvic Rehab", region: "Sacroiliac & Pelvic Girdle (S1–S5)", file: "treatment-11-si-joint---pelvic-rehab.png" },
+      { id: "12", title: "Hip Mobility Rehab", region: "Hip Joint & Pelvis", file: "treatment-12-hip-mobility-rehab.png" },
+      { id: "13", title: "Sports Injury & ACL Rehab", region: "Knee & Lower Kinetic Chain", file: "treatment-13-sports-injury---acl-rehab.png" },
+      { id: "14", title: "Post-Surgical Rehab", region: "Orthopedic Reconstruction", file: "treatment-14-post-surgical-rehab.png" }
+    ];
+
+    const grid = document.getElementById('galleryGrid');
+    grid.innerHTML = items.map(item => `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-num">${item.id} / 14</span>
+            <span class="card-title">${item.title}</span>
+          </div>
+          <span class="card-tag">${item.region}</span>
+        </div>
+        <a href="/stage1-previews/${item.file}" target="_blank" class="card-img-link" title="Click to view full-resolution image">
+          <img src="/stage1-previews/${item.file}" alt="${item.title}" loading="lazy">
+        </a>
+        <div class="card-footer">
+          <span class="status-pill">Active White Glass Blend: 0.99–1.00</span>
+          <a href="/stage1-previews/${item.file}" target="_blank">Open Full PNG ↗</a>
+        </div>
+      </div>
+    `).join('');
+  </script>
+</body>
+</html>

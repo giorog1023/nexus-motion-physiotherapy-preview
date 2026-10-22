@@ -26,6 +26,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/gallery",
+      "destination": "/gallery.html"
+    },
+    {
       "source": "/nexus-preview",
       "destination": "/nexus-preview.png"
     },
