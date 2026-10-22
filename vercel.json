@@ -24,6 +24,18 @@
     {
       "source": "/work",
       "destination": "/index.html"
+    },
+    {
+      "source": "/nexus-preview",
+      "destination": "/nexus-preview.png"
+    },
+    {
+      "source": "/nexus-preview-scrolled-mid",
+      "destination": "/nexus-preview-scrolled-mid.png"
+    },
+    {
+      "source": "/nexus-preview-scrolled-deep",
+      "destination": "/nexus-preview-scrolled-deep.png"
     }
   ]
 }
