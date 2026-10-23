@@ -4977,21 +4977,30 @@ varying vec2 vUv;
 void main() {
     vec4 scene = texture2D(tDiffuse, vUv);
 
-    // Deep clinical slate-navy studio background strictly matching reference image (#09111e to #0d1726)
-    vec3 bgCorner = vec3(0.055, 0.090, 0.155);
-    vec3 bgMid    = vec3(0.075, 0.120, 0.200);
-    vec3 studioBg = mix(bgMid, bgCorner, smoothstep(0.15, 0.65, length(vUv - 0.5)));
+    // Deep clinical slate-navy studio background strictly matching reference image (#0b121e to #101b2c)
+    vec3 bgCorner = vec3(0.043, 0.071, 0.125);
+    vec3 bgMid    = vec3(0.063, 0.102, 0.170);
+    vec3 studioBg = mix(bgMid, bgCorner, smoothstep(0.12, 0.72, length(vUv - 0.50)));
 
-    // Luminous cervical backlight directly behind C1-C7 vertebrae (#b7c6ca to #c4cace in ref)
-    vec2 lightPos = vec2(0.50, 0.68);
-    float dLight = length((vUv - lightPos) * vec2(1.0, 1.25));
-    float halo = exp(-pow(dLight / 0.28, 2.0));
-    float core = exp(-pow(dLight / 0.12, 2.0));
+    // Central Cinematic Atmospheric Glow behind spine (vertically elongated elliptical plume)
+    vec2 centralGlowCenter = vec2(0.50, 0.56);
+    float dCentral = length((vUv - centralGlowCenter) * vec2(1.70, 0.95));
 
-    vec3 haloColor = vec3(0.20, 0.60, 0.85); // Soft cool cyan halo
-    vec3 coreColor = vec3(0.85, 0.92, 0.98); // Silvery porcelain white core
+    // 1. Broad cinematic atmospheric halo: soft cyan & turquoise diffusion
+    float broadHalo = exp(-pow(dCentral / 0.42, 2.0));
+    vec3 haloColor = vec3(0.14, 0.54, 0.75); // Atmospheric cyan-blue
+    studioBg += haloColor * broadHalo * 0.85;
 
-    studioBg += haloColor * halo * 0.75 + coreColor * core * 1.05;
+    // 2. Concentrated luminous core: luminous turquoise/cyan radiance
+    float luminousCore = exp(-pow(dCentral / 0.22, 2.0));
+    vec3 coreColor = vec3(0.52, 0.86, 0.95); // Luminous turquoise/cyan
+    studioBg += coreColor * luminousCore * 0.90;
+
+    // 3. Delicate cervical spine accent directly behind C1-C7
+    float dCervical = length((vUv - vec2(0.50, 0.74)) * vec2(2.2, 1.6));
+    float cervicalAccent = exp(-pow(dCervical / 0.15, 2.0));
+    vec3 cervicalColor = vec3(0.80, 0.94, 0.98); // Silvery pearlescent highlight
+    studioBg += cervicalColor * cervicalAccent * 0.60;
 
     // Blend 3D scene over studio background
     float maxScene = max(scene.r, max(scene.g, scene.b));
@@ -5211,48 +5220,56 @@ void main() {
     vec3 viewDir = normalize(vCameraPos - vWorldPos.xyz);
 
     // Studio multi-point clinical lighting
-    vec3 keyLight  = normalize(vec3(0.35, 0.70, 0.60));
-    vec3 fillLight = normalize(vec3(-0.55, 0.20, 0.50));
-    vec3 backLight = normalize(vec3(0.00, 0.85, -0.50));
+    vec3 keyLight  = normalize(vec3(0.38, 0.68, 0.62));
+    vec3 fillLight = normalize(vec3(-0.55, 0.22, 0.48));
+    vec3 backLight = normalize(vec3(0.00, 0.50, -0.85));
 
     float diffKey  = max(dot(n, keyLight), 0.0);
     float diffFill = max(dot(n, fillLight), 0.0);
     float diffBack = max(dot(n, backLight), 0.0);
 
-    float studioDiff = diffKey * 0.65 + diffFill * 0.25 + diffBack * 0.18;
+    float studioDiff = diffKey * 0.62 + diffFill * 0.26 + diffBack * 0.22;
 
-    // Specular highlight on glazed alabaster porcelain
+    // Dual-lobe specular highlight: sharp cortical crest + broad pearlescent glaze
     vec3 halfKey = normalize(keyLight + viewDir);
-    float specBone = pow(max(dot(n, halfKey), 0.0), 36.0);
+    float specSharp = pow(max(dot(n, halfKey), 0.0), 34.0);
+    float specBroad = pow(max(dot(n, halfKey), 0.0), 12.0);
 
-    // Sculptural alabaster porcelain bone palette (matching reference image)
-    vec3 creviceColor  = vec3(0.09, 0.14, 0.22); // Deep clinical slate cavity
-    vec3 shadowColor   = vec3(0.42, 0.52, 0.62); // Soft anatomical shadow
-    vec3 porcelainBase = vec3(0.91, 0.94, 0.97); // Silky ivory alabaster bone
-    vec3 porcelainLit  = vec3(0.98, 0.99, 1.00); // Cortical crest highlight
+    // Sculptural alabaster porcelain bone palette (strictly matching Nexus Motion reference)
+    vec3 creviceColor  = vec3(0.14, 0.22, 0.32); // Deep clinical slate cavity
+    vec3 shadowColor   = vec3(0.45, 0.56, 0.66); // Soft anatomical shadow
+    vec3 porcelainBase = vec3(0.90, 0.93, 0.96); // Silky ivory alabaster bone
+    vec3 porcelainLit  = vec3(0.97, 0.98, 1.00); // Cortical crest highlight
 
-    vec3 boneColor = mix(creviceColor, shadowColor, smoothstep(0.02, 0.25, studioDiff));
-    boneColor = mix(boneColor, porcelainBase, smoothstep(0.25, 0.65, studioDiff));
-    boneColor = mix(boneColor, porcelainLit, smoothstep(0.65, 0.95, studioDiff));
-    boneColor += vec3(1.0) * specBone * 0.35;
+    vec3 boneColor = mix(creviceColor, shadowColor, smoothstep(0.01, 0.22, studioDiff));
+    boneColor = mix(boneColor, porcelainBase, smoothstep(0.22, 0.62, studioDiff));
+    boneColor = mix(boneColor, porcelainLit, smoothstep(0.62, 0.92, studioDiff));
+    boneColor += vec3(1.0) * specSharp * 0.32 + vec3(0.85, 0.95, 1.0) * specBroad * 0.14;
+
+    // Atmospheric environmental light wrap from central glow behind spine
+    float backWrap = max(0.0, -dot(n, vec3(0.0, 0.15, 0.98)) * 0.5 + 0.5);
+    vec3 envBacklight = vec3(0.18, 0.65, 0.85) * pow(backWrap, 2.5) * 0.30;
+    boneColor += envBacklight;
 
     // Intervertebral Disc Cushion: modeled locally at inferior vertebral body surface
     float discZone = smoothstep(-0.07, -0.13, vLocalPos.y);
     discZone *= smoothstep(0.18, -0.02, vLocalPos.z);
 
     // Rich metallic champagne gold disc cushion
-    vec3 champagneGold = vec3(0.85, 0.70, 0.38);
-    float specDisc = pow(max(dot(n, halfKey), 0.0), 18.0);
-    vec3 discColor = champagneGold * (diffKey * 0.85 + 0.45) + vec3(1.0, 0.95, 0.82) * specDisc * 1.2;
+    vec3 champagneGold = vec3(0.86, 0.72, 0.44);
+    float specDisc = pow(max(dot(n, halfKey), 0.0), 20.0);
+    vec3 discColor = champagneGold * (diffKey * 0.85 + 0.48) + vec3(1.0, 0.96, 0.86) * specDisc * 1.15;
 
     vec3 color = mix(boneColor, discColor, discZone * 0.88);
 
-    // Ethereal cyan silhouette rim light catching the backlight
+    // Ethereal cyan, turquoise and mint silhouette rim light catching the backlight
     float fresnel = pow(1.0 - clamp(abs(dot(n, viewDir)), 0.0, 1.0), 2.2);
-    vec3 rimIceBlue = vec3(0.20, 0.85, 1.00);
-    vec3 rimMint    = vec3(0.12, 0.92, 0.68);
-    vec3 rimColor = mix(rimIceBlue, rimMint, clamp(n.y * 0.5 + 0.5, 0.0, 1.0));
-    color += rimColor * fresnel * 0.65;
+    float rimY = clamp((vWorldPos.y + 10.0) / 22.0, 0.0, 1.0);
+    vec3 rimIceBlue   = vec3(0.22, 0.88, 1.00); // Luminous cyan
+    vec3 rimTurquoise = vec3(0.10, 0.90, 0.82); // Oceanic turquoise
+    vec3 rimMint      = vec3(0.14, 0.95, 0.68); // Delicate mint-green
+    vec3 rimColor = mix(rimMint, mix(rimTurquoise, rimIceBlue, smoothstep(0.35, 0.80, rimY)), smoothstep(0.0, 0.45, rimY));
+    color += rimColor * fresnel * 0.70;
     color += refr * 0.03;
 
     #drawbuffer Color gl_FragColor = vec4(color, 1.0);
