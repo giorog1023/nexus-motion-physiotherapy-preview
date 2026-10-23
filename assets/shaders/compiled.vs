@@ -4994,8 +4994,15 @@ void main() {
     studioBg += haloColor * halo * 0.75 + coreColor * core * 1.05;
 
     // Blend 3D scene over studio background
-    float objMask = smoothstep(0.005, 0.04, max(scene.r, max(scene.g, scene.b)));
-    vec3 color = mix(studioBg, scene.rgb, objMask);
+    float maxScene = max(scene.r, max(scene.g, scene.b));
+    float objMask = smoothstep(0.005, 0.04, maxScene);
+
+    // Prevent particles and transparent fringes from ever darkening the studio background:
+    vec3 sceneBlended = max(studioBg, scene.rgb);
+    float solidObject = smoothstep(0.12, 0.35, maxScene);
+    vec3 sceneColor = mix(sceneBlended, scene.rgb, solidObject);
+
+    vec3 color = mix(studioBg, sceneColor, objMask);
 
     gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
 }{@}ChainShader.glsl{@}#!ATTRIBUTES
@@ -5049,13 +5056,19 @@ const float PI = 3.1415926535897932384626433832795;
 #require(simplenoise.glsl)
 
 void main() {
+    // Stage 5 Density Control:
+    // Out of 16,384 vertices, select a sparse subset (~25-35 particles in view)
+    // exactly reproducing the calm, luxurious atmospheric density of the Nexus Motion reference
+    if (random.x > 0.0020) {
+        gl_PointSize = 0.0;
+        gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+        return;
+    }
+
     vec4 decodedPos = texture2D(tPos, position.xy);
     vec3 pos = decodedPos.xyz;
 
     vCameraPos = cameraPosition;
-
-
-    //vFlowers = pos.z > 0.5 ? 1.0 : 0.0;
 
     if (pos.x < 0.0) {
         pos.z = -pos.z;
@@ -5065,41 +5078,21 @@ void main() {
     pos.x += 1.0;
     pos.z -= 0.5;
 
+    // Subtle atmospheric vertical float
     float offset = smoothstep(0.4, 0.0, uScroll) * pow(random.x, 30.0) * 10.0;
     offset *= (0.8 + sin(pos.y * 0.2 + time * 0.02 + uScroll + random.z * 2.0) * 0.2);
     pos.y += offset;
 
-    // Top Spiral
+    // Organic orbital drift with scroll
     pos.x -= cos(uScroll * 5.0 + length(pos.xz) * 1.0 + pos.y * 0.5 + uRotate * 2.0) * 0.5 * smoothstep(0.0, 0.5, abs(uScroll-0.5));
     pos.z -= sin(uScroll * 5.0 + length(pos.xz) * 1.0 + pos.y * 0.5 + uRotate * 2.0) * 0.5 * smoothstep(0.0, 0.5, abs(uScroll-0.5));
 
-    // RotateTransition
-    float radius = 3.0;
-    //pos.x -= (cos(uRotate) * radius) - radius * 2.0;
-    //pos.z -= (sin(uRotate) * radius) - radius * 2.0;
+    // Spatial distribution across the midground and background around the spine
+    pos.x += (random.y - 0.5) * 8.5;
+    pos.z += (random.z - 0.5) * 5.0;
 
-    // Outer Spiral
-    radius = mix(0.5, 3.0, pow(random.w, 2.0));
-    pos.x -= cos(pos.y * 0.5 + sin(time * 0.05 + random.w * 5.0 * 0.1 - uRotate * 0.2)) * 25.0 * step(0.95, random.y);
-    pos.z -= sin(pos.y * 0.5 + sin(time * 0.05 + random.w * 5.0 * 0.1 - uRotate * 0.2)) * 25.0 * step(0.95, random.y);
-
-    if (pos.x < 0.0) {
-        pos.x -= cos(-decodedPos.y * 0.06) * 3.0 - 3.5;
-        pos.z -= sin(-decodedPos.y * 0.06) * 3.0 - 2.0;
-    } else {
-        pos.x -= cos(-decodedPos.y * 0.06 + 3.0) * 3.0 + 3.5;
-        pos.z -= sin(-decodedPos.y * 0.06 + 3.0) * 3.0 + 1.0;
-    }
-
-    // Bottom Spiral
-    pos.y -= pow(uScroll, 4.0) * 20.0 * pow(random.w, 15.0);
-    pos.x -= cos(pos.y * 1.0) * 0.2 * pow(random.w, 4.0) * pow(uScroll, 3.5);
-    pos.z -= sin(pos.y * 1.0) * 0.2 * pow(random.w, 4.0) * pow(uScroll, 3.5);
-
-    pos.xz = mix(pos.xz, vec2(0.0), pow(smoothstep(5.0, -45.0, pos.y), 3.0));
-
-    vOffset = length(pos-decodedPos.xyz);
-
+    // Keep particles in background/midground, never intruding into the foreground card plane
+    pos.z = min(pos.z, 0.3);
 
     vec3 worldPos = vec3(modelMatrix * vec4(pos, 1.0));
     vWorldPos = worldPos;
@@ -5108,27 +5101,16 @@ void main() {
     vDist = dist;
     vUv = uv;
 
-    vRipple = 0.0;//0.5 + sin(length(vWorldPos.xz) * 2.0) * 0.5;
-
-    vec3 viewDir = normalize(cameraPosition - pos);
-    vec3 ray = vec3(0.0, 0.0, 0.0) - pos;
-    vec3 rayDir = normalize(ray);
-    float u = 0.5 + atan(rayDir.z, rayDir.x) / (2.0 * PI);
-    float v = 0.5 - asin(rayDir.y) / PI;
-    float intensity = smoothstep(5.0, 2.0, length(ray));
-    vLightColor = texture2D(tPointColor, position.xy).rgb;
-    //vLightColor += ;
-
     vPos = pos;
     vRandom = random;
 
-    vScale = smoothstep(3.0, 15.0, dist);
-    vScale *= 1.0 + (0.5 + sin(time * 5.0 + random.y * 20.0) * 0.5) * 0.3;
-    vScale *= mix(0.5, 1.5, random.z);
-    vScale *= mix(1.0, 3.0, vRipple);
-
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = (0.016) * DPR * 2.0 * vScale * (1000.0 / length(mvPosition.xyz)) * uSizeBias;
+
+    // Large, luxurious out-of-focus bokeh disc sizing (35px to 75px)
+    float baseSize = mix(35.0, 75.0, random.y);
+    float distScale = clamp(7.5 / length(mvPosition.xyz), 0.65, 1.45);
+    gl_PointSize = baseSize * distScale * (DPR > 0.0 ? DPR : 1.0);
+
     gl_Position = projectionMatrix * mvPosition;
 }
 
@@ -5139,25 +5121,39 @@ void main() {
     float d = length(uv - 0.5);
     if (d > 0.5) discard;
 
-    vec3 cyan = vec3(0.25, 0.86, 0.98);
-    vec3 emerald = vec3(0.10, 0.90, 0.65);
-    vec3 color = mix(cyan, emerald, sin(vRandom.x * 6.28 + time * 0.4) * 0.5 + 0.5);
+    // Reference palette: luminous cyan, oceanic turquoise, and soft mint-green
+    vec3 cyan      = vec3(0.18, 0.88, 0.98);
+    vec3 turquoise = vec3(0.08, 0.92, 0.82);
+    vec3 mint      = vec3(0.12, 0.95, 0.65);
 
-    // Soft Gaussian bokeh falloff
-    float alpha = (exp(-d * d * 14.0) * 0.45 + smoothstep(0.5, 0.08, d) * 0.20) * 0.38;
+    // Harmonious per-particle color variance with gentle time breathing
+    float cMix = fract(vRandom.z * 3.17 + sin(time * 0.3 + vRandom.w * 6.28) * 0.2);
+    vec3 color = mix(cyan, mix(turquoise, mint, smoothstep(0.35, 0.75, cMix)), smoothstep(0.20, 0.60, cMix));
 
-    // Near camera distance fade
-    float nearFade = smoothstep(2.5, 5.0, vDist);
-    alpha *= nearFade;
+    // Optical Bokeh disc profile:
+    // Soft luminous glowing center, gently feathered Gaussian transparent rim
+    float rim = smoothstep(0.50, 0.15, d);
+    float core = exp(-d * d * 8.0);
+    float bokeh = (core * 0.50 + rim * 0.50);
 
-    // Foreground card clearance: fade particles near the active card zone
-    float cardClearance = smoothstep(0.8, 2.2, length(vec3(vWorldPos.x - 3.8, vWorldPos.y, vWorldPos.z)));
-    alpha *= mix(0.15, 1.0, cardClearance);
+    // Varied transparency and subtle breathing pulse
+    float baseAlpha = mix(0.25, 0.65, vRandom.w);
+    baseAlpha *= (0.88 + 0.12 * sin(time * 0.7 + vRandom.y * 6.28));
+    float alpha = bokeh * baseAlpha;
 
-    color *= alpha * 1.2;
+    // Distance fade to prevent close-camera artifacts
+    float depthFade = smoothstep(2.5, 4.5, vDist);
+    alpha *= depthFade;
 
-    #drawbuffer Color gl_FragColor = vec4(color, alpha);
-    #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.3, alpha);
+    // Foreground active card clearance: strictly ensure no particles render over the foreground card
+    float cardZone = smoothstep(1.0, 2.6, length(vec2(vWorldPos.x - 3.8, vWorldPos.y)));
+    alpha *= cardZone;
+
+    // Emissive light output (zero dark halos)
+    vec3 emissive = color * alpha;
+
+    #drawbuffer Color gl_FragColor = vec4(emissive, 0.0);
+    #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
 }
 {@}LogoShader.glsl{@}#!ATTRIBUTES
 #!UNIFORMS
