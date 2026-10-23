@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexus Motion — Production Visual Review Gallery</title>
+  <title>Nexus Motion &mdash; Production Visual Review Gallery</title>
   <link rel="icon" type="image/png" href="assets/meta/favicon-32x32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -454,7 +454,7 @@
   <div class="container">
     <header>
       <div>
-        <div class="badge">Stage 7 Verified · Production Ready</div>
+        <div class="badge">Stage 7 Verified &middot; Production Ready</div>
         <h1>Nexus Motion — Visual Review Gallery</h1>
         <p class="subtitle">
           Comprehensive high-resolution browser captures across all 14 clinical treatments. Featuring lockstep orbital card synchronization, dual frosted milky-white & translucent cyan-blue glass materials, soft 3D bokeh particles, pearlescent spine lighting, and compact clinical UI.
@@ -501,31 +501,31 @@
       </div>
     </div>
 
-    <!-- Section 2: Laptop Viewports (1440 x 900) -->
+    <!-- Section 2: Laptop Viewports (1440 &times; 900) -->
     <div class="section">
       <div class="section-header">
-        <div class="section-title"><span>02 //</span> Responsive Laptop Viewports (1440 × 900)</div>
+        <div class="section-title"><span>02 //</span> Responsive Laptop Viewports (1440 &times; 900)</div>
         <div class="section-note">Initial, Mid-Scroll, and Deep-Scroll viewports on standard laptop displays</div>
       </div>
       <div class="viewport-grid">
         <div class="viewport-card">
           <div class="viewport-header">
             <span>Initial Viewport (Treatment 01)</span>
-            <span style="color: var(--mint)">1440 × 900</span>
+            <span style="color: var(--mint)">1440 &times; 900</span>
           </div>
           <img src="gallery/viewport-1440p-initial.png" alt="1440p Initial Viewport" onclick="openLightbox(this.src)">
         </div>
         <div class="viewport-card">
           <div class="viewport-header">
             <span>Mid-Scroll (Treatment 07: Thoracic Mobility)</span>
-            <span style="color: var(--mint)">1440 × 900</span>
+            <span style="color: var(--mint)">1440 &times; 900</span>
           </div>
           <img src="gallery/viewport-1440p-mid.png" alt="1440p Mid-Scroll" onclick="openLightbox(this.src)">
         </div>
         <div class="viewport-card">
           <div class="viewport-header">
             <span>Deep-Scroll (Treatment 14: Post-Surgical)</span>
-            <span style="color: var(--mint)">1440 × 900</span>
+            <span style="color: var(--mint)">1440 &times; 900</span>
           </div>
           <img src="gallery/viewport-1440p-deep.png" alt="1440p Deep-Scroll" onclick="openLightbox(this.src)">
         </div>
@@ -542,14 +542,14 @@
         <div class="viewport-card">
           <div class="viewport-header">
             <span>Drawer Opened (Default Hero State)</span>
-            <span style="color: var(--mint)">1920 × 1080</span>
+            <span style="color: var(--mint)">1920 &times; 1080</span>
           </div>
           <img src="gallery/drawer-open-state.png" alt="Clinical Protocol Drawer Opened" onclick="openLightbox(this.src)">
         </div>
         <div class="viewport-card">
           <div class="viewport-header">
             <span>Drawer Collapsed (Full Viewport Focus)</span>
-            <span style="color: var(--cyan)">1920 × 1080</span>
+            <span style="color: var(--cyan)">1920 &times; 1080</span>
           </div>
           <img src="gallery/drawer-closed-state.png" alt="Clinical Protocol Drawer Closed" onclick="openLightbox(this.src)">
         </div>
@@ -566,33 +566,33 @@
     </div>
 
     <footer>
-      <div>Nexus Motion · Advanced Spinal Rehabilitation & Biomechanics</div>
-      <div>Production Vercel Deployment · Stage 7 Verified</div>
+      <div>Nexus Motion &middot; Advanced Spinal Rehabilitation & Biomechanics</div>
+      <div>Production Vercel Deployment &middot; Stage 7 Verified</div>
     </footer>
   </div>
 
   <!-- Lightbox Modal -->
   <div class="lightbox" id="lightboxModal" onclick="closeLightbox()">
-    <div class="lightbox-close" onclick="closeLightbox()">×</div>
+    <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
     <img id="lightboxImg" src="" alt="Enlarged View" onclick="event.stopPropagation()">
   </div>
 
   <script>
     const items = [
-      { id: "01", title: "Cervical Decompression", tag: "01 · C1–C7 CERVICAL", region: "Cervical Spine (C1–C7)", conditions: ["Disc Herniation", "Pinched Nerve"] },
-      { id: "02", title: "Manual Joint Therapy", tag: "02 · T1–T12 THORACIC", region: "Thoracic Spine & Facets", conditions: ["Disc Herniation", "Pinched Nerve"] },
-      { id: "03", title: "Myofascial Release", tag: "03 · MYOFASCIAL", region: "Cervicothoracic & Soft Tissue", conditions: ["Trap & Levator Knots", "Muscular Adhesions"] },
-      { id: "04", title: "Dry Needling Therapy", tag: "04 · TRIGGER POINT", region: "Neuromuscular Trigger Points", conditions: ["Paraspinal Spasms", "Trigger Points"] },
-      { id: "05", title: "Postural Realignment", tag: "05 · T1–T6 POSTURE", region: "Thoracic Spine (T1–T6)", conditions: ["Forward-Head Posture", "Rounded Shoulders"] },
-      { id: "06", title: "Rotator Cuff Rehab", tag: "06 · GLENOHUMERAL", region: "Shoulder & Scapular Girdle", conditions: ["Supraspinatus Impingement", "Bursitis"] },
-      { id: "07", title: "Thoracic Mobility Therapy", tag: "07 · THORACIC CAGE", region: "Mid-Spine & Ribcage (T6–T12)", conditions: ["Rib Flare", "Thoracic Hypomobility"] },
-      { id: "08", title: "Sciatica & Nerve Therapy", tag: "08 · L4–S1 SCIATICA", region: "Lumbar Nerve Roots (L1–L4)", conditions: ["Sciatic Nerve Pain", "Piriformis Syndrome"] },
-      { id: "09", title: "Lumbar Disc Rehab", tag: "09 · L1–L5 LUMBAR", region: "Lower Back (L4–L5)", conditions: ["L4–L5 Disc Extrusions", "Facet Syndrome"] },
-      { id: "10", title: "Spinal Stabilization", tag: "10 · CORE STABILIZATION", region: "Lumbosacral Core (L3–S1)", conditions: ["Spondylolisthesis", "Core Instability"] },
-      { id: "11", title: "SI Joint & Pelvic Rehab", tag: "11 · SACROILIAC JOINT", region: "Sacroiliac & Pelvic Girdle (S1–S5)", conditions: ["SI Joint Dysfunction", "Pelvic Torsion"] },
-      { id: "12", title: "Hip Mobility Rehab", tag: "12 · COXOFEMORAL", region: "Hip Joint & Pelvis", conditions: ["Femoroacetabular Impingement", "Labral Irritation"] },
-      { id: "13", title: "Sports Injury & ACL Rehab", tag: "13 · SPORTS MEDICINE", region: "Knee & Lower Kinetic Chain", conditions: ["ACL Reconstruction", "Meniscal Tear Rehab"] },
-      { id: "14", title: "Post-Surgical Rehabilitation", tag: "14 · RECOVERY PROTOCOL", region: "Orthopedic Reconstruction", conditions: ["Spinal Fusion Recovery", "Laminectomy Care"] }
+      { id: "01", title: "Cervical Decompression", tag: "01 &middot; C1&ndash;C7 CERVICAL", region: "Cervical Spine (C1&ndash;C7)", conditions: ["Disc Herniation", "Pinched Nerve"] },
+      { id: "02", title: "Manual Joint Therapy", tag: "02 &middot; T1&ndash;T12 THORACIC", region: "Thoracic Spine & Facets", conditions: ["Disc Herniation", "Pinched Nerve"] },
+      { id: "03", title: "Myofascial Release", tag: "03 &middot; MYOFASCIAL", region: "Cervicothoracic & Soft Tissue", conditions: ["Trap & Levator Knots", "Muscular Adhesions"] },
+      { id: "04", title: "Dry Needling Therapy", tag: "04 &middot; TRIGGER POINT", region: "Neuromuscular Trigger Points", conditions: ["Paraspinal Spasms", "Trigger Points"] },
+      { id: "05", title: "Postural Realignment", tag: "05 &middot; T1&ndash;T6 POSTURE", region: "Thoracic Spine (T1&ndash;T6)", conditions: ["Forward-Head Posture", "Rounded Shoulders"] },
+      { id: "06", title: "Rotator Cuff Rehab", tag: "06 &middot; GLENOHUMERAL", region: "Shoulder & Scapular Girdle", conditions: ["Supraspinatus Impingement", "Bursitis"] },
+      { id: "07", title: "Thoracic Mobility Therapy", tag: "07 &middot; THORACIC CAGE", region: "Mid-Spine & Ribcage (T6&ndash;T12)", conditions: ["Rib Flare", "Thoracic Hypomobility"] },
+      { id: "08", title: "Sciatica & Nerve Therapy", tag: "08 &middot; L4&ndash;S1 SCIATICA", region: "Lumbar Nerve Roots (L1&ndash;L4)", conditions: ["Sciatic Nerve Pain", "Piriformis Syndrome"] },
+      { id: "09", title: "Lumbar Disc Rehab", tag: "09 &middot; L1&ndash;L5 LUMBAR", region: "Lower Back (L4–L5)", conditions: ["L4–L5 Disc Extrusions", "Facet Syndrome"] },
+      { id: "10", title: "Spinal Stabilization", tag: "10 &middot; CORE STABILIZATION", region: "Lumbosacral Core (L3&ndash;S1)", conditions: ["Spondylolisthesis", "Core Instability"] },
+      { id: "11", title: "SI Joint & Pelvic Rehab", tag: "11 &middot; SACROILIAC JOINT", region: "Sacroiliac & Pelvic Girdle (S1&ndash;S5)", conditions: ["SI Joint Dysfunction", "Pelvic Torsion"] },
+      { id: "12", title: "Hip Mobility Rehab", tag: "12 &middot; COXOFEMORAL", region: "Hip Joint & Pelvis", conditions: ["Femoroacetabular Impingement", "Labral Irritation"] },
+      { id: "13", title: "Sports Injury & ACL Rehab", tag: "13 &middot; SPORTS MEDICINE", region: "Knee & Lower Kinetic Chain", conditions: ["ACL Reconstruction", "Meniscal Tear Rehab"] },
+      { id: "14", title: "Post-Surgical Rehabilitation", tag: "14 &middot; RECOVERY PROTOCOL", region: "Orthopedic Reconstruction", conditions: ["Spinal Fusion Recovery", "Laminectomy Care"] }
     ];
 
     const grid = document.getElementById('galleryGrid');
@@ -608,7 +608,7 @@
         <div class="card-images">
           <div class="card-img-link" title="Full 1920x1080 Viewport" onclick="openLightbox('gallery/treatment-${item.id}-full.png')">
             <img src="gallery/treatment-${item.id}-full.png" alt="${item.title} Full View" loading="lazy">
-            <span class="img-label">1920 × 1080 Full</span>
+            <span class="img-label">1920 &times; 1080 Full</span>
           </div>
           <div class="card-img-link" title="Card Detail Crop" onclick="openLightbox('gallery/treatment-${item.id}-card.png')">
             <img src="gallery/treatment-${item.id}-card.png" alt="${item.title} Card Detail" loading="lazy">
@@ -619,7 +619,7 @@
           <div class="condition-pills">
             ${item.conditions.map(c => `<span class="pill">${c}</span>`).join('')}
           </div>
-          <a href="gallery/treatment-${item.id}-full.png" target="_blank" class="card-link">Full 1080p PNG ↗</a>
+          <a href="gallery/treatment-${item.id}-full.png" target="_blank" class="card-link">Full 1080p PNG &#8599;</a>
         </div>
       </div>
     `).join('');
