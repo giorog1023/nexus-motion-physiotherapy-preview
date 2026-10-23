@@ -5330,7 +5330,7 @@ void main() {
 
     vPos = pos;
     vWorldPos = worldPos.xyz;
-    vNormal = normalMatrix * normal;
+    vNormal = normalize(normalMatrix * normal);
     vViewDir = -vec3(modelViewMatrix * vec4(pos, 1.0));
     vDist = vWorldPos.x - cameraPosition.x;
 
@@ -5407,9 +5407,15 @@ void main() {
     color = mix(color, borderColor, borderMask);
     color = mix(color, textColor, textMask);
 
-    // Specular cyan rim on the 3D beveled edge of the physical card slab
+    // Refined glass panel bevel & edges (subtle rim glow, no bulky opaque plastic paint)
     float bevel = pow(vSide, 2.2);
-    color += borderColor * bevel * (0.85 - 0.30 * uAhead);
+    color += borderColor * bevel * (0.32 - 0.14 * uAhead);
+
+    // Specular glint on the polished glass edge bevel
+    vec3 lightDir = normalize(vec3(0.35, 0.85, 0.55));
+    vec3 halfVec = normalize(lightDir + viewDir);
+    float edgeSpec = pow(clamp(dot(normalize(vNormal), halfVec), 0.0, 1.0), 32.0);
+    color += (vec3(0.90, 0.98, 1.0) * 0.70 + borderColor * 0.30) * edgeSpec * bevel * 0.40;
 
     // Interactive hover response
     color += vec3(0.08, 0.25, 0.35) * uHover;
