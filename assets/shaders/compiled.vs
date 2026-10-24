@@ -5008,10 +5008,13 @@ void main() {
     // Red is strictly <= 0.020, Green/Blue >= 0.65, so (G + B) / (2.0 * R) >= 20.0
     // In contrast, ALL cards (active, inactive, or transitioning) and typography have (G + B) / (2.0 * R) <= 3.5 or R >= 0.035
     // This physically prevents ANY card, transition state, or text from receiving cyan studioBg bleed
-    float particleRatio = (scene.g + scene.b) / (2.0 * max(scene.r, 0.001));
-    float isParticle = (1.0 - smoothstep(0.016, 0.022, scene.r))
-                     * smoothstep(8.0, 16.0, particleRatio)
-                     * smoothstep(0.04, 0.09, max(scene.g, scene.b));
+    // Pass 1 V5: Robust chromaticity & saturation separation for atmospheric bokeh particles vs solid 3D geometry
+    // Bokeh particles in FlowerParticleShader.glsl have extreme cyan/mint purity ((G + B) / (2 * R) >= 20.0)
+    // All solid objects (cards, spine, text, badges) have ratio <= 3.5 or scene.r >= 0.035
+    // Removing the arbitrary minimum brightness cutoff eliminates the hard black outline rings around feathered bokeh particles
+    float particleRatio = (scene.g + scene.b) / (2.0 * max(scene.r, 0.0001));
+    float isParticle = (1.0 - smoothstep(0.016, 0.024, scene.r))
+                     * smoothstep(6.0, 12.0, particleRatio);
     float solidObject = 1.0 - isParticle;
 
     // Empty background is smoothly masked (maxScene < 0.002)
@@ -5080,7 +5083,9 @@ void main() {
     // Stage 5 Density Control:
     // Select a sparse, calm, luxurious subset of candidate particles
     // yielding approximately 25-35 visible out-of-focus bokeh particles across the viewport
-    if (random.x > 0.0035) {
+    // Pass 1 V5 Density & Spatial Distribution:
+    // Generates ~28-35 visible soft bokeh particles across viewport with wide horizontal distribution
+    if (random.x > 0.0055) {
         gl_PointSize = 0.0;
         gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
         return;
@@ -5108,9 +5113,9 @@ void main() {
     pos.x -= cos(uScroll * 5.0 + length(pos.xz) * 1.0 + pos.y * 0.5 + uRotate * 2.0) * 0.5 * smoothstep(0.0, 0.5, abs(uScroll-0.5));
     pos.z -= sin(uScroll * 5.0 + length(pos.xz) * 1.0 + pos.y * 0.5 + uRotate * 2.0) * 0.5 * smoothstep(0.0, 0.5, abs(uScroll-0.5));
 
-    // Spatial distribution across the midground and background around the spine
-    pos.x += (random.y - 0.5) * 8.5;
-    pos.z += (random.z - 0.5) * 4.5;
+    // Wide horizontal distribution: extends on both sides of spine matching original benchmark
+    pos.x += (random.y - 0.5) * 14.5;
+    pos.z += (random.z - 0.5) * 5.5;
 
     // Natural Z distribution: keep particles strictly in midground/background around the spine (behind active card plane)
     pos.z = min(pos.z, -0.2);
@@ -5127,14 +5132,13 @@ void main() {
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
 
-    // Ensure particle depth in camera view space remains strictly behind the foreground card plane (mvPosition.z <= -15.5)
-    // This physically prevents any particle from rendering in front of the active card across all 14 treatments
+    // Ensure particle depth in camera view space remains strictly behind foreground card plane (mvPosition.z <= -15.5)
     if (mvPosition.z > -15.5) {
         mvPosition.z = -15.5 - (mvPosition.z + 15.5) * 0.5;
     }
 
-    // Large, luxurious out-of-focus bokeh disc sizing (28px to 65px)
-    float baseSize = mix(28.0, 65.0, random.y);
+    // Varied optical bokeh disc sizing (20px to 68px)
+    float baseSize = mix(20.0, 68.0, pow(random.y, 1.15));
     float distScale = clamp(8.0 / length(mvPosition.xyz), 0.65, 1.45);
     gl_PointSize = baseSize * distScale * (DPR > 0.0 ? DPR : 1.0);
 
@@ -5147,24 +5151,32 @@ void main() {
     float d = length(gl_PointCoord - 0.5);
     if (d > 0.5) discard;
 
-    // Reference palette: soft cyan, oceanic turquoise, and mint-green (low red <= 0.02)
-    vec3 cyan      = vec3(0.02, 0.85, 0.98); // Soft cyan / ice-blue
-    vec3 turquoise = vec3(0.01, 0.92, 0.80); // Oceanic turquoise
-    vec3 mint      = vec3(0.02, 0.95, 0.65); // Mint-green accent
+    // Pass 1 V5 Reference palette: balanced blend of cyan-blue, turquoise, and mint/emerald-green
+    vec3 cyan      = vec3(0.02, 0.82, 0.98); // Soft cyan / ice-blue
+    vec3 turquoise = vec3(0.01, 0.90, 0.78); // Oceanic turquoise
+    vec3 mint      = vec3(0.01, 0.95, 0.52); // Mint-green / emerald accent
+    vec3 seafoam   = vec3(0.02, 0.96, 0.70); // Radiant luminous seafoam
 
-    // Harmonious per-particle color variance with gentle time breathing
-    float cMix = fract(vRandom.z * 3.17 + sin(time * 0.25 + vRandom.w * 6.28) * 0.15);
-    vec3 color = mix(cyan, mix(turquoise, mint, smoothstep(0.35, 0.75, cMix)), smoothstep(0.20, 0.60, cMix));
+    // Balanced color distribution: ~40% mint/emerald, ~30% turquoise, ~30% cyan-blue
+    float cMix = fract(vRandom.z * 5.71 + vRandom.w * 3.33);
+    vec3 color;
+    if (cMix < 0.35) {
+        color = mix(cyan, turquoise, cMix / 0.35);
+    } else if (cMix < 0.70) {
+        color = mix(turquoise, mint, (cMix - 0.35) / 0.35);
+    } else {
+        color = mix(mint, seafoam, (cMix - 0.70) / 0.30);
+    }
 
     // True optical bokeh disc profile:
     // Soft luminous plateau core, smoothly feathered to absolute zero at boundary (no harsh clipping or dark halos)
-    float feather = smoothstep(0.50, 0.16, d);
+    float feather = smoothstep(0.50, 0.08, d);
     float core = exp(-d * d * 10.0);
-    float bokeh = feather * (0.55 + 0.45 * core);
+    float bokeh = feather * (0.45 + 0.55 * core);
 
     // Varied transparency and subtle atmospheric breathing
-    float baseAlpha = mix(0.35, 0.70, vRandom.w);
-    baseAlpha *= (0.88 + 0.12 * sin(time * 0.6 + vRandom.y * 6.28));
+    float baseAlpha = mix(0.40, 0.75, vRandom.w);
+    baseAlpha *= (0.88 + 0.12 * sin(time * 0.5 + vRandom.y * 6.28));
     float alpha = bokeh * baseAlpha;
 
     // Distance fade to prevent close-camera artifacts

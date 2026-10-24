@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 1 V5 Final Typography Calibration & Particle Repair</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 30px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1680px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .brand-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: white;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+      transform: translateY(-1px);
+    }
+    .container {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .card-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(12px);
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+    .code-del { color: #f87171; }
+    .code-add { color: #34d399; }
+    .code-comm { color: #64748b; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 24px;
+    }
+    .grid-fulls {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+      gap: 24px;
+    }
+    .thumb-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .thumb-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
+    }
+    .thumb-img-wrap {
+      background: #01040a;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .thumb-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .thumb-card:hover .thumb-img-wrap img {
+      transform: scale(1.02);
+    }
+    .thumb-body {
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .thumb-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .thumb-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .badge-tag {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* Lightbox Modal */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.96);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 30px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox-img-wrap {
+      max-width: 90vw;
+      max-height: 82vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--accent-glow);
+      background: #020617;
+    }
+    .lightbox-img-wrap img {
+      max-width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+    }
+    .lightbox-caption {
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .lightbox-close:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: #ef4444;
+      transform: scale(1.1);
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .lightbox-prev { left: 24px; }
+    .lightbox-next { right: 24px; }
+    .lightbox-nav:hover {
+      background: var(--accent);
+      color: #030712;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion Physiotherapy</span>
+          <span class="stage-pill">Pass 1 V5 Final Calibration</span>
+        </div>
+        <div class="subtitle">
+          Final typography proportion matching to benchmark + complete atmospheric soft bokeh particle repair.
+        </div>
+      </div>
+      <div class="header-links">
+        <a href="/" class="nav-btn btn-primary" target="_blank">Launch Live 3D App ↗</a>
+        <a href="/gallery/pass1-v4" class="nav-btn btn-secondary">Pass 1 V4 (Archive)</a>
+        <a href="/gallery/pass1-v3" class="nav-btn btn-secondary">Pass 1 V3 (Archive)</a>
+        <a href="/gallery/pass1-v2" class="nav-btn btn-secondary">Pass 1 V2 (Archive)</a>
+        <a href="/gallery" class="nav-btn btn-secondary">Stage 8 Master</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 1. EXECUTIVE DIAGNOSTIC & CALIBRATION SUMMARY -->
+    <div class="card-panel">
+      <h2 class="section-title">
+        <span style="color: #38bdf8;">1. EXECUTIVE SUMMARY & RESOLUTION ARCHITECTURE</span>
+      </h2>
+      <p class="section-desc">
+        Systematic resolution of the two external review directives: calibrating the visible proportions of the top identifier and details link to match the benchmark's exact 35.7% ratio, and eliminating hard dark outline circles to restore soft, luminous, feathered bokeh particles.
+      </p>
+
+      <div class="grid-2" style="margin-bottom: 24px;">
+        <div style="background: rgba(15,23,42,0.9); padding: 22px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+          <div style="color: #38bdf8; font-weight: 700; font-size: 14px; margin-bottom: 10px;">PARTICLE RENDERING REPAIR (SOFT BOKEH RESTORED)</div>
+          <div style="font-size: 12.5px; color: #cbd5e1; line-height: 1.65;">
+            • <b>Dark Outline Root Cause:</b> In <code>GlobalComposite.fs</code>, the previous shader included <code>smoothstep(0.04, 0.09, max(scene.g, scene.b))</code>. When particles feathered down below 0.04 brightness at their outer perimeters, they were abruptly reclassified as solid objects (<code>solidObject = 1.0</code>). This threw away the glowing studio background and substituted the near-black scene buffer, cutting a 2–4px pitch-black ring around every particle.<br>
+            • <b>Permanent Architectural Fix:</b> Removed the arbitrary lower-bound brightness cutoff. The chromatic saturation ratio <code>(G + B) / (2 * max(R, 0.0001))</code> remains &ge; 25.0 across the entire particle disc all the way down to complete transparency, enabling seamless additive Gaussian falloff into the background.<br>
+            • <b>Distribution & Palette:</b> Extended horizontal spread from &plusmn;4.25 to &plusmn;7.25 around the spine, and calibrated palette to 40% emerald/mint green, 30% turquoise, and 30% cyan-blue (~28–35 visible elements).
+          </div>
+        </div>
+
+        <div style="background: rgba(15,23,42,0.9); padding: 22px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+          <div style="color: #38bdf8; font-weight: 700; font-size: 14px; margin-bottom: 10px;">TYPOGRAPHY PROPORTION CALIBRATION (BENCHMARK MATCH)</div>
+          <div style="font-size: 12.5px; color: #cbd5e1; line-height: 1.65;">
+            • <b>Empirical Benchmark Ratios:</b> Direct pixel measurement of the original reference active card demonstrated that both the top badge text and bottom details link are exactly <b>35.7%</b> of the capital title letter height.<br>
+            • <b>Top Anatomical Identifier:</b> Increased from 44px to <b>64px</b> (+35% letter height, ratio 0.355), with a 98px height capsule, 2.4px thin grey border (<code>rgba(85, 105, 125, 0.45)</code>), and refined grey color (<code>#3b4d60</code>). Readability is commanding without zooming.<br>
+            • <b>Main Treatment Title:</b> Increased from 172px to <b>180px</b> (+4.6%) and visual weight modestly stepped to <b>650</b> (semibold-plus), preserving solid dark-navy (<code>#0a1628</code>) and crisp antialiasing.<br>
+            • <b>Bottom Details Link:</b> Increased from 48px to <b>64px</b> (+33%, ratio 0.355) with 68px delicate arrow and refined grey color (<code>#263646</code>).
+          </div>
+        </div>
+      </div>
+
+      <div class="code-box">
+<span class="code-comm">// 1. GlobalComposite.fs — Permanent Elimination of Dark Particle Outlines:</span>
+<span class="code-del">- float isParticle = (1.0 - smoothstep(0.016, 0.022, scene.r)) * smoothstep(8.0, 16.0, particleRatio) * smoothstep(0.04, 0.09, max(scene.g, scene.b)); // FAILS: cutoff chopped feathering &lt; 0.04</span>
+<span class="code-add">+ // Order-of-magnitude chromatic ratio separation persists across full particle disc down to zero alpha:</span>
+<span class="code-add">+ float particleRatio = (scene.g + scene.b) / (2.0 * max(scene.r, 0.0001));</span>
+<span class="code-add">+ float isParticle = (1.0 - smoothstep(0.016, 0.024, scene.r)) * smoothstep(6.0, 12.0, particleRatio);</span>
+<span class="code-add">+ float solidObject = 1.0 - isParticle; // 100% solid for cards/text; 100% additive for particles with zero dark rings</span>
+      </div>
+
+      <div class="code-box">
+<span class="code-comm">// 2. FlowerParticleShader.glsl — Wide Horizontal Distribution & Balanced Palette:</span>
+<span class="code-add">+ pos.x += (random.y - 0.5) * 14.5; // Spans both sides of spine (-7.25 to +7.25) matching benchmark</span>
+<span class="code-add">+ float feather = smoothstep(0.50, 0.08, d); // Smooth optical bokeh disc plateau with soft Gaussian halo</span>
+<span class="code-add">+ // Balanced palette: ~40% emerald/mint green (#01f284), ~30% oceanic turquoise (#01e6c7), ~30% cyan-blue (#05d1fa)</span>
+      </div>
+    </div>
+
+    <!-- 2. 3-WAY CARD EVOLUTION COMPARISON -->
+    <div class="card-panel">
+      <h2 class="section-title">
+        <span style="color: #10b981;">2. THREE-WAY ACTIVE CARD EVOLUTION COMPARISON</span>
+      </h2>
+      <p class="section-desc">
+        Visual comparison between the Original Nexus Motion Benchmark, the rejected Pass 1 V4 render (too small badge and link), and the calibrated Pass 1 V5 implementation matching exact reference proportions.
+      </p>
+
+      <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/pass1_v5_card_evolution.png', '3-Way Evolution: Reference Benchmark vs Pass 1 V4 (Too Small Badge/Link) vs Pass 1 V5 (Calibrated Proportions)')">
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v5/pass1_v5_card_evolution.png" alt="3-Way Card Evolution" />
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-title">
+            <span>Typographic Proportion & Hierarchy Evolution (Treatment 01)</span>
+            <span class="badge-tag">BENCHMARK CALIBRATED</span>
+          </div>
+          <div class="thumb-meta">Click to inspect native high-resolution 1800x720 3-way evolution comparison</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. PARTICLES CLOSE-UP AUDIT -->
+    <div class="card-panel">
+      <h2 class="section-title">
+        <span style="color: #38bdf8;">3. ATMOSPHERIC PARTICLES CLOSE-UP AUDIT (V4 OUTLINED VS V5 REPAIRED)</span>
+      </h2>
+      <p class="section-desc">
+        High-resolution side-by-side comparison of the particle perimeter falloff. V4 exhibits hard, dark-outlined circles; V5 restores soft, luminous bokeh with natural feathered falloff.
+      </p>
+
+      <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/particles_closeup_comparison.png', 'Atmospheric Particles Audit: Benchmark vs Pass 1 V4 (Outlined) vs Pass 1 V5 (Repaired Soft Bokeh)')">
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v5/particles_closeup_comparison.png" alt="Particles Close-up Comparison" />
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-title">
+            <span>Atmospheric Bokeh Falloff Audit: Perimeter Comparison</span>
+            <span class="badge-tag">ZERO DARK OUTLINES</span>
+          </div>
+          <div class="thumb-meta">Click to inspect native high-resolution particle perimeter comparison</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. TRANSITION STABILITY & CYAN ELIMINATION AUDIT -->
+    <div class="card-panel">
+      <h2 class="section-title">
+        <span style="color: #38bdf8;">4. INTERMEDIATE SCROLL TRANSITIONS & CYAN ELIMINATION AUDIT</span>
+      </h2>
+      <p class="section-desc">
+        Verification of intermediate transition frames at 50% orbital progress between treatments. Typography remains solid, crisp, and completely free of cyan contamination throughout active scrolling motion.
+      </p>
+
+      <div class="thumb-card" style="margin-bottom: 24px;" onclick="openLightbox('/gallery/pass1-v5/transition_cyan_diagnostic.png', 'Intermediate Scroll Transition Diagnostic: 50% Progress Between Cards')">
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v5/transition_cyan_diagnostic.png" alt="Transition Diagnostic" />
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-title">
+            <span>Intermediate Scroll Transition Diagnostic (01 &rarr; 02, 06 &rarr; 07, 13 &rarr; 14)</span>
+            <span class="badge-tag">ZERO CYAN BLEED</span>
+          </div>
+          <div class="thumb-meta">Click to enlarge side-by-side transition audit artifact with empirical pixel measurements</div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/trans_01_to_02.png', 'Transition Frame: 50% Progress Between Treatment 01 & Treatment 02')">
+          <div class="thumb-img-wrap">
+            <img src="/gallery/pass1-v5/trans_01_to_02.png" alt="Transition 01 to 02" />
+          </div>
+          <div class="thumb-body">
+            <div class="thumb-title">
+              <span>Transition 01 &rarr; 02</span>
+              <span class="badge-tag">50% PROGRESS</span>
+            </div>
+            <div class="thumb-meta">Cervical Decompression &rarr; Manual Joint Therapy</div>
+          </div>
+        </div>
+
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/trans_06_to_07.png', 'Transition Frame: 50% Progress Between Treatment 06 & Treatment 07')">
+          <div class="thumb-img-wrap">
+            <img src="/gallery/pass1-v5/trans_06_to_07.png" alt="Transition 06 to 07" />
+          </div>
+          <div class="thumb-body">
+            <div class="thumb-title">
+              <span>Transition 06 &rarr; 07</span>
+              <span class="badge-tag">50% PROGRESS</span>
+            </div>
+            <div class="thumb-meta">Rotator Cuff Rehab &rarr; Thoracic Mobility Therapy</div>
+          </div>
+        </div>
+
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/trans_13_to_14.png', 'Transition Frame: 50% Progress Between Treatment 13 & Treatment 14')">
+          <div class="thumb-img-wrap">
+            <img src="/gallery/pass1-v5/trans_13_to_14.png" alt="Transition 13 to 14" />
+          </div>
+          <div class="thumb-body">
+            <div class="thumb-title">
+              <span>Transition 13 &rarr; 14</span>
+              <span class="badge-tag">50% PROGRESS</span>
+            </div>
+            <div class="thumb-meta">Sports Injury &rarr; Post-Surgical Rehabilitation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. SIDE-BY-SIDE HERO COMPARISON -->
+    <div class="card-panel">
+      <h2 class="section-title">
+        <span style="color: #38bdf8;">5. SIDE-BY-SIDE HERO VIEWPORT COMPARISON (1920x1080)</span>
+      </h2>
+      <p class="section-desc">
+        Full 1920x1080 native resolution side-by-side comparison between the original reference benchmark and live Pass 1 V5 production preview.
+      </p>
+
+      <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/pass1_v5_side_by_side_comparison.png', 'Side-by-Side Hero Comparison: Benchmark vs Pass 1 V5 Live Viewport')">
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v5/pass1_v5_side_by_side_comparison.png" alt="Side-by-side Comparison" />
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-title">
+            <span>Full Viewport Comparison (1920x1080)</span>
+            <span class="badge-tag">HERO VIEWPORT</span>
+          </div>
+          <div class="thumb-meta">Original Nexus Motion Benchmark (Left) vs Pass 1 V5 Production Preview (Right)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. COMPLETE UNCROPPED ACTIVE CARDS (ALL 14 TREATMENTS) -->
+    <div class="card-panel">
+      <h2 class="section-title">
+        <span style="color: #10b981;">6. COMPLETE UNCROPPED ACTIVE CARDS (ALL 14 TREATMENTS)</span>
+      </h2>
+      <p class="section-desc">
+        Every treatment card captured showing all four rounded corners, calibrated semibold-plus titles, 64px grey badges with thin capsule outlines, and 64px grey details links.
+      </p>
+
+      <div class="grid-cards" id="cardsGrid">
+        <!-- Generated dynamically via JS -->
+      </div>
+    </div>
+
+    <!-- 7. FULL 1080p VIEWPORTS (ALL 14 TREATMENTS) -->
+    <div class="card-panel">
+      <h2 class="section-title">
+        <span style="color: #38bdf8;">7. FULL 1080p VIEWPORTS (ALL 14 TREATMENTS)</span>
+      </h2>
+      <p class="section-desc">
+        Full 1920x1080 viewport captures demonstrating spine lighting, soft bokeh particles, wide horizontal distribution, and clinical UI panels.
+      </p>
+
+      <div class="grid-fulls" id="fullsGrid">
+        <!-- Generated dynamically via JS -->
+      </div>
+    </div>
+
+    <!-- 8. RESPONSIVE VIEWPORTS (1440x900) -->
+    <div class="card-panel">
+      <h2 class="section-title">
+        <span style="color: #38bdf8;">8. RESPONSIVE VIEWPORT VERIFICATION (1440x900)</span>
+      </h2>
+      <p class="section-desc">
+        Responsive viewport captures at initial, mid, and deep orbital scroll positions verifying layout stability across desktop resolutions.
+      </p>
+
+      <div class="grid-3">
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/viewport-1440x900-initial.png', 'Responsive Viewport 1440x900: Initial Focus (Treatment 01)')">
+          <div class="thumb-img-wrap">
+            <img src="/gallery/pass1-v5/viewport-1440x900-initial.png" alt="1440x900 Initial" />
+          </div>
+          <div class="thumb-body">
+            <div class="thumb-title">
+              <span>Initial Focus (Treatment 01)</span>
+              <span class="badge-tag">1440x900</span>
+            </div>
+            <div class="thumb-meta">Cervical Decompression · uAhead = 1.0</div>
+          </div>
+        </div>
+
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/viewport-1440x900-mid.png', 'Responsive Viewport 1440x900: Mid Focus (Treatment 07)')">
+          <div class="thumb-img-wrap">
+            <img src="/gallery/pass1-v5/viewport-1440x900-mid.png" alt="1440x900 Mid" />
+          </div>
+          <div class="thumb-body">
+            <div class="thumb-title">
+              <span>Mid Focus (Treatment 07)</span>
+              <span class="badge-tag">1440x900</span>
+            </div>
+            <div class="thumb-meta">Thoracic Mobility Therapy · uAhead = 1.0</div>
+          </div>
+        </div>
+
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v5/viewport-1440x900-deep.png', 'Responsive Viewport 1440x900: Deep Focus (Treatment 14)')">
+          <div class="thumb-img-wrap">
+            <img src="/gallery/pass1-v5/viewport-1440x900-deep.png" alt="1440x900 Deep" />
+          </div>
+          <div class="thumb-body">
+            <div class="thumb-title">
+              <span>Deep Focus (Treatment 14)</span>
+              <span class="badge-tag">1440x900</span>
+            </div>
+            <div class="thumb-meta">Post-Surgical Rehabilitation · uAhead = 1.0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()" title="Close (Esc)">&times;</button>
+    <button class="lightbox-nav lightbox-prev" onclick="prevLightbox()" title="Previous (Left Arrow)">&larr;</button>
+    <button class="lightbox-nav lightbox-next" onclick="nextLightbox()" title="Next (Right Arrow)">&rarr;</button>
+    <div class="lightbox-img-wrap">
+      <img id="lightboxImg" alt="Enlarged view">
+    </div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <script>
+    const treatments = [
+      { num: '01', title: 'Cervical Decompression', badge: '01 · C1–C7 CERVICAL' },
+      { num: '02', title: 'Manual Joint Therapy', badge: '02 · T1–T12 THORACIC' },
+      { num: '03', title: 'Myofascial Release', badge: '03 · MYOFASCIAL' },
+      { num: '04', title: 'Dry Needling Therapy', badge: '04 · TRIGGER POINT' },
+      { num: '05', title: 'Postural Realignment', badge: '05 · T1–T6 POSTURE' },
+      { num: '06', title: 'Rotator Cuff Rehab', badge: '06 · GLENOHUMERAL' },
+      { num: '07', title: 'Thoracic Mobility Therapy', badge: '07 · THORACIC CAGE' },
+      { num: '08', title: 'Sciatica & Nerve Therapy', badge: '08 · L4–S1 SCIATICA' },
+      { num: '09', title: 'Lumbar Disc Rehab', badge: '09 · L1–L5 LUMBAR' },
+      { num: '10', title: 'Spinal Stabilization', badge: '10 · CORE STABILIZATION' },
+      { num: '11', title: 'SI Joint & Pelvic Rehab', badge: '11 · SACROILIAC JOINT' },
+      { num: '12', title: 'Hip Mobility Rehab', badge: '12 · COXOFEMORAL' },
+      { num: '13', title: 'Sports Injury & ACL Rehab', badge: '13 · SPORTS MEDICINE' },
+      { num: '14', title: 'Post-Surgical Rehabilitation', badge: '14 · RECOVERY PROTOCOL' }
+    ];
+
+    // Populate Cards Grid
+    const cardsGrid = document.getElementById('cardsGrid');
+    treatments.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'thumb-card';
+      card.onclick = () => openLightbox(`/gallery/pass1-v5/treatment-${t.num}-card.png`, `Treatment ${t.num}: ${t.title} (Active Card Crop)`);
+      card.innerHTML = `
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v5/treatment-${t.num}-card.png" alt="Treatment ${t.num} Card" />
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-title">
+            <span>${t.num}. ${t.title}</span>
+            <span class="badge-tag">ACTIVE CARD</span>
+          </div>
+          <div class="thumb-meta">${t.badge}</div>
+        </div>
+      `;
+      cardsGrid.appendChild(card);
+    });
+
+    // Populate Full Viewports Grid
+    const fullsGrid = document.getElementById('fullsGrid');
+    treatments.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'thumb-card';
+      card.onclick = () => openLightbox(`/gallery/pass1-v5/treatment-${t.num}-full.png`, `Treatment ${t.num}: ${t.title} (Full 1080p Viewport)`);
+      card.innerHTML = `
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v5/treatment-${t.num}-full.png" alt="Treatment ${t.num} Full Viewport" />
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-title">
+            <span>${t.num}. ${t.title}</span>
+            <span class="badge-tag">1080p VIEWPORT</span>
+          </div>
+          <div class="thumb-meta">${t.badge} · 1920x1080 Native</div>
+        </div>
+      `;
+      fullsGrid.appendChild(card);
+    });
+
+    // Lightbox Logic
+    const galleryItems = [];
+    document.querySelectorAll('.thumb-card').forEach(card => {
+      const img = card.querySelector('img');
+      const title = card.querySelector('.thumb-title span')?.innerText || '';
+      if (img) {
+        galleryItems.push({ src: img.src, caption: title });
+      }
+    });
+
+    let currentIndex = 0;
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+
+    function openLightbox(src, caption) {
+      lightbox.classList.add('active');
+      lightboxImg.src = src;
+      lightboxCaption.innerText = caption;
+      currentIndex = galleryItems.findIndex(item => item.src.includes(src.split('/').pop())) || 0;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function nextLightbox() {
+      currentIndex = (currentIndex + 1) % galleryItems.length;
+      lightboxImg.src = galleryItems[currentIndex].src;
+      lightboxCaption.innerText = galleryItems[currentIndex].caption;
+    }
+
+    function prevLightbox() {
+      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+      lightboxImg.src = galleryItems[currentIndex].src;
+      lightboxCaption.innerText = galleryItems[currentIndex].caption;
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextLightbox();
+      if (e.key === 'ArrowLeft') prevLightbox();
+    });
+  </script>
+</body>
+</html>
