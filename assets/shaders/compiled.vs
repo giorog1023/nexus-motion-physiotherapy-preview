@@ -5374,8 +5374,8 @@ void main() {
 
     // Optical frosted refraction of the spine behind the card
     vec2 ruv = gl_FragCoord.xy / resolution;
-    ruv -= 0.024 * norm.xy;
-    vec3 spineRefr = radialBlur(tRefraction, ruv, 5.0, 5.0).rgb;
+    ruv -= 0.018 * norm.xy;
+    vec3 spineRefr = radialBlur(tRefraction, ruv, 10.0, 6.0).rgb;
 
     // Sample card texture using the planar front-face coordinates
     vec2 cardUV = clamp(vCardUV, 0.0, 1.0);
@@ -5390,7 +5390,7 @@ void main() {
     // Perimeter rim glow along the glass card front boundary (clean shader-driven edge, zero cyan bleed into text)
     vec2 edgeDist = min(cardUV, 1.0 - cardUV);
     float rimDistance = min(edgeDist.x * 1.538, edgeDist.y);
-    float perimeterGlow = smoothstep(0.024, 0.002, rimDistance) * frontFacing;
+    float perimeterGlow = smoothstep(0.026, 0.003, rimDistance) * frontFacing;
 
     // uAhead: 1.0 when card is in active foreground focus, 0.0 when orbiting in background
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
@@ -5399,43 +5399,41 @@ void main() {
     vec3 lightDir = normalize(vec3(0.35, 0.85, 0.55));
     vec3 halfVec = normalize(lightDir + viewDir);
 
-    // 1. INACTIVE BACKGROUND CARDS: Translucent rich cyan-blue glass
-    // - Clear transmission of spine through oceanic glass with soft turquoise edge glow
-    vec3 cyanTint = vec3(0.08, 0.32, 0.46);
-    vec3 cyanBlue = mix(cyanTint, spineRefr * 0.88 + vec3(0.08, 0.20, 0.28), 0.55);
-    cyanBlue += vec3(0.04, 0.16, 0.26); // Ambient internal depth
-    // Soft turquoise edge illumination and internal grazing reflections
-    float inactiveFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.0);
-    vec3 turquoiseGlow = vec3(0.12, 0.85, 0.98);
-    cyanBlue += turquoiseGlow * inactiveFresnel * 0.55;
-    // Subtle specular glaze on inactive glass surface
+    // 1. INACTIVE BACKGROUND CARDS: Translucent oceanic cyan-blue glass (#47687b to #5e869f matching reference)
+    // Clear optical transmission of spine & background through oceanic glass with soft turquoise reflections
+    vec3 oceanicBase = vec3(0.14, 0.36, 0.50);
+    vec3 inactiveGlass = mix(oceanicBase, spineRefr * 0.88 + vec3(0.08, 0.20, 0.28), 0.55);
+    inactiveGlass += vec3(0.04, 0.16, 0.26); // Ambient internal depth
+    float inactiveFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.2);
+    vec3 turquoiseGlow = vec3(0.15, 0.86, 0.98);
+    inactiveGlass += turquoiseGlow * inactiveFresnel * 0.50;
     float inactiveSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 20.0);
-    cyanBlue += vec3(0.70, 0.92, 1.0) * inactiveSpec * 0.20;
+    inactiveGlass += vec3(0.70, 0.92, 1.0) * inactiveSpec * 0.22;
     vec3 inactiveTextColor = vec3(0.96, 0.98, 1.00); // Pure crisp white
-    vec3 inactiveBorderColor = vec3(0.05, 0.90, 1.00); // Luminous electric cyan
+    vec3 inactiveBorderColor = vec3(0.12, 0.90, 1.00); // Luminous electric cyan
 
-    // 2. ACTIVE FOREGROUND CARD: Luminous frosted milky-white glass
-    // - Pearlescent milky-white frosted base with soft spine illumination through the frosted glass
-    vec3 milkyBase = vec3(0.90, 0.94, 0.97);
-    float spinePresence = clamp(length(spineRefr) * 0.85, 0.0, 1.0);
-    vec3 spineFrosted = mix(milkyBase, spineRefr * 0.95 + vec3(0.05, 0.10, 0.15), 0.40);
-    vec3 frostedWhite = mix(milkyBase, spineFrosted, spinePresence);
+    // 2. ACTIVE FOREGROUND CARD: Luminous frosted milky-white glass (#daf2f7 to #a4b1ba matching reference)
+    // Pearlescent milky-white frosted base with soft spine transmission through the frosted glass
+    vec3 frostedMilky = vec3(0.82, 0.92, 0.96);
+    float spineLuma = dot(spineRefr, vec3(0.299, 0.587, 0.114));
+    vec3 spineTransmitted = mix(frostedMilky, spineRefr * 1.05 + vec3(0.06, 0.12, 0.18), 0.44);
+    vec3 frostedWhite = mix(frostedMilky, spineTransmitted, clamp(spineLuma * 1.6, 0.15, 0.88));
     // Studio diffuse lighting on the card face
     float diffLight = dot(norm, normalize(vec3(0.25, 0.80, 0.45))) * 0.5 + 0.5;
-    frostedWhite *= (0.94 + 0.10 * diffLight);
+    frostedWhite *= (0.95 + 0.08 * diffLight);
     // Surface specular glaze (smooth Blinn-Phong highlight)
     float activeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 28.0);
-    frostedWhite += vec3(0.96, 0.99, 1.0) * activeSpec * 0.25;
+    frostedWhite += vec3(0.96, 0.99, 1.0) * activeSpec * 0.28;
     // Soft cyan and mint edge Fresnel reflections
-    float activeFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.2);
-    vec3 cyanMintRim = mix(vec3(0.30, 0.90, 0.98), vec3(0.35, 0.98, 0.80), 0.35);
-    frostedWhite += cyanMintRim * activeFresnel * 0.40;
+    float activeFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.5);
+    vec3 cyanMintRim = mix(vec3(0.35, 0.92, 1.00), vec3(0.38, 0.98, 0.84), 0.35);
+    frostedWhite += cyanMintRim * activeFresnel * 0.45;
     vec3 activeTextColor = vec3(0.05, 0.09, 0.16); // Deep clinical slate-navy (#0d1729 strictly matching reference)
-    vec3 activeBorderColor = vec3(0.45, 0.90, 0.98); // Luminous cyan-mint ice
+    vec3 activeBorderColor = vec3(0.40, 0.92, 1.00); // Luminous cyan-mint ice
 
     // 3. BLUE-TO-WHITE MATERIAL & TYPOGRAPHY TRANSITION
     // Smooth orbital material interpolation
-    vec3 glassBody = mix(cyanBlue, frostedWhite, uAhead);
+    vec3 glassBody = mix(inactiveGlass, frostedWhite, uAhead);
     vec3 borderColor = mix(inactiveBorderColor, activeBorderColor, uAhead);
     // High-contrast typography transition: text is white on cyan-blue and navy on white frosted glass,
     // transitioning rapidly between 0.30 and 0.70 to prevent muddy mid-grey dropouts
