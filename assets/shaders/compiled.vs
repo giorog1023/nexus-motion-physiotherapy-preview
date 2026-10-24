@@ -5004,11 +5004,12 @@ void main() {
 
     // Blend 3D scene over studio background
     float maxScene = max(scene.r, max(scene.g, scene.b));
-    float objMask = smoothstep(0.005, 0.04, maxScene);
+    float objMask = smoothstep(0.002, 0.015, maxScene);
 
-    // Prevent particles and transparent fringes from ever darkening the studio background:
+    // Solid objects (spine, cards, active dark text at maxScene ~0.16) render cleanly with true contrast.
+    // Faint atmospheric particle halos (maxScene < 0.04) smoothly blend over the studio background.
     vec3 sceneBlended = max(studioBg, scene.rgb);
-    float solidObject = smoothstep(0.12, 0.35, maxScene);
+    float solidObject = smoothstep(0.015, 0.045, maxScene);
     vec3 sceneColor = mix(sceneBlended, scene.rgb, solidObject);
 
     vec3 color = mix(studioBg, sceneColor, objMask);
@@ -5328,9 +5329,8 @@ void main() {
     vec3 pos = position;
 
     // Planar front-face UV mapping directly from local Euclidean Cartesian coordinates:
-    // pos.x in [-0.37639, +0.37639] maps to [1.0, 0.0] (matching front-facing orientation)
-    // pos.y in [-0.37639, +0.37639] maps to [1.0, 0.0] bottom-to-top (matching image rows)
-    vCardUV = vec2(0.5 - pos.x / 0.75278, 0.5 - pos.y / 0.75278);
+    // cube.bin front face has pos.x and pos.y in [-0.37982, +0.37982] (span: 0.75964)
+    vCardUV = vec2(0.5 - pos.x / 0.75964, 0.5 - pos.y / 0.75964);
     vFrontFace = normal.z > 0.5 ? 1.0 : 0.0;
 
     pos.z += sin(time * 0.5 + abs(0.5-pos.x) * 3.0) * 0.05 + uHover * 0.1;
@@ -5351,7 +5351,7 @@ void main() {
         vUv.x = 1.0 - vUv.x;
         vBackface = 1.0;
     }
-    vSide = abs(normal.x);
+    vSide = max(abs(normal.x), abs(normal.y));
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }
 
@@ -5384,11 +5384,13 @@ void main() {
     // Front-facing mask to keep typography strictly on the front face of the 3D card slab
     float frontFacing = vFrontFace * smoothstep(0.10, 0.45, norm.z);
 
-    // Channel-isolated masks:
-    // White text has high R, high G, and high A
-    float textMask = smoothstep(0.20, 0.60, cardTex.r) * smoothstep(0.10, 0.50, cardTex.a) * frontFacing;
-    // Cyan border has low R, high B, and high A
-    float borderMask = (1.0 - smoothstep(0.15, 0.45, cardTex.r)) * smoothstep(0.20, 0.65, cardTex.b) * smoothstep(0.10, 0.50, cardTex.a) * frontFacing;
+    // Channel-isolated typography mask (pure white text with crisp alpha)
+    float textMask = smoothstep(0.15, 0.55, cardTex.r) * smoothstep(0.10, 0.60, cardTex.a) * frontFacing;
+
+    // Perimeter rim glow along the glass card front boundary (clean shader-driven edge, zero cyan bleed into text)
+    vec2 edgeDist = min(cardUV, 1.0 - cardUV);
+    float rimDistance = min(edgeDist.x * 1.538, edgeDist.y);
+    float perimeterGlow = smoothstep(0.024, 0.002, rimDistance) * frontFacing;
 
     // uAhead: 1.0 when card is in active foreground focus, 0.0 when orbiting in background
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
@@ -5428,7 +5430,7 @@ void main() {
     float activeFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.2);
     vec3 cyanMintRim = mix(vec3(0.30, 0.90, 0.98), vec3(0.35, 0.98, 0.80), 0.35);
     frostedWhite += cyanMintRim * activeFresnel * 0.40;
-    vec3 activeTextColor = vec3(0.04, 0.08, 0.15); // Deep clinical slate-navy
+    vec3 activeTextColor = vec3(0.05, 0.09, 0.16); // Deep clinical slate-navy (#0d1729 strictly matching reference)
     vec3 activeBorderColor = vec3(0.45, 0.90, 0.98); // Luminous cyan-mint ice
 
     // 3. BLUE-TO-WHITE MATERIAL & TYPOGRAPHY TRANSITION
@@ -5436,13 +5438,13 @@ void main() {
     vec3 glassBody = mix(cyanBlue, frostedWhite, uAhead);
     vec3 borderColor = mix(inactiveBorderColor, activeBorderColor, uAhead);
     // High-contrast typography transition: text is white on cyan-blue and navy on white frosted glass,
-    // transitioning rapidly between 0.35 and 0.65 to prevent muddy mid-grey dropouts
-    float textBlend = smoothstep(0.35, 0.65, uAhead);
+    // transitioning rapidly between 0.30 and 0.70 to prevent muddy mid-grey dropouts
+    float textBlend = smoothstep(0.30, 0.70, uAhead);
     vec3 textColor = mix(inactiveTextColor, activeTextColor, textBlend);
 
     // Composite layers
     vec3 color = glassBody;
-    color = mix(color, borderColor, borderMask);
+    color = mix(color, borderColor, perimeterGlow * (0.65 - 0.20 * uAhead));
     color = mix(color, textColor, textMask);
 
     // Refined glass panel bevel & edges (subtle rim glow, no bulky opaque plastic paint)
