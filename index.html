@@ -62,23 +62,23 @@
 
     .interactive-card {
       pointer-events: auto;
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      background: rgba(14, 23, 39, 0.72);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      background: rgba(18, 28, 44, 0.78);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
-      border-radius: 18px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      border-radius: 22px;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .interactive-card:hover {
       border-color: rgba(56, 189, 248, 0.25);
-      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.50);
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
 
     /* TOP-LEFT: BRAND LOGO */
     .brand-header {
       position: absolute;
-      top: 24px;
+      top: 26px;
       left: 32px;
       display: flex;
       align-items: center;
@@ -109,15 +109,16 @@
       position: absolute;
       top: 24px;
       right: 28px;
-      width: 310px;
-      padding: 18px 20px;
+      width: 380px;
+      box-sizing: border-box;
+      padding: 24px 26px;
       display: flex;
       flex-direction: column;
       z-index: 10;
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
     }
     .detail-drawer.closed {
-      transform: translateX(360px);
+      transform: translateX(440px);
       opacity: 0;
       pointer-events: none;
     }
@@ -125,14 +126,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 12px;
+      padding-bottom: 14px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
     .icon-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 9px;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.09);
       display: flex;
@@ -148,34 +149,37 @@
       border-color: rgba(56, 189, 248, 0.35);
     }
     .drawer-section-title {
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 600;
       color: #FFFFFF;
       letter-spacing: -0.01em;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .pill-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 7px;
+      gap: 8px;
       align-items: flex-start;
+      max-width: 100%;
     }
     .med-pill {
       display: inline-flex;
       align-items: center;
-      padding: 5px 14px;
+      padding: 6px 15px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.11);
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 500;
       color: #CBD5E1;
-      white-space: nowrap;
+      max-width: 100%;
+      word-break: break-word;
+      line-height: 1.35;
     }
     .drawer-divider {
       height: 1px;
       background: rgba(255, 255, 255, 0.08);
-      margin: 14px 0;
+      margin: 16px 0 18px 0;
     }
     .protocol-metrics-row {
       display: flex;
@@ -189,56 +193,56 @@
     }
     .protocol-metric-divider {
       width: 1px;
-      height: 38px;
+      height: 42px;
       background: rgba(255, 255, 255, 0.10);
-      margin: 0 16px;
+      margin: 0 20px;
     }
     .protocol-value-line {
       display: flex;
       align-items: baseline;
-      gap: 3px;
+      gap: 4px;
     }
     .protocol-num {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
       color: #FFFFFF;
       letter-spacing: -0.03em;
       line-height: 1;
     }
     .protocol-unit {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 500;
       color: #FFFFFF;
     }
     .protocol-sublabel {
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 400;
       color: #94A3B8;
-      margin-top: 2px;
+      margin-top: 4px;
     }
     .schedule-btn {
       width: 100%;
-      height: 40px;
-      margin-top: 16px;
-      border-radius: 10px;
-      background: #12D59B;
+      height: 44px;
+      margin-top: 20px;
+      border-radius: 12px;
+      background: #10B981;
       border: none;
       color: #04241B;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      box-shadow: 0 8px 24px rgba(18, 213, 155, 0.28);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .schedule-btn:hover {
       background: #0EBA85;
       color: #FFFFFF;
       transform: translateY(-1px);
-      box-shadow: 0 10px 28px rgba(18, 213, 155, 0.38);
+      box-shadow: 0 10px 28px rgba(16, 185, 129, 0.38);
     }
 
     /* BOTTOM-RIGHT: BIOMECHANICAL EVALUATION CTA */
@@ -246,8 +250,9 @@
       position: absolute;
       bottom: 28px;
       right: 28px;
-      width: 310px;
-      padding: 18px 20px;
+      width: 340px;
+      box-sizing: border-box;
+      padding: 22px 24px;
       display: flex;
       flex-direction: column;
       z-index: 10;
@@ -258,52 +263,52 @@
       gap: 10px;
     }
     .cta-status-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background: #12D59B;
-      box-shadow: 0 0 10px #12D59B;
+      background: #10B981;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.70);
       margin-top: 4px;
       flex-shrink: 0;
     }
     .cta-title-group {
       display: flex;
       flex-direction: column;
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 800;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: #FFFFFF;
       line-height: 1.25;
     }
     .cta-body {
-      font-size: 12px;
-      line-height: 1.45;
+      font-size: 12.5px;
+      line-height: 1.50;
       color: #94A3B8;
       font-weight: 400;
-      margin: 10px 0 14px 0;
+      margin: 12px 0 18px 0;
     }
     .cta-btn {
       width: 100%;
-      height: 40px;
-      border-radius: 10px;
-      background: #12D59B;
+      height: 44px;
+      border-radius: 12px;
+      background: #10B981;
       border: none;
       color: #04241B;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      box-shadow: 0 8px 24px rgba(18, 213, 155, 0.25);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .cta-btn:hover {
       background: #0EBA85;
       color: #FFFFFF;
       transform: translateY(-1px);
-      box-shadow: 0 10px 28px rgba(18, 213, 155, 0.35);
+      box-shadow: 0 10px 28px rgba(16, 185, 129, 0.38);
     }
 
     /* BOTTOM-LEFT: ANATOMICAL FOCUS (01 / 14) */
@@ -311,14 +316,15 @@
       position: absolute;
       bottom: 28px;
       left: 32px;
-      width: 300px;
-      padding: 18px 20px;
+      width: 320px;
+      box-sizing: border-box;
+      padding: 20px 22px;
       display: flex;
       flex-direction: column;
       z-index: 10;
     }
     .focus-header {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       letter-spacing: 0.08em;
       color: #94A3B8;
@@ -331,7 +337,7 @@
     .focus-divider {
       height: 1px;
       background: rgba(255, 255, 255, 0.08);
-      margin: 10px 0 12px 0;
+      margin: 12px 0 14px 0;
     }
     .focus-list {
       display: flex;
@@ -343,9 +349,9 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 12.5px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
       font-weight: 500;
       color: #64748B;
       cursor: pointer;
@@ -353,7 +359,7 @@
       border: 1.5px solid transparent;
     }
     .focus-item .item-num {
-      font-size: 12.5px;
+      font-size: 13px;
       color: #64748B;
       font-variant-numeric: tabular-nums;
     }
@@ -363,19 +369,19 @@
       text-overflow: ellipsis;
     }
     .focus-item.active {
-      color: #12D59B;
-      background: rgba(18, 213, 155, 0.05);
-      border-color: rgba(18, 213, 155, 0.85);
-      box-shadow: 0 0 14px rgba(18, 213, 155, 0.18);
+      color: #10B981;
+      background: rgba(16, 185, 129, 0.07);
+      border-color: #10B981;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.18);
       font-weight: 600;
     }
     .focus-item.active .item-num {
-      color: #12D59B;
+      color: #10B981;
       font-weight: 600;
     }
     .focus-item:not(.active):hover {
       color: #94A3B8;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.04);
     }
 
     /* CENTER SCROLL HINT */
@@ -405,17 +411,27 @@
     }
 
     /* Responsive Adaptations */
-    @media (max-width: 1200px) {
-      .detail-drawer { width: 280px; padding: 16px 18px; top: 16px; right: 20px; }
-      .cta-card { width: 280px; padding: 16px 18px; bottom: 20px; right: 20px; }
-      .focus-panel { width: 270px; padding: 16px 18px; bottom: 20px; left: 24px; }
-      .brand-header { top: 18px; left: 24px; }
+    @media (max-width: 1440px) {
+      .detail-drawer { width: 340px; padding: 20px 22px; top: 20px; right: 24px; }
+      .cta-card { width: 310px; padding: 18px 20px; bottom: 22px; right: 24px; }
+      .focus-panel { width: 290px; padding: 18px 20px; bottom: 22px; left: 24px; }
+      .brand-header { top: 20px; left: 26px; }
     }
 
-    @media (max-height: 750px) {
-      .detail-drawer { padding: 14px 16px; top: 12px; }
-      .cta-card { padding: 14px 16px; bottom: 12px; }
-      .focus-panel { padding: 14px 16px; bottom: 12px; }
+    @media (max-width: 1100px) {
+      .detail-drawer { width: 300px; padding: 16px 18px; top: 16px; right: 18px; }
+      .cta-card { width: 280px; padding: 16px 18px; bottom: 18px; right: 18px; }
+      .focus-panel { width: 270px; padding: 16px 18px; bottom: 18px; left: 18px; }
+      .brand-header { top: 16px; left: 20px; }
+    }
+
+    @media (max-height: 800px) {
+      .detail-drawer { padding: 16px 20px; top: 14px; }
+      .cta-card { padding: 16px 20px; bottom: 14px; }
+      .focus-panel { padding: 16px 20px; bottom: 14px; }
+      .drawer-divider { margin: 12px 0 14px 0; }
+      .schedule-btn { margin-top: 14px; }
+      .cta-body { margin: 8px 0 12px 0; }
     }
   </style>
 
