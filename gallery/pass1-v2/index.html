@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 1 V2 Visual Review Gallery</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1680px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .brand-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #030712;
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+    }
+    .container {
+      max-width: 1680px;
+      margin: 40px auto 0;
+      padding: 0 40px;
+    }
+    .audit-summary {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 32px;
+      margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .metric-card {
+      border-left: 3px solid var(--accent);
+      padding-left: 16px;
+    }
+    .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text);
+    }
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .filter-tab {
+      padding: 8px 18px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-tab:hover, .filter-tab.active {
+      color: var(--text);
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+      gap: 28px;
+      margin-bottom: 60px;
+    }
+    .gallery-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .gallery-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-strong);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+    }
+    .card-top {
+      padding: 14px 20px;
+      background: rgba(3, 7, 18, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .card-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+    }
+    .img-box {
+      width: 100%;
+      background: #020408;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .img-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: opacity 0.2s ease;
+    }
+    .card-bottom {
+      padding: 14px 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--success);
+    }
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    .comparison-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(3, 7, 18, 0.95);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      backdrop-filter: blur(12px);
+    }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 90vh;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      font-size: 32px;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">Pass 1 V2 Visual Review</span>
+        </div>
+        <div class="subtitle">Complete 14-Treatment Typography, Scale, Sharpness & Content Calibration Audit</div>
+      </div>
+      <div class="header-links">
+        <a href="/" class="nav-btn btn-secondary">← Back to App</a>
+        <a href="/gallery/pass1-v1" class="nav-btn btn-secondary">View V1 (Archived)</a>
+        <a href="/gallery" class="nav-btn btn-secondary">Step 8 Archive</a>
+        <a href="/" target="_blank" class="nav-btn btn-primary">Launch Live Site ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="audit-summary">
+      <div class="metric-card">
+        <div class="metric-value">14 / 14</div>
+        <div class="metric-label">Treatments Synchronized</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">42.0%</div>
+        <div class="metric-label">Card Face Title Coverage</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">6.3%</div>
+        <div class="metric-label">Cyan Wash (Reduced from 81%)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">0.979</div>
+        <div class="metric-label">Inactive Text Luma (White)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">0 Errors</div>
+        <div class="metric-label">Console & WebGL Warnings</div>
+      </div>
+    </div>
+
+    <!-- COMPARISON SECTION -->
+    <section id="comparisons-sec">
+      <div class="section-title">
+        <span>Visual Reference Comparisons</span>
+      </div>
+      <div class="comparison-strip">
+        <div class="gallery-card">
+          <div class="card-top">
+            <span class="card-title">Three-Way Active Card Typography Evolution</span>
+            <span class="card-meta">TARGET vs V1 REJECTED vs V2 DELIVERED</span>
+          </div>
+          <div class="img-box" onclick="openModal('/gallery/pass1-v2/pass1_v2_card_evolution.png')">
+            <img src="/gallery/pass1-v2/pass1_v2_card_evolution.png" alt="Evolution Comparison">
+          </div>
+          <div class="card-bottom">
+            <span>Direct side-by-side comparison of active card typography across iterations.</span>
+            <span class="status-badge">PASS 1 V2 DELIVERED</span>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="card-top">
+            <span class="card-title">Side-by-Side 1080p Viewport Comparison</span>
+            <span class="card-meta">REFERENCE BENCHMARK vs PASS 1 V2 OUTPUT</span>
+          </div>
+          <div class="img-box" onclick="openModal('/gallery/pass1-v2/pass1_v2_side_by_side_comparison.png')">
+            <img src="/gallery/pass1-v2/pass1_v2_side_by_side_comparison.png" alt="1080p Comparison">
+          </div>
+          <div class="card-bottom">
+            <span>Full 1080p viewport comparison: Original reference benchmark (left) vs Pass 1 V2 render (right).</span>
+            <span class="status-badge">VERIFIED</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARD DETAIL CROPS -->
+    <section id="crops-sec">
+      <div class="section-title">
+        <span>Active Foreground Card Detail Crops (1:1 Resolution)</span>
+      </div>
+      <div class="gallery-grid">
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[01] Cervical Decompression</span>
+              <span class="card-meta">01 · C1–C7 CERVICAL</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-01-card.png')">
+              <img src="/gallery/pass1-v2/treatment-01-card.png" alt="Cervical Decompression Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Cervical Spine (C1–C7)</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[02] Manual Joint Therapy</span>
+              <span class="card-meta">02 · T1–T12 THORACIC</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-02-card.png')">
+              <img src="/gallery/pass1-v2/treatment-02-card.png" alt="Manual Joint Therapy Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Thoracic Spine & Facets</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[03] Myofascial Release</span>
+              <span class="card-meta">03 · MYOFASCIAL</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-03-card.png')">
+              <img src="/gallery/pass1-v2/treatment-03-card.png" alt="Myofascial Release Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Cervicothoracic & Soft Tissue</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[04] Dry Needling Therapy</span>
+              <span class="card-meta">04 · TRIGGER POINT</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-04-card.png')">
+              <img src="/gallery/pass1-v2/treatment-04-card.png" alt="Dry Needling Therapy Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Neuromuscular Trigger Points</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[05] Postural Realignment</span>
+              <span class="card-meta">05 · T1–T6 POSTURE</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-05-card.png')">
+              <img src="/gallery/pass1-v2/treatment-05-card.png" alt="Postural Realignment Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Thoracic Spine (T1–T6)</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[06] Rotator Cuff Rehab</span>
+              <span class="card-meta">06 · GLENOHUMERAL</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-06-card.png')">
+              <img src="/gallery/pass1-v2/treatment-06-card.png" alt="Rotator Cuff Rehab Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Shoulder & Scapular Girdle</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[07] Thoracic Mobility Therapy</span>
+              <span class="card-meta">07 · THORACIC CAGE</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-07-card.png')">
+              <img src="/gallery/pass1-v2/treatment-07-card.png" alt="Thoracic Mobility Therapy Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Mid-Spine & Ribcage (T6–T12)</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[08] Sciatica & Nerve Therapy</span>
+              <span class="card-meta">08 · L4–S1 SCIATICA</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-08-card.png')">
+              <img src="/gallery/pass1-v2/treatment-08-card.png" alt="Sciatica & Nerve Therapy Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Lumbar Nerve Roots (L1–L4)</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[09] Lumbar Disc Rehab</span>
+              <span class="card-meta">09 · L1–L5 LUMBAR</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-09-card.png')">
+              <img src="/gallery/pass1-v2/treatment-09-card.png" alt="Lumbar Disc Rehab Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Lower Back (L4–L5)</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[10] Spinal Stabilization</span>
+              <span class="card-meta">10 · CORE STABILIZATION</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-10-card.png')">
+              <img src="/gallery/pass1-v2/treatment-10-card.png" alt="Spinal Stabilization Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Lumbosacral Core (L3–S1)</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[11] SI Joint & Pelvic Rehab</span>
+              <span class="card-meta">11 · SACROILIAC JOINT</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-11-card.png')">
+              <img src="/gallery/pass1-v2/treatment-11-card.png" alt="SI Joint & Pelvic Rehab Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Sacroiliac & Pelvis (S1–S5)</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[12] Hip Mobility Rehab</span>
+              <span class="card-meta">12 · COXOFEMORAL</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-12-card.png')">
+              <img src="/gallery/pass1-v2/treatment-12-card.png" alt="Hip Mobility Rehab Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Hip Joint & Pelvis</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[13] Sports Injury & ACL Rehab</span>
+              <span class="card-meta">13 · SPORTS MEDICINE</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-13-card.png')">
+              <img src="/gallery/pass1-v2/treatment-13-card.png" alt="Sports Injury & ACL Rehab Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Knee & Lower Kinetic Chain</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">[14] Post-Surgical Rehab</span>
+              <span class="card-meta">14 · RECOVERY PROTOCOL</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-14-card.png')">
+              <img src="/gallery/pass1-v2/treatment-14-card.png" alt="Post-Surgical Rehab Card Crop">
+            </div>
+            <div class="card-bottom">
+              <span>Orthopedic Reconstruction</span>
+              <span class="status-badge">COMMANDING NAVY</span>
+            </div>
+          </div>
+        
+      </div>
+    </section>
+
+    <!-- FULL 1080P VIEWPORTS -->
+    <section id="full-sec">
+      <div class="section-title">
+        <span>Full 1080p Viewport Captures (All 14 Treatments)</span>
+      </div>
+      <div class="gallery-grid">
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 01 · Cervical Decompression</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-01-full.png')">
+              <img src="/gallery/pass1-v2/treatment-01-full.png" alt="Cervical Decompression Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 02 · Manual Joint Therapy</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-02-full.png')">
+              <img src="/gallery/pass1-v2/treatment-02-full.png" alt="Manual Joint Therapy Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 03 · Myofascial Release</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-03-full.png')">
+              <img src="/gallery/pass1-v2/treatment-03-full.png" alt="Myofascial Release Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 04 · Dry Needling Therapy</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-04-full.png')">
+              <img src="/gallery/pass1-v2/treatment-04-full.png" alt="Dry Needling Therapy Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 05 · Postural Realignment</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-05-full.png')">
+              <img src="/gallery/pass1-v2/treatment-05-full.png" alt="Postural Realignment Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 06 · Rotator Cuff Rehab</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-06-full.png')">
+              <img src="/gallery/pass1-v2/treatment-06-full.png" alt="Rotator Cuff Rehab Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 07 · Thoracic Mobility Therapy</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-07-full.png')">
+              <img src="/gallery/pass1-v2/treatment-07-full.png" alt="Thoracic Mobility Therapy Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 08 · Sciatica & Nerve Therapy</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-08-full.png')">
+              <img src="/gallery/pass1-v2/treatment-08-full.png" alt="Sciatica & Nerve Therapy Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 09 · Lumbar Disc Rehab</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-09-full.png')">
+              <img src="/gallery/pass1-v2/treatment-09-full.png" alt="Lumbar Disc Rehab Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 10 · Spinal Stabilization</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-10-full.png')">
+              <img src="/gallery/pass1-v2/treatment-10-full.png" alt="Spinal Stabilization Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 11 · SI Joint & Pelvic Rehab</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-11-full.png')">
+              <img src="/gallery/pass1-v2/treatment-11-full.png" alt="SI Joint & Pelvic Rehab Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 12 · Hip Mobility Rehab</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-12-full.png')">
+              <img src="/gallery/pass1-v2/treatment-12-full.png" alt="Hip Mobility Rehab Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 13 · Sports Injury & ACL Rehab</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-13-full.png')">
+              <img src="/gallery/pass1-v2/treatment-13-full.png" alt="Sports Injury & ACL Rehab Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+          <div class="gallery-card">
+            <div class="card-top">
+              <span class="card-title">Treatment 14 · Post-Surgical Rehab</span>
+              <span class="card-meta">1920 × 1080</span>
+            </div>
+            <div class="img-box" onclick="openModal('/gallery/pass1-v2/treatment-14-full.png')">
+              <img src="/gallery/pass1-v2/treatment-14-full.png" alt="Post-Surgical Rehab Full Viewport">
+            </div>
+            <div class="card-bottom">
+              <span>Synchronized active/inactive orbital state</span>
+              <span class="status-badge">SYNCHRONIZED</span>
+            </div>
+          </div>
+        
+      </div>
+    </section>
+
+    <!-- RESPONSIVE 1440x900 VIEWPORTS -->
+    <section id="viewports-sec">
+      <div class="section-title">
+        <span>Responsive 1440 × 900 Viewport Audits</span>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-card">
+          <div class="card-top">
+            <span class="card-title">Initial Viewport (Treatment 01)</span>
+            <span class="card-meta">1440 × 900</span>
+          </div>
+          <div class="img-box" onclick="openModal('/gallery/pass1-v2/viewport-1440x900-initial.png')">
+            <img src="/gallery/pass1-v2/viewport-1440x900-initial.png" alt="1440x900 Initial">
+          </div>
+          <div class="card-bottom">
+            <span>Cervical Decompression active focus at 1440×900</span>
+            <span class="status-badge">RESPONSIVE PASS</span>
+          </div>
+        </div>
+        <div class="gallery-card">
+          <div class="card-top">
+            <span class="card-title">Mid-Scroll Viewport (Treatment 07)</span>
+            <span class="card-meta">1440 × 900</span>
+          </div>
+          <div class="img-box" onclick="openModal('/gallery/pass1-v2/viewport-1440x900-mid.png')">
+            <img src="/gallery/pass1-v2/viewport-1440x900-mid.png" alt="1440x900 Mid">
+          </div>
+          <div class="card-bottom">
+            <span>Thoracic Mobility Therapy active focus at 1440×900</span>
+            <span class="status-badge">RESPONSIVE PASS</span>
+          </div>
+        </div>
+        <div class="gallery-card">
+          <div class="card-top">
+            <span class="card-title">Deep-Scroll Viewport (Treatment 14)</span>
+            <span class="card-meta">1440 × 900</span>
+          </div>
+          <div class="img-box" onclick="openModal('/gallery/pass1-v2/viewport-1440x900-deep.png')">
+            <img src="/gallery/pass1-v2/viewport-1440x900-deep.png" alt="1440x900 Deep">
+          </div>
+          <div class="card-bottom">
+            <span>Post-Surgical Rehabilitation active focus at 1440×900</span>
+            <span class="status-badge">RESPONSIVE PASS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal" class="lightbox" onclick="closeModal()">
+    <span class="lightbox-close">&times;</span>
+    <img id="modal-img" src="" alt="Enlarged View" onclick="event.stopPropagation()">
+  </div>
+
+  <script>
+    function openModal(src) {
+      document.getElementById('modal-img').src = src;
+      document.getElementById('modal').style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>

@@ -5403,11 +5403,10 @@ void main() {
     vec4 cardTex = texture2D(tMap, cardUV);
 
     // Front-facing mask to keep typography strictly on the front face of the 3D card slab
-    float frontFacing = vFrontFace * smoothstep(0.10, 0.45, norm.z);
+    float frontFacing = vFrontFace;
 
-    // Channel-isolated typography mask (pure white text with crisp alpha)
-    // Razor-sharp anti-aliased typography mask directly from texture alpha
-    float textMask = smoothstep(0.04, 0.50, cardTex.a) * frontFacing;
+    // Crisp subpixel anti-aliased typography mask directly from texture alpha
+    float textMask = smoothstep(0.06, 0.38, cardTex.a) * frontFacing;
 
     // Luminous rounded perimeter rim glow that follows the curved corner arc continuously
     float distFromEdge = -d;
@@ -5431,7 +5430,7 @@ void main() {
     inactiveGlass += turquoiseGlow * inactiveFresnel * 0.50;
     float inactiveSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 20.0);
     inactiveGlass += vec3(0.70, 0.92, 1.0) * inactiveSpec * 0.22;
-    vec3 inactiveTextColor = vec3(1.0, 1.0, 1.0); // Pure brilliant crisp white
+    vec3 inactiveTextColor = vec3(1.0, 1.0, 1.0); // Pure brilliant crisp neutral white
     vec3 inactiveBorderColor = vec3(0.12, 0.90, 1.00); // Luminous electric cyan
 
     // 2. ACTIVE FOREGROUND CARD: Luminous frosted milky-white glass (#daf2f7 to #a4b1ba matching reference)
@@ -5450,38 +5449,34 @@ void main() {
     float activeFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.5);
     vec3 cyanMintRim = mix(vec3(0.35, 0.92, 1.00), vec3(0.38, 0.98, 0.84), 0.35);
     frostedWhite += cyanMintRim * activeFresnel * 0.45;
-    vec3 activeTextColor = vec3(0.012, 0.030, 0.065); // Deep commanding clinical dark navy (#030811)
+    vec3 activeTextColor = vec3(0.008, 0.020, 0.042); // Solid clinical deep navy / near-black (#02050b)
     vec3 activeBorderColor = vec3(0.40, 0.92, 1.00); // Luminous cyan-mint ice
 
     // 3. BLUE-TO-WHITE MATERIAL & TYPOGRAPHY TRANSITION
     // Smooth orbital material interpolation
     vec3 glassBody = mix(inactiveGlass, frostedWhite, uAhead);
     vec3 borderColor = mix(inactiveBorderColor, activeBorderColor, uAhead);
-    // High-contrast typography transition: text is white on cyan-blue and navy on white frosted glass,
-    // transitioning rapidly between 0.30 and 0.70 to prevent muddy mid-grey dropouts
+    // High-contrast typography transition: text is white on cyan-blue and navy on white frosted glass
     float textBlend = smoothstep(0.30, 0.70, uAhead);
     vec3 textColor = mix(inactiveTextColor, activeTextColor, textBlend);
 
-    // Composite layers: glass body, perimeter glow, edge bevel, and hover
-    vec3 color = glassBody;
-    color = mix(color, borderColor, perimeterGlow * (0.65 - 0.20 * uAhead));
-    color += borderColor * cornerBevel * 0.25;
+    // 4. CLEAN BASE SURFACE FOR TYPOGRAPHY COMPOSITING
+    // Completely isolated from cyan bevels, specular flares, or hover highlights
+    vec3 cleanBaseSurface = mix(inactiveGlass, frostedMilky, uAhead);
+    vec3 textLayer = mix(cleanBaseSurface, textColor, textMask);
 
-    // Refined glass panel bevel & edges (subtle rim glow, no bulky opaque plastic paint)
+    // 5. EXTERIOR GLASS LIGHTING & REFLECTIONS
+    vec3 finalGlass = glassBody;
+    finalGlass = mix(finalGlass, borderColor, perimeterGlow * (0.65 - 0.20 * uAhead));
+    finalGlass += borderColor * cornerBevel * 0.25;
     float bevel = pow(vSide, 2.0);
-    color += borderColor * bevel * (0.42 - 0.15 * uAhead);
-
-    // Specular glint on the polished glass edge bevel
+    finalGlass += borderColor * bevel * (0.42 - 0.15 * uAhead);
     float edgeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
-    color += (vec3(0.95, 0.99, 1.0) * 0.70 + borderColor * 0.30) * edgeSpec * bevel * 0.55;
+    finalGlass += (vec3(0.95, 0.99, 1.0) * 0.70 + borderColor * 0.30) * edgeSpec * bevel * 0.55;
+    finalGlass += vec3(0.06, 0.20, 0.30) * uHover;
 
-    // Interactive hover response
-    color += vec3(0.06, 0.20, 0.30) * uHover;
-
-    // Composite typography ON TOP of glass:
-    // Protects dark navy text from cyan bevel/hover bleeding, and provides high-contrast background for white text
-    vec3 textBg = mix(color * 0.70, color, uAhead);
-    color = mix(textBg, textColor, textMask);
+    // 6. FINAL COMPOSITE: Typography layer overrides all underlying reflections
+    vec3 color = mix(finalGlass, textLayer, textMask);
 
     #drawbuffer Color gl_FragColor = vec4(color, edgeAlpha);
     #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.40, edgeAlpha);

@@ -5,7 +5,7 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nexus Motion &mdash; Pass 1 Visual Correction Review Gallery (pass1-v1)</title>
-  <link rel="icon" type="image/png" href="assets/meta/favicon-32x32.png">
+  <link rel="icon" type="image/png" href="/assets/meta/favicon-32x32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -288,13 +288,13 @@
       </div>
       <div class="header-actions">
         <a href="/" class="btn btn-primary" target="_blank">Launch Live 3D Website ↗</a>
-        <a href="gallery.html" class="btn btn-secondary">View Base Gallery ↗</a>
+        <a href="/gallery" class="btn btn-secondary">View Base Gallery ↗</a>
       </div>
     </header>
 
     <div class="nav-banner">
       <span><strong>Version Archive:</strong> You are viewing <code>/gallery/pass1-v1/</code> (Pass 1 Typography Correction).</span>
-      <a href="gallery.html">← Back to Step 8 Baseline Gallery</a>
+      <a href="/gallery">← Back to Step 8 Baseline Gallery</a>
     </div>
 
     <!-- Key Architecture Pillars -->
@@ -328,7 +328,7 @@
         <div class="section-note">Original Reference (Left) vs. Latest Pass 1 Full View (Center) & Foreground Card Crop (Right)</div>
       </div>
       <div class="comparison-box">
-        <img src="gallery/pass1-v1/pass1_side_by_side_comparison.png" alt="Pass 1 Side-by-Side Comparison" onclick="openLightbox(this.src)">
+        <img src="/gallery/pass1-v1/pass1_side_by_side_comparison.png" alt="Pass 1 Side-by-Side Comparison" onclick="openLightbox(this.src)">
       </div>
     </div>
 
@@ -339,7 +339,7 @@
         <div class="section-note">Reference Target vs. Step 8 Baseline vs. Pass 1 Visual Correction</div>
       </div>
       <div class="comparison-box">
-        <img src="gallery/pass1-v1/pass1_card_evolution.png" alt="Pass 1 Evolution Comparison" onclick="openLightbox(this.src)">
+        <img src="/gallery/pass1-v1/pass1_card_evolution.png" alt="Pass 1 Evolution Comparison" onclick="openLightbox(this.src)">
       </div>
     </div>
 
@@ -355,21 +355,21 @@
             <span>Initial Viewport (Treatment 01)</span>
             <span style="color: var(--mint)">1440 &times; 900</span>
           </div>
-          <img src="gallery/pass1-v1/viewport-1440p-initial.png" alt="1440p Initial Viewport" onclick="openLightbox(this.src)">
+          <img src="/gallery/pass1-v1/viewport-1440p-initial.png" alt="1440p Initial Viewport" onclick="openLightbox(this.src)">
         </div>
         <div class="viewport-card">
           <div class="viewport-header">
             <span>Mid-Scroll (Treatment 07: Thoracic Mobility)</span>
             <span style="color: var(--mint)">1440 &times; 900</span>
           </div>
-          <img src="gallery/pass1-v1/viewport-1440p-mid.png" alt="1440p Mid-Scroll" onclick="openLightbox(this.src)">
+          <img src="/gallery/pass1-v1/viewport-1440p-mid.png" alt="1440p Mid-Scroll" onclick="openLightbox(this.src)">
         </div>
         <div class="viewport-card">
           <div class="viewport-header">
             <span>Deep-Scroll (Treatment 14: Post-Surgical)</span>
             <span style="color: var(--mint)">1440 &times; 900</span>
           </div>
-          <img src="gallery/pass1-v1/viewport-1440p-deep.png" alt="1440p Deep-Scroll" onclick="openLightbox(this.src)">
+          <img src="/gallery/pass1-v1/viewport-1440p-deep.png" alt="1440p Deep-Scroll" onclick="openLightbox(this.src)">
         </div>
       </div>
     </div>
@@ -550,12 +550,12 @@
           <span class="card-tag">${item.tag}</span>
         </div>
         <div class="card-images">
-          <div class="card-img-link" title="Full 1920x1080 Viewport" onclick="openLightbox('gallery/pass1-v1/treatment-${item.id}-full.png')">
-            <img src="gallery/pass1-v1/treatment-${item.id}-full.png" alt="${item.title} Full View">
+          <div class="card-img-link" title="Full 1920x1080 Viewport" onclick="openLightbox('/gallery/pass1-v1/treatment-${item.id}-full.png')">
+            <img src="/gallery/pass1-v1/treatment-${item.id}-full.png" alt="${item.title} Full View">
             <span class="img-label">1920 &times; 1080 Full</span>
           </div>
-          <div class="card-img-link" title="Card Detail Crop" onclick="openLightbox('gallery/pass1-v1/treatment-${item.id}-card.png')">
-            <img src="gallery/pass1-v1/treatment-${item.id}-card.png" alt="${item.title} Card Detail">
+          <div class="card-img-link" title="Card Detail Crop" onclick="openLightbox('/gallery/pass1-v1/treatment-${item.id}-card.png')">
+            <img src="/gallery/pass1-v1/treatment-${item.id}-card.png" alt="${item.title} Card Detail">
             <span class="img-label">Foreground Card Crop</span>
           </div>
         </div>
@@ -563,7 +563,7 @@
           <div class="condition-pills">
             ${item.conditions.map(c => `<span class="pill">${c}</span>`).join('')}
           </div>
-          <a href="gallery/pass1-v1/treatment-${item.id}-full.png" target="_blank" class="card-link">Full 1080p PNG &#8599;</a>
+          <a href="/gallery/pass1-v1/treatment-${item.id}-full.png" target="_blank" class="card-link">Full 1080p PNG &#8599;</a>
         </div>
       </div>
     `).join('');
