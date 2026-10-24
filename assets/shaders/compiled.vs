@@ -5003,16 +5003,22 @@ void main() {
     studioBg += cervicalColor * cervicalAccent * 0.60;
 
     // Blend 3D scene over studio background
-    float maxScene = max(scene.r, max(scene.g, scene.b));
-    float objMask = smoothstep(0.002, 0.015, maxScene);
+    // Identify active foreground card screen region (maintains pristine white frosted glass & clinical dark text)
+    bool inActiveCard = (vUv.x > 0.34 && vUv.x < 0.66 && vUv.y > 0.14 && vUv.y < 0.54);
 
-    // Solid objects (spine, cards, active dark text at maxScene ~0.16) render cleanly with true contrast.
-    // Faint atmospheric particle halos (maxScene < 0.04) smoothly blend over the studio background.
-    vec3 sceneBlended = max(studioBg, scene.rgb);
-    float solidObject = smoothstep(0.015, 0.045, maxScene);
-    vec3 sceneColor = mix(sceneBlended, scene.rgb, solidObject);
+    // Identify solid 3D meshes (pearl-white spine, active card, inactive orbital cards)
+    bool isSpine = (scene.r > 0.20 && abs(scene.r - scene.g) < 0.10 && abs(scene.g - scene.b) < 0.10);
+    bool isCard = inActiveCard || (scene.b > 0.35 && scene.r > 0.10);
+    bool isSolid = isSpine || isCard;
 
-    vec3 color = mix(studioBg, sceneColor, objMask);
+    vec3 color;
+    if (isSolid) {
+        // Solid objects composite cleanly with full anatomical contrast and zero washout
+        color = scene.rgb;
+    } else {
+        // Atmospheric space: out-of-focus bokeh particles additively illuminate the studio background
+        color = studioBg + scene.rgb;
+    }
 
     gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
 }{@}ChainShader.glsl{@}#!ATTRIBUTES
@@ -5067,9 +5073,9 @@ const float PI = 3.1415926535897932384626433832795;
 
 void main() {
     // Stage 5 Density Control:
-    // Out of 16,384 vertices, select a sparse subset (~25-35 particles in view)
-    // exactly reproducing the calm, luxurious atmospheric density of the Nexus Motion reference
-    if (random.x > 0.0020) {
+    // Select a sparse, calm, luxurious subset of candidate particles
+    // yielding approximately 25-35 visible out-of-focus bokeh particles across the viewport
+    if (random.x > 0.0018) {
         gl_PointSize = 0.0;
         gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
         return;
@@ -5099,10 +5105,10 @@ void main() {
 
     // Spatial distribution across the midground and background around the spine
     pos.x += (random.y - 0.5) * 8.5;
-    pos.z += (random.z - 0.5) * 5.0;
+    pos.z += (random.z - 0.5) * 4.5;
 
-    // Keep particles in background/midground, never intruding into the foreground card plane
-    pos.z = min(pos.z, 0.3);
+    // Natural Z distribution: keep particles strictly in midground/background around the spine (behind active card plane)
+    pos.z = min(pos.z, -0.2);
 
     vec3 worldPos = vec3(modelMatrix * vec4(pos, 1.0));
     vWorldPos = worldPos;
@@ -5116,9 +5122,15 @@ void main() {
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
 
-    // Large, luxurious out-of-focus bokeh disc sizing (35px to 75px)
-    float baseSize = mix(35.0, 75.0, random.y);
-    float distScale = clamp(7.5 / length(mvPosition.xyz), 0.65, 1.45);
+    // Ensure particle depth in camera view space remains strictly behind the foreground card plane (mvPosition.z <= -15.0)
+    // This physically prevents any particle from rendering in front of the active card across all 14 treatments
+    if (mvPosition.z > -15.0) {
+        mvPosition.z = -15.0 - (mvPosition.z + 15.0) * 0.5;
+    }
+
+    // Large, luxurious out-of-focus bokeh disc sizing (28px to 65px)
+    float baseSize = mix(28.0, 65.0, random.y);
+    float distScale = clamp(8.0 / length(mvPosition.xyz), 0.65, 1.45);
     gl_PointSize = baseSize * distScale * (DPR > 0.0 ? DPR : 1.0);
 
     gl_Position = projectionMatrix * mvPosition;
@@ -5127,39 +5139,34 @@ void main() {
 #!SHADER: Fragment
 
 void main() {
-    vec2 uv = vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y);
-    float d = length(uv - 0.5);
+    float d = length(gl_PointCoord - 0.5);
     if (d > 0.5) discard;
 
-    // Reference palette: luminous cyan, oceanic turquoise, and soft mint-green
-    vec3 cyan      = vec3(0.18, 0.88, 0.98);
-    vec3 turquoise = vec3(0.08, 0.92, 0.82);
-    vec3 mint      = vec3(0.12, 0.95, 0.65);
+    // Reference palette: soft cyan, oceanic turquoise, and mint-green
+    vec3 cyan      = vec3(0.20, 0.85, 0.98); // Soft cyan / ice-blue
+    vec3 turquoise = vec3(0.10, 0.90, 0.82); // Oceanic turquoise
+    vec3 mint      = vec3(0.14, 0.94, 0.66); // Mint-green accent
 
     // Harmonious per-particle color variance with gentle time breathing
-    float cMix = fract(vRandom.z * 3.17 + sin(time * 0.3 + vRandom.w * 6.28) * 0.2);
+    float cMix = fract(vRandom.z * 3.17 + sin(time * 0.25 + vRandom.w * 6.28) * 0.15);
     vec3 color = mix(cyan, mix(turquoise, mint, smoothstep(0.35, 0.75, cMix)), smoothstep(0.20, 0.60, cMix));
 
-    // Optical Bokeh disc profile:
-    // Soft luminous glowing center, gently feathered Gaussian transparent rim
-    float rim = smoothstep(0.50, 0.15, d);
-    float core = exp(-d * d * 8.0);
-    float bokeh = (core * 0.50 + rim * 0.50);
+    // True optical bokeh disc profile:
+    // Soft luminous plateau core, smoothly feathered to absolute zero at boundary (no harsh clipping or dark halos)
+    float feather = smoothstep(0.50, 0.18, d);
+    float core = exp(-d * d * 10.0);
+    float bokeh = feather * (0.55 + 0.45 * core);
 
-    // Varied transparency and subtle breathing pulse
-    float baseAlpha = mix(0.25, 0.65, vRandom.w);
-    baseAlpha *= (0.88 + 0.12 * sin(time * 0.7 + vRandom.y * 6.28));
+    // Varied transparency and subtle atmospheric breathing
+    float baseAlpha = mix(0.30, 0.70, vRandom.w);
+    baseAlpha *= (0.88 + 0.12 * sin(time * 0.6 + vRandom.y * 6.28));
     float alpha = bokeh * baseAlpha;
 
     // Distance fade to prevent close-camera artifacts
-    float depthFade = smoothstep(2.5, 4.5, vDist);
+    float depthFade = smoothstep(2.5, 5.0, vDist);
     alpha *= depthFade;
 
-    // Foreground active card clearance: strictly ensure no particles render over the foreground card
-    float cardZone = smoothstep(1.0, 2.6, length(vec2(vWorldPos.x - 3.8, vWorldPos.y)));
-    alpha *= cardZone;
-
-    // Emissive light output (zero dark halos)
+    // Luminous emissive output (zero dark halos)
     vec3 emissive = color * alpha;
 
     #drawbuffer Color gl_FragColor = vec4(emissive, 0.0);
