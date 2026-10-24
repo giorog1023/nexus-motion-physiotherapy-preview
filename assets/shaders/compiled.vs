@@ -5003,10 +5003,15 @@ void main() {
     studioBg += cervicalColor * cervicalAccent * 0.60;
 
     // Blend 3D scene over studio background
-    // Identify atmospheric bokeh particles vs solid 3D surfaces (spine, glass card, and dark navy typography)
-    // Bokeh particles are luminous emissive cyan/mint (high green/blue > 0.045, low red < 0.025)
-    // Dark typography (#02050b) is dark absorbing pigment (max(G,B) <= 0.045) and must NEVER be treated as additive particles
-    float isParticle = smoothstep(0.045, 0.10, max(scene.g, scene.b)) * (1.0 - smoothstep(0.025, 0.06, scene.r));
+    // Robust chromaticity & saturation separation for atmospheric bokeh particles vs solid 3D geometry
+    // Bokeh particles in FlowerParticleShader.glsl have extreme cyan/mint purity:
+    // Red is strictly <= 0.020, Green/Blue >= 0.65, so (G + B) / (2.0 * R) >= 20.0
+    // In contrast, ALL cards (active, inactive, or transitioning) and typography have (G + B) / (2.0 * R) <= 3.5 or R >= 0.035
+    // This physically prevents ANY card, transition state, or text from receiving cyan studioBg bleed
+    float particleRatio = (scene.g + scene.b) / (2.0 * max(scene.r, 0.001));
+    float isParticle = (1.0 - smoothstep(0.016, 0.022, scene.r))
+                     * smoothstep(8.0, 16.0, particleRatio)
+                     * smoothstep(0.04, 0.09, max(scene.g, scene.b));
     float solidObject = 1.0 - isParticle;
 
     // Empty background is smoothly masked (maxScene < 0.002)
@@ -5407,8 +5412,9 @@ void main() {
     // Front-facing mask to keep typography strictly on the front face of the 3D card slab
     float frontFacing = vFrontFace;
 
-    // Crisp subpixel anti-aliased typography mask directly from texture alpha
-    float textMask = smoothstep(0.06, 0.38, cardTex.a) * frontFacing;
+    // Natural, un-dilated typography coverage mask from texture alpha
+    // No artificial smoothstep thresholding: preserves natural subpixel antialiasing and true font stroke weight
+    float textMask = cardTex.a * frontFacing;
 
     // Luminous rounded perimeter rim glow that follows the curved corner arc continuously
     float distFromEdge = -d;
@@ -5451,15 +5457,17 @@ void main() {
     float activeFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.5);
     vec3 cyanMintRim = mix(vec3(0.35, 0.92, 1.00), vec3(0.38, 0.98, 0.84), 0.35);
     frostedWhite += cyanMintRim * activeFresnel * 0.45;
-    vec3 activeTextColor = vec3(0.008, 0.020, 0.042); // Solid clinical deep navy / near-black (#02050b)
+    
+    // Inactive text is pure white; Active card typography uses calibrated reference colors directly from texture RGB
+    // (Title: commanding dark navy #0a1628; Top Badge: medium-grey slate #3b4d60; Bottom Link: medium-dark grey #263646)
+    vec3 activeTextColor = cardTex.rgb;
     vec3 activeBorderColor = vec3(0.40, 0.92, 1.00); // Luminous cyan-mint ice
 
     // 3. BLUE-TO-WHITE MATERIAL & TYPOGRAPHY TRANSITION
-    // Smooth orbital material interpolation
     vec3 glassBody = mix(inactiveGlass, frostedWhite, uAhead);
     vec3 borderColor = mix(inactiveBorderColor, activeBorderColor, uAhead);
-    // High-contrast typography transition: text is white on cyan-blue and navy on white frosted glass
-    float textBlend = smoothstep(0.30, 0.70, uAhead);
+    // Seamless orbital typography transition from pure white on oceanic glass to calibrated dark navy/grey on frosted glass
+    float textBlend = smoothstep(0.25, 0.75, uAhead);
     vec3 textColor = mix(inactiveTextColor, activeTextColor, textBlend);
 
     // 4. EXTERIOR GLASS LIGHTING & REFLECTIONS
@@ -5472,8 +5480,8 @@ void main() {
     finalGlass += (vec3(0.95, 0.99, 1.0) * 0.70 + borderColor * 0.30) * edgeSpec * bevel * 0.55;
     finalGlass += vec3(0.06, 0.20, 0.30) * uHover;
 
-    // 5. FINAL COMPOSITE: Crisp linear alpha blend of typography directly onto polished glass surface
-    // Completely solid dark navy (#02050b) for active card, pure crisp white for inactive cards, zero double-mix halo
+    // 5. FINAL COMPOSITE: Pure linear alpha coverage directly onto polished glass surface
+    // Preserves true font-weight 600, thin grey capsule outline, and razor-sharp subpixel antialiasing
     vec3 color = mix(finalGlass, textColor, textMask);
 
     #drawbuffer Color gl_FragColor = vec4(color, edgeAlpha);
