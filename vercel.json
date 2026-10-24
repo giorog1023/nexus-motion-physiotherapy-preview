@@ -3,6 +3,19 @@
   "trailingSlash": false,
   "headers": [
     {
+      "source": "/_external/us-central1-at-services.cloudfunctions.net/geo(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -21,6 +34,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/_external/us-central1-at-services.cloudfunctions.net/geo",
+      "destination": "/_external/us-central1-at-services.cloudfunctions.net/geo.json"
+    },
     {
       "source": "/work",
       "destination": "/index.html"
