@@ -5377,6 +5377,21 @@ void main() {
     ruv -= 0.018 * norm.xy;
     vec3 spineRefr = radialBlur(tRefraction, ruv, 10.0, 6.0).rgb;
 
+    // 2D Euclidean aspect-corrected card surface coordinates for rounded silhouette SDF
+    vec2 cardCoord = (vCardUV - 0.5) * vec2(1.53642, 1.0);
+    vec2 halfExtents = vec2(0.5 * 1.53642, 0.5);
+    float cornerRadius = 0.082; // Luxurious rounded corner radius matching reference
+
+    // Signed distance to rounded rectangle boundary (d < 0 inside, d == 0 on edge, d > 0 outside)
+    vec2 q = abs(cardCoord) - halfExtents + vec2(cornerRadius);
+    float d = min(max(q.x, q.y), 0.0) + length(max(q, vec2(0.0))) - cornerRadius;
+
+    // Discard fragments protruding outside the rounded corner silhouette
+    // Anti-aliased outer edge mask
+    float edgeWidth = max(fwidth(d), 0.0015);
+    float edgeAlpha = clamp(1.0 - d / edgeWidth, 0.0, 1.0);
+    if (edgeAlpha < 0.02) discard;
+
     // Sample card texture using the planar front-face coordinates
     vec2 cardUV = clamp(vCardUV, 0.0, 1.0);
     vec4 cardTex = texture2D(tMap, cardUV);
@@ -5387,10 +5402,10 @@ void main() {
     // Channel-isolated typography mask (pure white text with crisp alpha)
     float textMask = smoothstep(0.15, 0.55, cardTex.r) * smoothstep(0.10, 0.60, cardTex.a) * frontFacing;
 
-    // Perimeter rim glow along the glass card front boundary (clean shader-driven edge, zero cyan bleed into text)
-    vec2 edgeDist = min(cardUV, 1.0 - cardUV);
-    float rimDistance = min(edgeDist.x * 1.538, edgeDist.y);
-    float perimeterGlow = smoothstep(0.026, 0.003, rimDistance) * frontFacing;
+    // Luminous rounded perimeter rim glow that follows the curved corner arc continuously
+    float distFromEdge = -d;
+    float perimeterGlow = smoothstep(0.028, 0.003, distFromEdge) * frontFacing;
+    float cornerBevel = smoothstep(0.052, 0.012, distFromEdge) * (1.0 - smoothstep(0.012, 0.036, distFromEdge)) * frontFacing;
 
     // uAhead: 1.0 when card is in active foreground focus, 0.0 when orbiting in background
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
@@ -5443,6 +5458,7 @@ void main() {
     // Composite layers
     vec3 color = glassBody;
     color = mix(color, borderColor, perimeterGlow * (0.65 - 0.20 * uAhead));
+    color += borderColor * cornerBevel * 0.25; // Subtle molded glass corner bevel reflection
     color = mix(color, textColor, textMask);
 
     // Refined glass panel bevel & edges (subtle rim glow, no bulky opaque plastic paint)
@@ -5456,8 +5472,8 @@ void main() {
     // Interactive hover response
     color += vec3(0.06, 0.20, 0.30) * uHover;
 
-    #drawbuffer Color gl_FragColor = vec4(color, 1.0);
-    #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.40, 1.0);
+    #drawbuffer Color gl_FragColor = vec4(color, edgeAlpha);
+    #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.40, edgeAlpha);
 }{@}WorkItemUIShader.glsl{@}#!ATTRIBUTES
 #!UNIFORMS
 #!VARYINGS
