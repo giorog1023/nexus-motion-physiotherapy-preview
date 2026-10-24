@@ -5406,7 +5406,8 @@ void main() {
     float frontFacing = vFrontFace * smoothstep(0.10, 0.45, norm.z);
 
     // Channel-isolated typography mask (pure white text with crisp alpha)
-    float textMask = smoothstep(0.15, 0.55, cardTex.r) * smoothstep(0.10, 0.60, cardTex.a) * frontFacing;
+    // Razor-sharp anti-aliased typography mask directly from texture alpha
+    float textMask = smoothstep(0.04, 0.50, cardTex.a) * frontFacing;
 
     // Luminous rounded perimeter rim glow that follows the curved corner arc continuously
     float distFromEdge = -d;
@@ -5430,7 +5431,7 @@ void main() {
     inactiveGlass += turquoiseGlow * inactiveFresnel * 0.50;
     float inactiveSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 20.0);
     inactiveGlass += vec3(0.70, 0.92, 1.0) * inactiveSpec * 0.22;
-    vec3 inactiveTextColor = vec3(0.96, 0.98, 1.00); // Pure crisp white
+    vec3 inactiveTextColor = vec3(1.0, 1.0, 1.0); // Pure brilliant crisp white
     vec3 inactiveBorderColor = vec3(0.12, 0.90, 1.00); // Luminous electric cyan
 
     // 2. ACTIVE FOREGROUND CARD: Luminous frosted milky-white glass (#daf2f7 to #a4b1ba matching reference)
@@ -5449,7 +5450,7 @@ void main() {
     float activeFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.5);
     vec3 cyanMintRim = mix(vec3(0.35, 0.92, 1.00), vec3(0.38, 0.98, 0.84), 0.35);
     frostedWhite += cyanMintRim * activeFresnel * 0.45;
-    vec3 activeTextColor = vec3(0.09, 0.12, 0.18); // Deep clinical slate-navy (#171f2e)
+    vec3 activeTextColor = vec3(0.012, 0.030, 0.065); // Deep commanding clinical dark navy (#030811)
     vec3 activeBorderColor = vec3(0.40, 0.92, 1.00); // Luminous cyan-mint ice
 
     // 3. BLUE-TO-WHITE MATERIAL & TYPOGRAPHY TRANSITION
@@ -5461,11 +5462,10 @@ void main() {
     float textBlend = smoothstep(0.30, 0.70, uAhead);
     vec3 textColor = mix(inactiveTextColor, activeTextColor, textBlend);
 
-    // Composite layers
+    // Composite layers: glass body, perimeter glow, edge bevel, and hover
     vec3 color = glassBody;
     color = mix(color, borderColor, perimeterGlow * (0.65 - 0.20 * uAhead));
-    color += borderColor * cornerBevel * 0.25; // Subtle molded glass corner bevel reflection
-    color = mix(color, textColor, textMask);
+    color += borderColor * cornerBevel * 0.25;
 
     // Refined glass panel bevel & edges (subtle rim glow, no bulky opaque plastic paint)
     float bevel = pow(vSide, 2.0);
@@ -5477,6 +5477,11 @@ void main() {
 
     // Interactive hover response
     color += vec3(0.06, 0.20, 0.30) * uHover;
+
+    // Composite typography ON TOP of glass:
+    // Protects dark navy text from cyan bevel/hover bleeding, and provides high-contrast background for white text
+    vec3 textBg = mix(color * 0.70, color, uAhead);
+    color = mix(textBg, textColor, textMask);
 
     #drawbuffer Color gl_FragColor = vec4(color, edgeAlpha);
     #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.40, edgeAlpha);
