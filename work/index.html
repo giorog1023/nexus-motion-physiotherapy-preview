@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <base href="/">
+  <title>Nexus Motion · 3D Physiotherapy Services</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="Nexus Motion · Elite Physiotherapy & Spine Biomechanics">
+  <link rel="icon" type="image/png" href="assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Global Reset & Luxury Clinical Studio Atmosphere */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #08101E;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #FFFFFF;
+    }
+
+    #Stage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Hide legacy text, accessibility links, and duplicate elements */
+    a, [tabindex], .a11y, [class*="a11y"], #a11y, [class*="A11y"],
+    .cookieBanner, .contactUI, .chatDOM, .chat-panel, .chat-input-wrapper,
+    .LoaderView, [class*="LoaderView"], [class*="loaderView"] {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* Corner-Pinned Clinical UI Overlay (z-index 10) */
+    .physio-ui-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .interactive-card {
+      pointer-events: auto;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      background: rgba(18, 28, 44, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      border-radius: 22px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .interactive-card:hover {
+      border-color: rgba(56, 189, 248, 0.25);
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    /* TOP-LEFT: BRAND LOGO */
+    .brand-header {
+      position: absolute;
+      top: 26px;
+      left: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .brand-header:hover {
+      opacity: 0.90;
+      transform: translateY(-1px);
+    }
+    .brand-logo-svg {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #FFFFFF;
+    }
+
+    /* TOP-RIGHT: CONDITIONS TREATED & CLINICAL PROTOCOL */
+    .detail-drawer {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      width: 380px;
+      box-sizing: border-box;
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+    .detail-drawer.closed {
+      transform: translateX(440px);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .drawer-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 16px;
+    }
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94A3B8;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #FFFFFF;
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .drawer-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFFFFF;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-start;
+      max-width: 100%;
+    }
+    .med-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 15px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #CBD5E1;
+      max-width: 100%;
+      word-break: break-word;
+      line-height: 1.35;
+    }
+    .drawer-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin: 16px 0 18px 0;
+    }
+    .protocol-metrics-row {
+      display: flex;
+      align-items: center;
+    }
+    .protocol-metric-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .protocol-metric-divider {
+      width: 1px;
+      height: 42px;
+      background: rgba(255, 255, 255, 0.10);
+      margin: 0 20px;
+    }
+    .protocol-value-line {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .protocol-num {
+      font-size: 32px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .protocol-unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: #FFFFFF;
+    }
+    .protocol-sublabel {
+      font-size: 12px;
+      font-weight: 400;
+      color: #94A3B8;
+      margin-top: 4px;
+    }
+    .schedule-btn {
+      width: 100%;
+      height: 44px;
+      margin-top: 20px;
+      border-radius: 12px;
+      background: #10B981;
+      border: none;
+      color: #04241B;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .schedule-btn:hover {
+      background: #0EBA85;
+      color: #FFFFFF;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(16, 185, 129, 0.38);
+    }
+
+    /* BOTTOM-RIGHT: BIOMECHANICAL EVALUATION CTA */
+    .cta-card {
+      position: absolute;
+      bottom: 28px;
+      right: 28px;
+      width: 340px;
+      box-sizing: border-box;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+    .cta-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .cta-status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.70);
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+    .cta-title-group {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #FFFFFF;
+      line-height: 1.25;
+    }
+    .cta-body {
+      font-size: 12.5px;
+      line-height: 1.50;
+      color: #94A3B8;
+      font-weight: 400;
+      margin: 12px 0 18px 0;
+    }
+    .cta-btn {
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      background: #10B981;
+      border: none;
+      color: #04241B;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cta-btn:hover {
+      background: #0EBA85;
+      color: #FFFFFF;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(16, 185, 129, 0.38);
+    }
+
+    /* BOTTOM-LEFT: ANATOMICAL FOCUS (01 / 14) */
+    .focus-panel {
+      position: absolute;
+      bottom: 28px;
+      left: 32px;
+      width: 320px;
+      box-sizing: border-box;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+    .focus-header {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #94A3B8;
+      text-transform: uppercase;
+    }
+    .focus-header .counter {
+      color: #94A3B8;
+      font-variant-numeric: tabular-nums;
+    }
+    .focus-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin: 12px 0 14px 0;
+    }
+    .focus-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      list-style: none;
+    }
+    .focus-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1.5px solid transparent;
+    }
+    .focus-item .item-num {
+      font-size: 13px;
+      color: #64748B;
+      font-variant-numeric: tabular-nums;
+    }
+    .focus-item .item-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .focus-item.active {
+      color: #10B981;
+      background: rgba(16, 185, 129, 0.07);
+      border-color: #10B981;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.18);
+      font-weight: 600;
+    }
+    .focus-item.active .item-num {
+      color: #10B981;
+      font-weight: 600;
+    }
+    .focus-item:not(.active):hover {
+      color: #94A3B8;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* CENTER SCROLL HINT */
+    .scroll-hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #64748B;
+      opacity: 0.7;
+    }
+    .scroll-hint svg {
+      width: 14px;
+      height: 14px;
+      stroke: #64748B;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Responsive Adaptations */
+    @media (max-width: 1440px) {
+      .detail-drawer { width: 340px; padding: 20px 22px; top: 20px; right: 24px; }
+      .cta-card { width: 310px; padding: 18px 20px; bottom: 22px; right: 24px; }
+      .focus-panel { width: 290px; padding: 18px 20px; bottom: 22px; left: 24px; }
+      .brand-header { top: 20px; left: 26px; }
+    }
+
+    @media (max-width: 1100px) {
+      .detail-drawer { width: 300px; padding: 16px 18px; top: 16px; right: 18px; }
+      .cta-card { width: 280px; padding: 16px 18px; bottom: 18px; right: 18px; }
+      .focus-panel { width: 270px; padding: 16px 18px; bottom: 18px; left: 18px; }
+      .brand-header { top: 16px; left: 20px; }
+    }
+
+    @media (max-height: 800px) {
+      .detail-drawer { padding: 16px 20px; top: 14px; }
+      .cta-card { padding: 16px 20px; bottom: 14px; }
+      .focus-panel { padding: 16px 20px; bottom: 14px; }
+      .drawer-divider { margin: 12px 0 14px 0; }
+      .schedule-btn { margin-top: 14px; }
+      .cta-body { margin: 8px 0 12px 0; }
+    }
+  </style>
+
+  <script>
+    window._ENV_ = 'production';
+    window._CMS_ = "%CMS%";
+    window._CACHE_ = "1780406240914";
+    window.UIL_STATIC_PATH = "assets/data/uil.1780406240914.json";
+
+    // Global editable clinical physiotherapy services data
+    window.PHYSIO_SERVICES = [{"id":1,"slug":"cervical-decompression","title":"Cervical Decompression","regionTag":"01 · C1–C7 CERVICAL","region":"Cervical Spine (C1–C7)","focusArea":"Neck & Cervical Spine","tags":["cervical","neck","spine","all"],"color":"0ea5e9","bgPalette":["#071f33","#0e4369","#38bdf8"],"duration":"45 Min","sessionType":"Movement","technique":"Segmental Decompression","description":"Gentle hands-on cervical traction and segmental mobilization to relieve pinched nerves, neck stiffness, tension headaches, and cervical disc pressure without forceful manipulation.","conditions":["Disc Herniation","Pinched Nerve"],"approach":"Our senior physiotherapists apply precise, unhurried manual traction to gently decompress the intervertebral spaces of the cervical spine, reducing pressure on irritated nerve roots while restoring fluid rotation and flexion."},{"id":2,"slug":"manual-joint-therapy","title":"Manual Joint Therapy","regionTag":"02 · T1–T12 THORACIC","region":"Thoracic Spine & Facets","focusArea":"Thoracic & Posture","tags":["thoracic","posture","all"],"color":"10b981","bgPalette":["#06291e","#0e5740","#10b981"],"duration":"45 Min","sessionType":"Joint Mobilization","technique":"Maitland & Kaltenborn","description":"Skilled hands-on joint mobilization and manipulation to restore natural gliding motion, reduce joint capsule stiffness, and eliminate mechanical pain across the spine and extremities.","conditions":["Disc Herniation","Pinched Nerve"],"approach":"Using graded Maitland and Kaltenborn joint mobilizations, we target the exact stiff spinal segments or peripheral joints so protective muscular guarding relaxes and normal, pain-free motion returns."},{"id":3,"slug":"myofascial-release","title":"Myofascial Release","regionTag":"03 · MYOFASCIAL","region":"Cervicothoracic & Soft Tissue","focusArea":"Neck & Cervical Spine","tags":["cervical","thoracic","shoulder","all"],"color":"0284c7","bgPalette":["#08243d","#0d4e80","#0284c7"],"duration":"40 Min","sessionType":"Targeted Deep Tissue","technique":"Active Myofascial Shearing","description":"Targeted deep-tissue and fascial release therapy to break down scar tissue adhesions, relieve chronic muscle tightness, and restore elastic, pain-free movement.","conditions":["Chronic Trap & Levator Knots","Upper-Back Muscular Adhesions","Post-Injury Tissue Restriction","Occupational Neck & Shoulder Strain"],"approach":"Sustained, directional shear pressure elongates restricted fascial planes and resets overactive muscle spindles, restoring tissue hydration and blood flow without bruising or soreness."},{"id":4,"slug":"dry-needling-therapy","title":"Dry Needling Therapy","regionTag":"04 · NEUROMUSCULAR MOTOR POINTS","region":"Neuromuscular Trigger Points","focusArea":"Specialized Treatments","tags":["cervical","thoracic","lumbar","specialized","all"],"color":"14b8a6","bgPalette":["#052b28","#0b5954","#14b8a6"],"duration":"30 Min","sessionType":"Precision Intramuscular","technique":"Sterile Micro-Filament","description":"Precision intramuscular trigger-point therapy using ultra-fine sterile filaments to release deep muscle spasms, reset pain pathways, and accelerate natural tissue recovery.","conditions":["Deep Paraspinal Spasms","Stubborn Trigger Points","Radiating Myofascial Pain","Chronic Scapular Aches"],"approach":"By targeting deep motor endplates that manual pressure cannot reach, dry needling elicits a localized twitch response that immediately clears chemical pain mediators and restores resting muscle tone."},{"id":5,"slug":"postural-realignment","title":"Postural Realignment","regionTag":"05 · T1–T6 THORACIC SPINE","region":"Thoracic Spine (T1–T6)","focusArea":"Thoracic & Posture","tags":["cervical","thoracic","posture","all"],"color":"38bdf8","bgPalette":["#09263d","#104d7a","#38bdf8"],"duration":"50 Min","sessionType":"Kinetic Re-education","technique":"Thoracic Extension Mobilization","description":"Thoracic spine mobilization and postural retraining to correct rounded shoulders, forward-head posture, and upper-back fatigue caused by desk work or athletic asymmetries.","conditions":["Forward-Head Posture & Dowager Hump","Rounded Shoulders & Scapular Winging","Postural Thoracic Kyphosis","Desk-Bound Upper-Back Fatigue"],"approach":"We combine hands-on thoracic spine extension work with targeted motor recruitment of deep cervical flexors and lower trapezius so upright posture feels effortless and natural rather than forced."},{"id":6,"slug":"rotator-cuff-rehab","title":"Rotator Cuff Rehab","regionTag":"06 · SCAPULOTHORACIC GIRDLE","region":"Shoulder & Scapular Girdle","focusArea":"Thoracic & Posture","tags":["thoracic","shoulder","all"],"color":"059669","bgPalette":["#06291e","#0d5740","#059669"],"duration":"45 Min","sessionType":"Dynamic Shoulder Rehab","technique":"Force Couple Restabilization","description":"Progressive rotator cuff strengthening and scapular mechanics rehabilitation for shoulder impingement, tendonitis, labral irritation, and pain when reaching overhead.","conditions":["Subacromial Impingement & Bursitis","Supraspinatus Tendinopathy","Partial Rotator Cuff Tears","Scapular Dyskinesis & Overhead Pain"],"approach":"Because the shoulder blade glides along the ribcage and thoracic spine, we restore upward scapular rotation and dynamic humeral centering before progressing to high-load overhead movements."},{"id":7,"slug":"thoracic-mobility-therapy","title":"Thoracic Mobility Therapy","regionTag":"07 · T6–T12 MID-SPINE & RIBS","region":"Mid-Spine & Ribcage (T6–T12)","focusArea":"Thoracic & Posture","tags":["thoracic","posture","spine","all"],"color":"0ea5e9","bgPalette":["#08243b","#0e4a78","#0ea5e9"],"duration":"45 Min","sessionType":"Rotational Spinal Care","technique":"Costovertebral Mobilization","description":"Ribcage and mid-back mobility therapy to unlock spinal rotation, improve rib expansion and breathing mechanics, and remove compensatory strain from the neck and lower back.","conditions":["Costovertebral & Rib Joint Locking","Restricted Torso Rotation","Mid-Back Breathing Restriction","Rotational Deficits in Golf & Tennis"],"approach":"Costovertebral joint mobilization and rotational drills restore 360-degree ribcage expansion and mid-back mobility, sparing your lumbar spine from harmful excessive twisting forces."},{"id":8,"slug":"sciatica-nerve-therapy","title":"Sciatica & Nerve Therapy","regionTag":"08 · L1–L4 LUMBAR RADICULAR","region":"Lumbar Nerve Roots (L1–L4)","focusArea":"Lower Back & Sciatica","tags":["lumbar","sciatica","nerve","all"],"color":"10b981","bgPalette":["#062b20","#0e5c45","#10b981"],"duration":"45 Min","sessionType":"Neural Decompression","technique":"Neurodynamic Flossing","description":"Targeted neural mobilization, nerve flossing, and directional decompression to calm radiating leg pain, numbness, tingling, and sciatic nerve root irritation.","conditions":["Acute Sciatica & Gluteal Radiating Pain","Lumbar Radiculopathy (L4/L5/S1)","Piriformis Syndrome Nerve Entrapment","Lower-Limb Paresthesia & Numbness"],"approach":"Rather than stretching an inflamed nerve—which often worsens symptoms—we use gentle neurodynamic gliding and directional decompression to restore neural blood supply and relieve root compression."},{"id":9,"slug":"lumbar-disc-rehab","title":"Lumbar Disc Rehab","regionTag":"09 · L4–L5 LUMBAR DISC COMPLEX","region":"Lower Back (L4–L5)","focusArea":"Lower Back & Sciatica","tags":["lumbar","sciatica","spine","all"],"color":"0284c7","bgPalette":["#08263e","#0d5185","#0284c7"],"duration":"50 Min","sessionType":"Disc Restabilization","technique":"Directional Preference & Traction","description":"Evidence-based non-surgical rehabilitation for bulging, herniated, or degenerative lower-back discs—focused on centralizing pain and rebuilding confident spinal load tolerance.","conditions":["Herniated & Bulging Discs (L4–L5, L5–S1)","Acute Lumbar Spasms & Flexion Intolerance","Degenerative Disc Disease (DDD)","Morning Lower-Back Stiffness"],"approach":"We identify your specific directional preference to reduce intradiscal pressure immediately, then systematically rebuild hip-hinge mechanics and spinal endurance so you can bend and lift without fear."},{"id":10,"slug":"spinal-stabilization","title":"Spinal Stabilization","regionTag":"10 · L3–S1 LUMBOSACRAL CORE","region":"Lumbosacral Core (L3–S1)","focusArea":"Lower Back & Sciatica","tags":["lumbar","core","spine","all"],"color":"14b8a6","bgPalette":["#062e2c","#0c5c57","#14b8a6"],"duration":"45 Min","sessionType":"Core Neuromuscular Training","technique":"Intra-Abdominal Pressure (IAP)","description":"Neuromuscular retraining of the deep spinal stabilizers—multifidus, transverse abdominis, and pelvic floor—to eliminate recurring lower-back flare-ups under real-world loads.","conditions":["Recurrent Chronic Low Back Pain","Lumbar Segmental Micro-Instability","Spondylolisthesis Management","Loss of Core Bracing During Lifting"],"approach":"Traditional crunches often aggravate back pain. We retrain 360-degree intra-abdominal pressure and deep segmental muscle firing so your lumbar spine stays naturally supported through every daily movement."},{"id":11,"slug":"si-joint-pelvic-rehab","title":"SI Joint & Pelvic Rehab","regionTag":"11 · S1–S5 SACROILIAC GIRDLE","region":"Sacroiliac & Pelvic Girdle (S1–S5)","focusArea":"Pelvis, Hip & Knee","tags":["lower","pelvis","hip","all"],"color":"38bdf8","bgPalette":["#092842","#105287","#38bdf8"],"duration":"45 Min","sessionType":"Pelvic Alignment Therapy","technique":"Muscle Energy Technique (MET)","description":"Sacroiliac (SI) joint realignment and lumbopelvic muscle balancing to resolve one-sided lower-back pain, pelvic asymmetry, and pain when transitioning from sitting to standing.","conditions":["Sacroiliac (SI) Joint Dysfunction","One-Sided Sacral & Buttock Pain","Pelvic Torsion & Asymmetry","Postpartum Pelvic Girdle Pain"],"approach":"Through gentle muscle-energy techniques and targeted gluteus medius, adductor, and deep core stabilization, we restore symmetrical force transfer across the pelvis and sacrum."},{"id":12,"slug":"hip-mobility-rehab","title":"Hip Mobility Rehab","regionTag":"12 · ACETABULOFEMORAL JOINT","region":"Hip Joint & Pelvis","focusArea":"Pelvis, Hip & Knee","tags":["lower","hip","pelvis","all"],"color":"059669","bgPalette":["#062a1f","#0d5b43","#059669"],"duration":"45 Min","sessionType":"Hip Joint Preservation","technique":"Capsular Distraction & Gliding","description":"Joint capsule mobilization and deep hip rotator strengthening for hip impingement (FAI), labral irritation, trochanteric bursitis, and deep groin or lateral hip pain.","conditions":["Femoroacetabular Impingement (FAI)","Hip Labral Irritation & Groin Pinching","Greater Trochanteric Pain Syndrome","Deep Squat & Hip Rotation Deficits"],"approach":"When hip internal or external rotation is restricted, the lower back compensates. We mobilize the hip capsule to create joint clearance and restore smooth, impingement-free squatting."},{"id":13,"slug":"sports-injury-rehab","title":"Sports Injury & ACL Rehab","regionTag":"13 · LOWER KINETIC CHAIN","region":"Knee & Lower Kinetic Chain","focusArea":"Pelvis, Hip & Knee","tags":["lower","knee","sports","all"],"color":"0ea5e9","bgPalette":["#08243d","#0e4e82","#0ea5e9"],"duration":"50 Min","sessionType":"Athletic Return-to-Play","technique":"Eccentric Load & Deceleration","description":"Comprehensive sports physiotherapy for knee, ligament, meniscus, and tendon injuries—rebuilding strength symmetry, deceleration mechanics, and reactive agility for safe return to sport.","conditions":["ACL, MCL & Meniscus Tear Rehab","Patellofemoral Pain (Runner’s Knee)","Patellar & Achilles Tendinopathy","Hamstring & Quad Strain Recovery"],"approach":"We bridge the gap between basic clinical exercise and high-speed sports performance using force plates, eccentric rate-of-force training, and multi-directional deceleration biomechanics."},{"id":14,"slug":"post-surgical-rehab","title":"Post-Surgical Rehabilitation","regionTag":"14 · ORTHOPEDIC RECONSTRUCTION","region":"Orthopedic Reconstruction","focusArea":"Pelvis, Hip & Knee","tags":["lower","post-op","all"],"color":"10b981","bgPalette":["#06291e","#0e5740","#10b981"],"duration":"50 Min","sessionType":"Phase-Specific Post-Op","technique":"Surgeon Protocol Adherence","description":"Guided 1-on-1 orthopedic rehabilitation following spinal microdiscectomy, fusion, rotator cuff repair, hip arthroscopy, or knee reconstruction to safely restore full function.","conditions":["Post-Op Lumbar Discectomy & Fusion","Post-Op Rotator Cuff & Labral Repair","Total Knee & Hip Arthroplasty (TKA/THA)","Arthroscopic Joint Decompression"],"approach":"Working strictly in step with your surgeon’s clinical protocol, we guide tissue healing from early edema control and gentle scar mobilization to full athletic power and independence."}];
+  </script>
+</head>
+<body>
+  <div id="Stage"></div>
+
+  <!-- High-Fidelity UI Overlay -->
+  <div class="physio-ui-overlay">
+    <!-- Top-Left Brand Logo -->
+    <div class="brand-header" onclick="location.hash='#work'">
+      <svg class="brand-logo-svg" width="30" height="30" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 24V11.5C6 9 8 7 10.5 7C13 7 15 9 15 11.5V20.5C15 23 17 25 19.5 25C22 25 24 23 24 20.5V8" stroke="url(#nm-cyan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 19L21.5 8C22.8 6.2 25.5 6.2 26.8 8C28 9.8 27.8 12.2 26 14.2L18.5 24" stroke="url(#nm-mint)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="nm-cyan" x1="6" y1="7" x2="16" y2="25" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#38BDF8"/>
+            <stop offset="1" stop-color="#0284C7"/>
+          </linearGradient>
+          <linearGradient id="nm-mint" x1="14" y1="7" x2="27" y2="25" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#34D399"/>
+            <stop offset="1" stop-color="#10B981"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="brand-title">Nexus Motion</div>
+    </div>
+
+    <!-- Bottom-Left Anatomical Focus List -->
+    <div class="focus-panel interactive-card">
+      <div class="focus-header">
+        ANATOMICAL FOCUS · <span class="counter" id="focusCounter">01 / 14</span>
+      </div>
+      <div class="focus-divider"></div>
+      <ul class="focus-list" id="focusList">
+        <li class="focus-item active" data-index="0">
+          <span class="item-num">01</span>
+          <span class="item-title">Cervical Decompression</span>
+        </li>
+        <li class="focus-item" data-index="1">
+          <span class="item-num">02</span>
+          <span class="item-title">Manual Joint Therapy</span>
+        </li>
+        <li class="focus-item" data-index="2">
+          <span class="item-num">03</span>
+          <span class="item-title">Myofascial Release</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right Drawer: Clinical Protocol Details -->
+    <div class="detail-drawer interactive-card" id="detailDrawer">
+      <div class="drawer-top-bar">
+        <button class="icon-btn" onclick="toggleDrawer(false)" aria-label="Back">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <button class="icon-btn" onclick="toggleDrawer(false)" aria-label="Close">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div>
+        <div class="drawer-section-title">Conditions Treated</div>
+        <div class="pill-group" id="conditionsGroup">
+          <div class="med-pill">Disc Herniation</div>
+          <div class="med-pill">Pinched Nerve</div>
+        </div>
+      </div>
+
+      <div class="drawer-divider"></div>
+
+      <div>
+        <div class="drawer-section-title">Clinical Protocol</div>
+        <div class="protocol-metrics-row">
+          <div class="protocol-metric-col">
+            <div class="protocol-value-line">
+              <span class="protocol-num" id="protocolDurationNum">45</span>
+              <span class="protocol-unit">Min</span>
+            </div>
+            <div class="protocol-sublabel" id="protocolSessionLabel">Movement</div>
+          </div>
+          <div class="protocol-metric-divider"></div>
+          <div class="protocol-metric-col">
+            <div class="protocol-value-line">
+              <span class="protocol-num">45</span>
+              <span class="protocol-unit">Min</span>
+            </div>
+            <div class="protocol-sublabel">Session</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="schedule-btn" onclick="alert('Scheduling initialized for: ' + (window.CURRENT_WORK_DATA?.title || 'Cervical Decompression'))">
+        Schedule This Treatment →
+      </button>
+    </div>
+
+    <!-- Bottom-Right Biomechanical Evaluation CTA -->
+    <div class="cta-card interactive-card">
+      <div class="cta-header">
+        <div class="cta-status-dot"></div>
+        <div class="cta-title-group">
+          <span>BIOMECHANICAL</span>
+          <span>EVALUATION</span>
+        </div>
+      </div>
+      <div class="cta-body">
+        Clinical assessment to innovate your care experience and biomechanical evaluation.
+      </div>
+      <button class="cta-btn" onclick="alert('Booking Initial Biomechanical Evaluation...')">
+        Book Initial Assessment →
+      </button>
+    </div>
+  </div>
+
+  <!-- Center Scroll Hint -->
+  <div class="scroll-hint">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 6v4"/></svg>
+    <span>Scroll to Navigate Spine</span>
+  </div>
+
+  <script>
+    function updateFocusList(activeIdx) {
+      const services = window.PHYSIO_SERVICES;
+      if (!services || !services.length) return;
+      const idx = Math.max(0, Math.min(services.length - 1, activeIdx));
+      
+      const counterEl = document.getElementById('focusCounter');
+      if (counterEl) {
+        counterEl.innerText = String(idx + 1).padStart(2, '0') + ' / ' + String(services.length).padStart(2, '0');
+      }
+
+      const s1 = services[idx];
+      const s2 = services[(idx + 1) % services.length];
+      const s3 = services[(idx + 2) % services.length];
+
+      const listEl = document.getElementById('focusList');
+      if (listEl && s1 && s2 && s3) {
+        listEl.innerHTML = `
+          <li class="focus-item active" data-index="${idx}"><span class="item-num">${String(s1.id).padStart(2, '0')}</span> <span class="item-title">${s1.title}</span></li>
+          <li class="focus-item" data-index="${(idx + 1) % services.length}"><span class="item-num">${String(s2.id).padStart(2, '0')}</span> <span class="item-title">${s2.title}</span></li>
+          <li class="focus-item" data-index="${(idx + 2) % services.length}"><span class="item-num">${String(s3.id).padStart(2, '0')}</span> <span class="item-title">${s3.title}</span></li>
+        `;
+      }
+
+      // Update drawer preview data
+      const condEl = document.getElementById('conditionsGroup');
+      if (condEl && s1 && s1.conditions) {
+        condEl.innerHTML = s1.conditions.map(c => `<div class="med-pill">${c}</div>`).join('');
+      }
+      const durEl = document.getElementById('protocolDurationNum');
+      if (durEl && s1 && s1.duration) {
+        durEl.innerText = s1.duration.replace(/[^0-9]/g, '') || '45';
+      }
+      const sessEl = document.getElementById('protocolSessionLabel');
+      if (sessEl && s1) {
+        sessEl.innerText = s1.sessionType || 'Movement';
+      }
+    }
+
+    // Attach interactive click navigation to focus list
+    document.addEventListener('DOMContentLoaded', () => {
+      const listEl = document.getElementById('focusList');
+      if (listEl) {
+        listEl.addEventListener('click', (e) => {
+          const item = e.target.closest('.focus-item');
+          if (item && item.dataset.index !== undefined) {
+            const targetIdx = parseInt(item.dataset.index);
+            if (window.WORK_SCENE && typeof window.WORK_SCENE.scrollProgress !== 'undefined') {
+              const offset = typeof Device !== 'undefined' && Device.mobile ? 0.1 : 0.06;
+              const targetScroll = (targetIdx / 13.0) * (1 - 2 * offset) + offset;
+              window.WORK_SCENE.scrollProgress = targetScroll;
+              if (window.WORK_SCENE.targetScrollProgress !== undefined) {
+                window.WORK_SCENE.targetScrollProgress = targetScroll;
+              }
+            }
+          }
+        });
+      }
+      updateFocusList(0);
+    });
+
+    window.addEventListener('physio-scroll', (e) => {
+      updateFocusList(e.detail.index);
+    });
+
+    window.addEventListener('physio-open-modal', (e) => {
+      toggleDrawer(true);
+    });
+
+    window.addEventListener('physio-close-modal', () => {
+      toggleDrawer(false);
+    });
+
+    function toggleDrawer(open) {
+      const drawer = document.getElementById('detailDrawer');
+      if (!drawer) return;
+      if (open) {
+        drawer.classList.remove('closed');
+      } else {
+        drawer.classList.add('closed');
+        if (window.CLOSE_CURRENT_PROJECT) window.CLOSE_CURRENT_PROJECT();
+      }
+    }
+  </script>
+
+  <script src="assets/js/app.1780406240914.js"></script>
+</body>
+</html>
