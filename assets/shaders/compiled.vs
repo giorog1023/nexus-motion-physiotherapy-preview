@@ -5003,9 +5003,11 @@ void main() {
     studioBg += cervicalColor * cervicalAccent * 0.60;
 
     // Blend 3D scene over studio background
-    // Identify solid 3D meshes (spine R >= 0.24, card body R >= 0.80, text R >= 0.08)
-    // Particles have low red (R <= 0.02) and luminous cyan/turquoise/mint (G + B > 0.03)
-    float solidObject = smoothstep(0.03, 0.09, scene.r);
+    // Identify atmospheric bokeh particles vs solid 3D surfaces (spine, glass card, and dark navy typography)
+    // Bokeh particles are luminous emissive cyan/mint (high green/blue > 0.045, low red < 0.025)
+    // Dark typography (#02050b) is dark absorbing pigment (max(G,B) <= 0.045) and must NEVER be treated as additive particles
+    float isParticle = smoothstep(0.045, 0.10, max(scene.g, scene.b)) * (1.0 - smoothstep(0.025, 0.06, scene.r));
+    float solidObject = 1.0 - isParticle;
 
     // Empty background is smoothly masked (maxScene < 0.002)
     float maxScene = max(scene.r, max(scene.g, scene.b));
@@ -5014,7 +5016,7 @@ void main() {
     // Atmospheric space: out-of-focus bokeh particles additively illuminate the studio background with zero dark halos
     vec3 spaceWithParticles = studioBg + scene.rgb;
 
-    // Solid objects cleanly composite with true contrast and zero background washout
+    // Solid objects (spine, glass cards, and solid dark navy text) cleanly composite with true contrast and zero background bleed
     vec3 sceneColor = mix(spaceWithParticles, scene.rgb, solidObject);
     vec3 color = mix(studioBg, sceneColor, objMask);
 
@@ -5460,12 +5462,7 @@ void main() {
     float textBlend = smoothstep(0.30, 0.70, uAhead);
     vec3 textColor = mix(inactiveTextColor, activeTextColor, textBlend);
 
-    // 4. CLEAN BASE SURFACE FOR TYPOGRAPHY COMPOSITING
-    // Completely isolated from cyan bevels, specular flares, or hover highlights
-    vec3 cleanBaseSurface = mix(inactiveGlass, frostedMilky, uAhead);
-    vec3 textLayer = mix(cleanBaseSurface, textColor, textMask);
-
-    // 5. EXTERIOR GLASS LIGHTING & REFLECTIONS
+    // 4. EXTERIOR GLASS LIGHTING & REFLECTIONS
     vec3 finalGlass = glassBody;
     finalGlass = mix(finalGlass, borderColor, perimeterGlow * (0.65 - 0.20 * uAhead));
     finalGlass += borderColor * cornerBevel * 0.25;
@@ -5475,8 +5472,9 @@ void main() {
     finalGlass += (vec3(0.95, 0.99, 1.0) * 0.70 + borderColor * 0.30) * edgeSpec * bevel * 0.55;
     finalGlass += vec3(0.06, 0.20, 0.30) * uHover;
 
-    // 6. FINAL COMPOSITE: Typography layer overrides all underlying reflections
-    vec3 color = mix(finalGlass, textLayer, textMask);
+    // 5. FINAL COMPOSITE: Crisp linear alpha blend of typography directly onto polished glass surface
+    // Completely solid dark navy (#02050b) for active card, pure crisp white for inactive cards, zero double-mix halo
+    vec3 color = mix(finalGlass, textColor, textMask);
 
     #drawbuffer Color gl_FragColor = vec4(color, edgeAlpha);
     #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.40, edgeAlpha);
