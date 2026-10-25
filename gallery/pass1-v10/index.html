@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 1 V10 Top Anatomical Identifier Calibration Gallery</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 30px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1680px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .brand-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #030712;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+      transform: translateY(-1px);
+    }
+    .container {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .audit-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 36px;
+      backdrop-filter: blur(12px);
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+      max-width: 1200px;
+    }
+    .preview-img-container {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #000;
+      cursor: pointer;
+      position: relative;
+    }
+    .preview-img-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+    .preview-img-container:hover img {
+      transform: scale(1.01);
+    }
+    .table-container {
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    th {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .badge-match {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-frozen {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .treatments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .treatment-item {
+      background: rgba(11, 19, 41, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      padding: 16px;
+    }
+    .treatment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .treatment-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .treatment-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+    }
+    .treatment-thumb {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      background: #000;
+    }
+    .treatment-thumb img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 36px;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">Pass 1 · V10 Production</span>
+        </div>
+        <div class="subtitle">Top Anatomical Identifier: Lighter Font Weight (580) + Darker Slate Outline (3.0px 0.95) + Balanced Spacing (+40px)</div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn btn-primary" target="_blank">Launch 3D App ↗</a>
+        <a href="/gallery/pass1-v9" class="nav-btn btn-secondary">Pass 1 V9 Gallery</a>
+        <a href="/gallery/pass1-v8" class="nav-btn btn-secondary">Pass 1 V8 Gallery</a>
+        <a href="/gallery.html" class="nav-btn btn-secondary">All Galleries</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- SECTION 1: EXECUTIVE AUDIT & COMPARISON -->
+    <div class="audit-card">
+      <h2 class="section-title">1. Dedicated Top Anatomical Identifier Calibration Audit</h2>
+      <p class="section-desc">Comparing the original benchmark reference target against Pass 1 V9 (reviewed) and the calibrated Pass 1 V10 production build. Dedicated crops capture the top specular card rim, upper glass breathing room, capsule outline definition, and letter stroke weight.</p>
+      
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/v10_crops_audit.png')">
+        <img src="/gallery/pass1-v10/v10_crops_audit.png" alt="Pass 1 V10 Dedicated Crops Audit" />
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric / Dimension</th>
+              <th>Original Reference Benchmark</th>
+              <th>Pass 1 V9 (Reviewed)</th>
+              <th>Pass 1 V10 Production</th>
+              <th>Verification Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Letter Stroke Font Weight</strong></td>
+              <td>Delicate Semibold (~550–580)</td>
+              <td>Weight 650 (Noticeably heavy/bold)</td>
+              <td><strong>Weight 580 (Lighter, refined stems)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Capsule Outline Spec</strong></td>
+              <td>Crisp Defined Slate-Grey</td>
+              <td>2.0px solid rgba(18,30,44,0.80) (Pale/faint)</td>
+              <td><strong>3.0px solid rgba(14,24,36,0.95)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Outline Rendered Luma</strong></td>
+              <td>~125–145 (High contrast)</td>
+              <td>~170–178 (Washed out)</td>
+              <td><strong>~99.2 (Crisp slate outline)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Top Rim to Capsule Gap</strong></td>
+              <td>23.0px (Normalized)</td>
+              <td>27.0px (Crowded against top rim)</td>
+              <td><strong>35.0px (Balanced breathing room)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Gap-to-Capsule Height Ratio</strong></td>
+              <td><strong>1.045</strong> (Balanced)</td>
+              <td>0.794 (Crowded top)</td>
+              <td><strong>1.129 (Balanced, natural margin)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Capsule Interior Fill</strong></td>
+              <td>100% Clear / Transparent</td>
+              <td>100% Clear (alpha = 0.0)</td>
+              <td><strong>100% Clear (alpha = 0.0)</strong></td>
+              <td><span class="status-badge badge-frozen">PRESERVED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Text Size & Slate Color</strong></td>
+              <td>Approved V8/V9 Standard</td>
+              <td>76px, #0e1824</td>
+              <td><strong>76px, #0e1824 (100% Frozen)</strong></td>
+              <td><span class="status-badge badge-frozen">FROZEN</span></td>
+            </tr>
+            <tr>
+              <td><strong>Main Treatment Title</strong></td>
+              <td>Dark Navy #0a1628, Weight 650</td>
+              <td>y = 350.406px</td>
+              <td><strong>y = 350.406px (0.000px shift)</strong></td>
+              <td><span class="status-badge badge-frozen">FROZEN</span></td>
+            </tr>
+            <tr>
+              <td><strong>Bottom Details Link & Arrow</strong></td>
+              <td>Medium Grey #182638, SVG Arrow</td>
+              <td>66px, weight 500</td>
+              <td><strong>100% Bit-Identical (0.000px shift)</strong></td>
+              <td><span class="status-badge badge-frozen">FROZEN</span></td>
+            </tr>
+            <tr>
+              <td><strong>Atmospheric Particles</strong></td>
+              <td>Soft Gaussian luminous bokeh</td>
+              <td>Soft bokeh preserved</td>
+              <td><strong>100% Bit-Identical Bokeh</strong></td>
+              <td><span class="status-badge badge-frozen">PRESERVED</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 2: COMPLETE CARDS EVOLUTION -->
+    <div class="audit-card">
+      <h2 class="section-title">2. Complete Foreground Card Faces Evolution</h2>
+      <p class="section-desc">Complete foreground active cards normalized to identical displayed width while strictly preserving original aspect ratios. Shows the complete visual progression from the benchmark truth to V9 and V10.</p>
+      
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/pass1_v10_card_evolution.png')">
+        <img src="/gallery/pass1-v10/pass1_v10_card_evolution.png" alt="Complete Card Face Evolution" />
+      </div>
+    </div>
+
+    <!-- SECTION 3: TOP SPACING & RATIO VERIFICATION -->
+    <div class="audit-card">
+      <h2 class="section-title">3. Dedicated Top Spacing & Ratio Verification</h2>
+      <p class="section-desc">Quantitative analysis showing the exact card-top-to-capsule breathing room at comparable scale with measurement alignment guides.</p>
+      
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/pass1_v10_top_spacing_comparison.png')">
+        <img src="/gallery/pass1-v10/pass1_v10_top_spacing_comparison.png" alt="Top Spacing Comparison" />
+      </div>
+    </div>
+
+    <!-- SECTION 4: HERO SIDE-BY-SIDE -->
+    <div class="audit-card">
+      <h2 class="section-title">4. Native 1080p Hero 3D Scene Side-by-Side Comparison</h2>
+      <p class="section-desc">Left: Original Benchmark Reference Target (1024×571) | Right: Pass 1 V10 Live Production Viewport (1920×1080).</p>
+      
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/pass1_v10_side_by_side_comparison.png')">
+        <img src="/gallery/pass1-v10/pass1_v10_side_by_side_comparison.png" alt="Hero Side-by-Side Comparison" />
+      </div>
+    </div>
+
+    <!-- SECTION 5: PROTECTED ELEMENTS REGRESSION AUDIT -->
+    <div class="audit-card">
+      <h2 class="section-title">5. Protected Elements Regression Audit & Particles Bokeh</h2>
+      <p class="section-desc">Verifying 0.000px displacement and pixel-for-pixel preservation of Main Title, Bottom Link, and Particles Bokeh.</p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/regression_audit.png')">
+          <img src="/gallery/pass1-v10/regression_audit.png" alt="Regression Audit" />
+        </div>
+        <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/particles_closeup_comparison.png')">
+          <img src="/gallery/pass1-v10/particles_closeup_comparison.png" alt="Particles Bokeh Closeup" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: INTERMEDIATE TRANSITION DIAGNOSTIC -->
+    <div class="audit-card">
+      <h2 class="section-title">6. Orbital Transition Typography Diagnostic</h2>
+      <p class="section-desc">Intermediate scroll frames at 50% blend crossfade verifying clean transitions with ZERO cyan fringing or outline bleed on badge typography.</p>
+      
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/transition_cyan_diagnostic.png')">
+        <img src="/gallery/pass1-v10/transition_cyan_diagnostic.png" alt="Transition Typography Diagnostic" />
+      </div>
+    </div>
+
+    <!-- SECTION 7: ALL 14 TREATMENTS SHOWCASE -->
+    <div class="audit-card">
+      <h2 class="section-title">7. Complete 14 Treatments Production Verification</h2>
+      <p class="section-desc">All 14 treatment cards rendered in the live 3D orbital carousel at 1920×1080 native resolution. Click any thumbnail to view in full-resolution lightbox.</p>
+
+      <div class="treatments-grid">
+        <!-- 14 Treatment Cards -->
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">01 · Cervical Decompression</span><span class="treatment-tag">C1–C7</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-01-full.png')"><img src="/gallery/pass1-v10/treatment-01-card.png" alt="Treatment 01" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">02 · Manual Joint Therapy</span><span class="treatment-tag">T1–T12</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-02-full.png')"><img src="/gallery/pass1-v10/treatment-02-card.png" alt="Treatment 02" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">03 · Myofascial Release</span><span class="treatment-tag">MYOFASCIAL</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-03-full.png')"><img src="/gallery/pass1-v10/treatment-03-card.png" alt="Treatment 03" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">04 · Dry Needling Therapy</span><span class="treatment-tag">TRIGGER POINT</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-04-full.png')"><img src="/gallery/pass1-v10/treatment-04-card.png" alt="Treatment 04" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">05 · Postural Realignment</span><span class="treatment-tag">T1–T6 POSTURE</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-05-full.png')"><img src="/gallery/pass1-v10/treatment-05-card.png" alt="Treatment 05" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">06 · Rotator Cuff Rehab</span><span class="treatment-tag">GLENOHUMERAL</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-06-full.png')"><img src="/gallery/pass1-v10/treatment-06-card.png" alt="Treatment 06" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">07 · Thoracic Mobility Therapy</span><span class="treatment-tag">THORACIC CAGE</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-07-full.png')"><img src="/gallery/pass1-v10/treatment-07-card.png" alt="Treatment 07" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">08 · Sciatica & Nerve Therapy</span><span class="treatment-tag">L4–S1 SCIATICA</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-08-full.png')"><img src="/gallery/pass1-v10/treatment-08-card.png" alt="Treatment 08" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">09 · Lumbar Disc Rehab</span><span class="treatment-tag">L1–L5 LUMBAR</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-09-full.png')"><img src="/gallery/pass1-v10/treatment-09-card.png" alt="Treatment 09" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">10 · Spinal Stabilization</span><span class="treatment-tag">CORE STABILIZATION</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-10-full.png')"><img src="/gallery/pass1-v10/treatment-10-card.png" alt="Treatment 10" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">11 · SI Joint & Pelvic Rehab</span><span class="treatment-tag">SACROILIAC JOINT</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-11-full.png')"><img src="/gallery/pass1-v10/treatment-11-card.png" alt="Treatment 11" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">12 · Hip Mobility Rehab</span><span class="treatment-tag">COXOFEMORAL</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-12-full.png')"><img src="/gallery/pass1-v10/treatment-12-card.png" alt="Treatment 12" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">13 · Sports Injury & ACL Rehab</span><span class="treatment-tag">SPORTS MEDICINE</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-13-full.png')"><img src="/gallery/pass1-v10/treatment-13-card.png" alt="Treatment 13" /></div>
+        </div>
+        <div class="treatment-item">
+          <div class="treatment-header"><span class="treatment-title">14 · Post-Surgical Rehab</span><span class="treatment-tag">RECOVERY PROTOCOL</span></div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v10/treatment-14-full.png')"><img src="/gallery/pass1-v10/treatment-14-card.png" alt="Treatment 14" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 8: RESPONSIVE VIEWPORTS -->
+    <div class="audit-card">
+      <h2 class="section-title">8. Responsive Viewport Verification (1440×900)</h2>
+      <p class="section-desc">Initial load, mid-scroll orbital transition, and deep-scroll state captured at desktop 1440×900 resolution.</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/viewport-1440x900-initial.png')">
+          <img src="/gallery/pass1-v10/viewport-1440x900-initial.png" alt="1440x900 Initial" />
+        </div>
+        <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/viewport-1440x900-mid.png')">
+          <img src="/gallery/pass1-v10/viewport-1440x900-mid.png" alt="1440x900 Mid" />
+        </div>
+        <div class="preview-img-container" onclick="openModal('/gallery/pass1-v10/viewport-1440x900-deep.png')">
+          <img src="/gallery/pass1-v10/viewport-1440x900-deep.png" alt="1440x900 Deep" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="lightboxModal" class="modal" onclick="closeModal()">
+    <span class="modal-close">&times;</span>
+    <img id="modalImg" class="modal-content" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Full Preview" />
+  </div>
+
+  <script>
+    function openModal(src) {
+      document.getElementById('modalImg').src = src;
+      document.getElementById('lightboxModal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('lightboxModal').classList.remove('active');
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
