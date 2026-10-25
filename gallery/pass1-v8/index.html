@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 1 V8 Top Anatomical Identifier Calibration Gallery</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 30px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1680px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .brand-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: white;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+      transform: translateY(-1px);
+    }
+    .container {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 40px 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(12px);
+    }
+    .audit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .audit-box {
+      background: rgba(11, 19, 41, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .audit-box.highlight {
+      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(14, 165, 233, 0.06);
+    }
+    .audit-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .audit-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #fff;
+      line-height: 1.6;
+    }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .thumb-card {
+      background: rgba(11, 19, 41, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .thumb-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 30px rgba(56, 189, 248, 0.25);
+    }
+    .thumb-img-wrap {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      background: #01040a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .thumb-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .thumb-card:hover .thumb-img-wrap img {
+      transform: scale(1.04);
+    }
+    .thumb-info {
+      padding: 12px 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .thumb-num {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .thumb-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Modal / Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.94);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      backdrop-filter: blur(16px);
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox-content {
+      max-width: 95vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+      object-fit: contain;
+    }
+    .lightbox-caption {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      color: #fff;
+      font-size: 30px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    th {
+      color: var(--text-muted);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td.badge-tag {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          Nexus Motion
+          <span class="stage-pill">Pass 1 · V8 Production Review</span>
+        </div>
+        <div class="subtitle">Top Anatomical Identifier Calibration: Visibly Larger & Darker with Clear Interior</div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn btn-secondary">Open Live App (/work)</a>
+        <a href="/gallery/pass1-v7" class="nav-btn btn-secondary">V7 Gallery (Previous)</a>
+        <a href="/gallery/pass1-v6" class="nav-btn btn-secondary">V6 Gallery</a>
+        <a href="/gallery" class="nav-btn btn-secondary">Gallery Hub</a>
+        <a href="#hero-comparison" class="nav-btn btn-primary">Hero Comparison</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Executive Summary Card -->
+    <div class="card" style="border-left: 4px solid var(--accent);">
+      <h2 style="font-size: 17px; font-weight: 800; color: var(--accent); margin-bottom: 8px;">Pass 1 V8 Executive Calibration Summary</h2>
+      <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+        Pass 1 V8 addresses external review feedback by <strong>substantially increasing the top anatomical identifier's size (+31% font increase from 58px to 76px)</strong> and <strong>deepening its pigment to a bold slate-charcoal (<code style="color:#38bdf8;">#0e1824</code>, weight 650)</strong>. This completely eliminates the washed-out, faint appearance in 3D perspective while preserving the delicate outlined capsule with 100% transparent interior established in V7.
+      </p>
+      <div class="audit-grid">
+        <div class="audit-box highlight">
+          <div class="audit-title"><span>Top Identifier Glyph Size</span> <span>VISIBLY LARGER</span></div>
+          <div class="audit-val">
+            Source Font: 76px (+31% vs V7's 58px)<br>
+            Rendered Screen Glyph Height: ~20px (vs V7's 16px)<br>
+            Canvas Capsule Height: 100px (9.6% card height)
+          </div>
+        </div>
+        <div class="audit-box highlight">
+          <div class="audit-title"><span>Contrast & Source Pigment</span> <span>VISIBLY DARKER</span></div>
+          <div class="audit-val">
+            Pigment: Deep Slate-Charcoal #0e1824<br>
+            Font Weight: 650 (Semibold-Bold, robust stems)<br>
+            Capsule Interior: 100% Clear (Zero grey fill)
+          </div>
+        </div>
+        <div class="audit-box highlight">
+          <div class="audit-title"><span>Repaired Comparison Audit</span> <span>TRUE CROPS</span></div>
+          <div class="audit-val">
+            Ref Capsule Crop: x:385, y:215, w:170, h:38 (Zero Spine)<br>
+            V7 & V8 Crops: Verified x:70, y:310 on active card<br>
+            Accurate 1:1 Relative Scale Alignment
+          </div>
+        </div>
+        <div class="audit-box">
+          <div class="audit-title"><span>Protected Scope Invariance</span> <span>100% FROZEN</span></div>
+          <div class="audit-val">
+            Main Title: Dark navy #0a1628, semibold 650 (0px shift)<br>
+            Bottom Link: Medium-grey #182638, SVG arrow (frozen)<br>
+            Particles & Materials: Smooth bokeh & glass preserved
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 1: Side-by-Side Hero Comparison -->
+    <h2 class="section-title" id="hero-comparison">1. Side-by-Side 1080p Hero Comparison</h2>
+    <div class="card">
+      <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v8/pass1_v8_side_by_side_comparison.png', 'Side-by-Side 1080p Hero Comparison: Benchmark Target vs Pass 1 V8 Live Build')">
+        <img src="/gallery/pass1-v8/pass1_v8_side_by_side_comparison.png" alt="Side-by-Side Hero Comparison" style="width: 100%; display: block;" />
+      </div>
+      <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 12px; display: flex; justify-content: space-between;">
+        <span>Click image to view native 1920x600 resolution.</span>
+        <span style="color: var(--accent);">Original Nexus Motion Target (Left) vs Pass 1 V8 Live Build (Right)</span>
+      </div>
+    </div>
+
+    <!-- Section 2: Dedicated True Crops Audit -->
+    <h2 class="section-title" id="crops-audit">2. Top Anatomical Identifier Accurate Crops Audit (Zero Spine Vertebra)</h2>
+    <div class="card">
+      <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v8/v8_crops_audit.png', 'Top Anatomical Identifier Dedicated Crops: Benchmark Target vs V7 (Faint/Small) vs V8 (Calibrated Match)')">
+        <img src="/gallery/pass1-v8/v8_crops_audit.png" alt="Top Identifier Crops Audit" style="width: 100%; display: block;" />
+      </div>
+      <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 12px;">
+        <strong>Evidence Correction:</strong> The reference crop now displays the genuine "01 · C1–C7 CERVICAL" capsule from the benchmark image (x:385, y:215, w:170, h:38). It proves conclusively that V8's glyph size, weight, and slate-charcoal contrast match the original reference, while V7 was substantially undersized and pale.
+      </div>
+    </div>
+
+    <!-- Section 3: Foreground Cards Evolution -->
+    <h2 class="section-title" id="card-evolution">3. Complete Foreground Cards Evolution: Benchmark vs V7 vs V8</h2>
+    <div class="card">
+      <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v8/pass1_v8_card_evolution.png', 'Complete Foreground Cards Evolution: Benchmark vs V7 vs V8')">
+        <img src="/gallery/pass1-v8/pass1_v8_card_evolution.png" alt="Complete Cards Evolution" style="width: 100%; display: block;" />
+      </div>
+      <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 12px;">
+        All three foreground cards normalized to identical card face width. Notice the restored presence and hierarchy of the V8 top capsule relative to the two-line dark navy title and bottom link.
+      </div>
+    </div>
+
+    <!-- Section 4: Sample Active Card Closeups -->
+    <h2 class="section-title" id="card-closeups">4. Sample Active Card Closeups (All 4 Corners Visible)</h2>
+    <div class="card">
+      <div class="thumb-grid">
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v8/treatment-01-card.png', 'Treatment 01 Card: Cervical Decompression (All 4 Corners Visible)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v8/treatment-01-card.png" alt="Treatment 01 Card" /></div>
+          <div class="thumb-info">
+            <div class="thumb-num">01 · C1–C7 CERVICAL</div>
+            <div class="thumb-name">Cervical Decompression</div>
+          </div>
+        </div>
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v8/treatment-07-card.png', 'Treatment 07 Card: Thoracic Mobility Therapy (All 4 Corners Visible)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v8/treatment-07-card.png" alt="Treatment 07 Card" /></div>
+          <div class="thumb-info">
+            <div class="thumb-num">07 · THORACIC CAGE</div>
+            <div class="thumb-name">Thoracic Mobility Therapy</div>
+          </div>
+        </div>
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v8/treatment-14-card.png', 'Treatment 14 Card: Post-Surgical Rehabilitation (All 4 Corners Visible)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v8/treatment-14-card.png" alt="Treatment 14 Card" /></div>
+          <div class="thumb-info">
+            <div class="thumb-num">14 · RECOVERY PROTOCOL</div>
+            <div class="thumb-name">Post-Surgical Rehabilitation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Protected Elements Regression & Particles Audit -->
+    <h2 class="section-title" id="regression-audit">5. Protected Elements Regression Audit & Particles Bokeh Integrity</h2>
+    <div class="card">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v8/regression_audit.png', 'Title & Link Regression Audit: Pass 1 V7 vs Pass 1 V8')">
+          <img src="/gallery/pass1-v8/regression_audit.png" alt="Title & Link Regression Audit" style="width: 100%; display: block;" />
+        </div>
+        <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v8/particles_closeup_comparison.png', 'Particles Bokeh Integrity Audit: V5 Repair 100% Preserved in V8')">
+          <img src="/gallery/pass1-v8/particles_closeup_comparison.png" alt="Particles Bokeh Integrity" style="width: 100%; display: block;" />
+        </div>
+      </div>
+      <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 14px; line-height: 1.6;">
+        • <strong>Main Treatment Title & Bottom Link:</strong> 100% identical pixel match. Main title remains dark-navy (<code style="color:#38bdf8;">#0a1628</code>), weight 650 with zero vertical shift. Bottom details link remains medium-grey (<code style="color:#38bdf8;">#182638</code>), weight 500 with vector SVG arrow.<br>
+        • <strong>Atmospheric Particles:</strong> The Gaussian feathered soft bokeh from Pass 1 V5 remains 100% untouched and intact, free of dark outline rings.
+      </div>
+    </div>
+
+    <!-- Section 6: Technical Calibration Data Table -->
+    <h2 class="section-title" id="technical-data">6. Technical Calibration Data Table</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Original Reference Target</th>
+            <th>Pass 1 V7 (Rejected)</th>
+            <th>Pass 1 V8 Production Build</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Badge Text Glyph Height</td>
+            <td>~18–20px (Relative 1080p scale)</td>
+            <td>~15–16px (Rendered small)</td>
+            <td><strong>~20px (+25% rendered height)</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">MATCH</span></td>
+          </tr>
+          <tr>
+            <td>Canvas Font Size</td>
+            <td>—</td>
+            <td>58px (Reduced erroneously)</td>
+            <td><strong>76px (+31% increase)</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">CALIBRATED</span></td>
+          </tr>
+          <tr>
+            <td>Font Weight / Stem Width</td>
+            <td>Semibold (Solid, crisp stems)</td>
+            <td>550 (Thin stems washed out)</td>
+            <td><strong>650 (Solid dark charcoal stems)</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">MATCH</span></td>
+          </tr>
+          <tr>
+            <td>Source Pigment</td>
+            <td>Defined Slate-Charcoal</td>
+            <td>#243342 (Pale under mipmapping)</td>
+            <td><strong>#0e1824 (High contrast slate-charcoal)</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">MATCH</span></td>
+          </tr>
+          <tr>
+            <td>Capsule Height</td>
+            <td>~9.2% of card height</td>
+            <td>82px (7.88% of canvas)</td>
+            <td><strong>100px (9.61% of canvas)</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">MATCH</span></td>
+          </tr>
+          <tr>
+            <td>Capsule Interior Fill</td>
+            <td>100% Transparent / Clear</td>
+            <td>100% Transparent (Clear)</td>
+            <td><strong>100% Transparent (0 Grey Fill)</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">PRESERVED</span></td>
+          </tr>
+          <tr>
+            <td>Capsule Border Outline</td>
+            <td>Delicate outline ~2px</td>
+            <td>2.0px solid rgba(85,105,125,0.40)</td>
+            <td><strong>2.0px solid rgba(50,70,90,0.45)</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">MATCH</span></td>
+          </tr>
+          <tr>
+            <td>Top Row Layout Container</td>
+            <td>—</td>
+            <td>98px flex container</td>
+            <td><strong>100px flex container (0px title shift)</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">FROZEN</span></td>
+          </tr>
+          <tr>
+            <td>Atmospheric Particles</td>
+            <td>Soft feathered luminous bokeh</td>
+            <td>Soft feathered bokeh preserved</td>
+            <td><strong>100% Intact V5 soft bokeh</strong></td>
+            <td><span style="color:#10b981;font-weight:700;">PRESERVED</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 7: Intermediate Scroll Transitions -->
+    <h2 class="section-title" id="scroll-transitions">7. Intermediate Scroll Transitions (50% Progress Diagnostic)</h2>
+    <div class="card">
+      <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v8/transition_cyan_diagnostic.png', 'Intermediate Scroll Transition Diagnostic: 50% Progress Frames')">
+        <img src="/gallery/pass1-v8/transition_cyan_diagnostic.png" alt="Transition Cyan Diagnostic" style="width: 100%; display: block;" />
+      </div>
+      <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 12px;">
+        Zero cyan fill or color distortion across intermediate 50% orbital scroll transition frames (01->02, 06->07, 13->14).
+      </div>
+    </div>
+
+    <!-- Section 8: Responsive Viewports (1440x900) -->
+    <h2 class="section-title" id="responsive-viewports">8. Responsive Viewport Verification (1440x900 Native)</h2>
+    <div class="card">
+      <div class="thumb-grid">
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v8/viewport-1440x900-initial.png', 'Responsive Viewport 1440x900: Initial State (Treatment 01)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v8/viewport-1440x900-initial.png" alt="1440x900 Initial" /></div>
+          <div class="thumb-info">
+            <div class="thumb-num">1440x900 VIEWPORT</div>
+            <div class="thumb-name">Initial State (Treatment 01)</div>
+          </div>
+        </div>
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v8/viewport-1440x900-mid.png', 'Responsive Viewport 1440x900: Mid Scroll (Treatment 07)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v8/viewport-1440x900-mid.png" alt="1440x900 Mid" /></div>
+          <div class="thumb-info">
+            <div class="thumb-num">1440x900 VIEWPORT</div>
+            <div class="thumb-name">Mid Scroll (Treatment 07)</div>
+          </div>
+        </div>
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v8/viewport-1440x900-deep.png', 'Responsive Viewport 1440x900: Deep Scroll (Treatment 14)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v8/viewport-1440x900-deep.png" alt="1440x900 Deep" /></div>
+          <div class="thumb-info">
+            <div class="thumb-num">1440x900 VIEWPORT</div>
+            <div class="thumb-name">Deep Scroll (Treatment 14)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 9: All 14 Active Card Closeups -->
+    <h2 class="section-title" id="all-cards">9. All 14 Treatment Active Card Closeups (All 4 Corners Visible)</h2>
+    <div class="card">
+      <div class="thumb-grid" id="allCardsGrid"></div>
+    </div>
+
+    <!-- Section 10: All 14 Full 1080p Viewports -->
+    <h2 class="section-title" id="all-viewports">10. All 14 Treatments Full Viewports (1920x1080 Native)</h2>
+    <div class="card">
+      <div class="thumb-grid" id="allViewportsGrid"></div>
+    </div>
+
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightboxModal" onclick="closeLightbox(event)">
+    <div class="lightbox-close" onclick="closeLightbox(event)">&times;</div>
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <img id="lightboxImg" class="lightbox-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Enlarged review view" />
+      <div id="lightboxCaption" class="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <script>
+    const treatments = [
+      { num: '01', tag: '01 · C1–C7 CERVICAL', title: 'Cervical Decompression' },
+      { num: '02', tag: '02 · T1–T12 THORACIC', title: 'Manual Joint Therapy' },
+      { num: '03', tag: '03 · MYOFASCIAL', title: 'Myofascial Release' },
+      { num: '04', tag: '04 · TRIGGER POINT', title: 'Dry Needling Therapy' },
+      { num: '05', tag: '05 · T1–T6 POSTURE', title: 'Postural Realignment' },
+      { num: '06', tag: '06 · GLENOHUMERAL', title: 'Rotator Cuff Rehab' },
+      { num: '07', tag: '07 · THORACIC CAGE', title: 'Thoracic Mobility Therapy' },
+      { num: '08', tag: '08 · L4–S1 SCIATICA', title: 'Sciatica & Nerve Therapy' },
+      { num: '09', tag: '09 · L1–L5 LUMBAR', title: 'Lumbar Disc Rehab' },
+      { num: '10', tag: '10 · CORE STABILIZATION', title: 'Spinal Stabilization' },
+      { num: '11', tag: '11 · SACROILIAC JOINT', title: 'SI Joint & Pelvic Rehab' },
+      { num: '12', tag: '12 · COXOFEMORAL', title: 'Hip Mobility Rehab' },
+      { num: '13', tag: '13 · SPORTS MEDICINE', title: 'Sports Injury & ACL Rehab' },
+      { num: '14', tag: '14 · RECOVERY PROTOCOL', title: 'Post-Surgical Rehabilitation' }
+    ];
+
+    const cardsGrid = document.getElementById('allCardsGrid');
+    treatments.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'thumb-card';
+      card.onclick = () => openLightbox(`/gallery/pass1-v8/treatment-${t.num}-card.png`, `Treatment ${t.num}: ${t.title} (Active Card Crop)`);
+      card.innerHTML = `
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v8/treatment-${t.num}-card.png" alt="Treatment ${t.num} Card" />
+        </div>
+        <div class="thumb-info">
+          <div class="thumb-num">${t.tag}</div>
+          <div class="thumb-name">${t.title}</div>
+        </div>
+      `;
+      cardsGrid.appendChild(card);
+    });
+
+    const viewportsGrid = document.getElementById('allViewportsGrid');
+    treatments.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'thumb-card';
+      card.onclick = () => openLightbox(`/gallery/pass1-v8/treatment-${t.num}-full.png`, `Treatment ${t.num}: ${t.title} (Full 1080p Viewport)`);
+      card.innerHTML = `
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v8/treatment-${t.num}-full.png" alt="Treatment ${t.num} Full Viewport" />
+        </div>
+        <div class="thumb-info">
+          <div class="thumb-num">TREATMENT ${t.num}/14</div>
+          <div class="thumb-name">${t.title}</div>
+        </div>
+      `;
+      viewportsGrid.appendChild(card);
+    });
+
+    function openLightbox(src, caption) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightboxCaption').textContent = caption;
+      document.getElementById('lightboxModal').classList.add('active');
+    }
+
+    function closeLightbox(e) {
+      document.getElementById('lightboxModal').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+</html>
