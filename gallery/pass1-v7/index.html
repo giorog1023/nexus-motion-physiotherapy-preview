@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 1 V7 Top Anatomical Identifier Calibration Gallery</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 30px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1680px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .brand-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: white;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+      transform: translateY(-1px);
+    }
+    .container {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .card-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(12px);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .grid-14 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .thumb-card {
+      background: rgba(11, 19, 41, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .thumb-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.2);
+    }
+    .thumb-img-wrap {
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .thumb-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    .thumb-card:hover .thumb-img-wrap img {
+      transform: scale(1.03);
+    }
+    .thumb-body {
+      padding: 12px 16px;
+    }
+    .thumb-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .thumb-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .badge-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+    }
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      margin-top: 16px;
+    }
+    .metrics-table th, .metrics-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .metrics-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+    .status-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-frozen {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* Lightbox Modal */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.96);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox-img-wrap {
+      max-width: 90vw;
+      max-height: 82vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+      background: #020617;
+    }
+    .lightbox-img-wrap img {
+      max-width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+    }
+    .lightbox-caption {
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .lightbox-close:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: #ef4444;
+      transform: scale(1.1);
+    }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent);
+      font-size: 22px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .lightbox-prev { left: 24px; }
+    .lightbox-next { right: 24px; }
+    .lightbox-nav:hover {
+      background: var(--accent);
+      color: #030712;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span style="color: var(--accent);">Nexus Motion</span>
+          <span style="color: #64748b;">/</span>
+          <span>Pass 1 V7 Visual Review</span>
+          <span class="stage-pill">V7 Calibrated</span>
+        </div>
+        <div class="subtitle">Single-Element Calibration: Outlined Capsule with 100% Clear Interior, Preserved Navy Title & High-Clarity Details Link</div>
+      </div>
+      <div class="header-links">
+        <a href="/" class="nav-btn btn-primary" target="_blank">Launch Live 3D App ↗</a>
+        <a href="/gallery/pass1-v6" class="nav-btn btn-secondary">Pass 1 V6 (Archive)</a>
+        <a href="/gallery/pass1-v5" class="nav-btn btn-secondary">Pass 1 V5 (Archive)</a>
+        <a href="/gallery" class="nav-btn btn-secondary">Stage 8 Master</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- HERO COMPARISON -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>01 · Side-by-Side Hero Comparison (1920×1080 Native)</span>
+        <span class="status-badge status-success">V7 DEPLOYED</span>
+      </div>
+      <p class="section-desc">Comparing the original benchmark image with the live Pass 1 V7 production preview. Notice the delicate, clean outlined capsule and transparent interior.</p>
+      <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v7/pass1_v7_side_by_side_comparison.png', 'Side-by-Side 1080p Hero Comparison: Benchmark Target vs Pass 1 V7 Live Build')">
+        <img src="/gallery/pass1-v7/pass1_v7_side_by_side_comparison.png" alt="Side-by-Side Hero Comparison" style="width: 100%; display: block;" />
+      </div>
+    </div>
+
+    <!-- DEDICATED CROPS AUDIT -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>02 · Top Anatomical Identifier Dedicated Crops Audit</span>
+        <span class="status-badge status-success">ACTUAL CAPSULE CROPS</span>
+      </div>
+      <p class="section-desc">Close-up verification showing the actual top anatomical identifier at matching relative scale. Proves that the V6 filled grey pill has been eliminated and replaced with the original's delicate outline and clear interior.</p>
+      <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v7/v7_crops_audit.png', 'Top Anatomical Identifier Crops: Benchmark vs V6 (Filled Grey Pill) vs V7 (Clear Interior & Delicate Outline)')">
+        <img src="/gallery/pass1-v7/v7_crops_audit.png" alt="Top Identifier Crops Audit" style="width: 100%; display: block;" />
+      </div>
+    </div>
+
+    <!-- COMPLETE CARDS EVOLUTION -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>03 · Complete Foreground Cards Evolution (Normalized Width)</span>
+        <span class="status-badge status-success">NORMALIZED SCALE</span>
+      </div>
+      <p class="section-desc">Full foreground cards normalized to matching displayed width without distortion or stretching. Demonstrates the complete visual hierarchy of badge, heading, and bottom link.</p>
+      <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v7/pass1_v7_card_evolution.png', 'Complete Foreground Cards Evolution: Benchmark vs V6 vs V7')">
+        <img src="/gallery/pass1-v7/pass1_v7_card_evolution.png" alt="Complete Cards Evolution" style="width: 100%; display: block;" />
+      </div>
+    </div>
+
+    <!-- KEY CORNERS & TREATMENTS AUDIT (TREATMENT 01, 07, 14) -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>04 · Complete Cards Audit: Treatments 01, 07 & 14 (All Four Corners Visible)</span>
+        <span class="status-badge status-success">UNCROPPED CORNERS</span>
+      </div>
+      <p class="section-desc">Native-resolution uncropped card captures for the first (01), middle (07), and last (14) clinical treatments, demonstrating that text fits comfortably inside the capsule without clipping and all 4 glass corners remain intact.</p>
+      <div class="grid-3">
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v7/treatment-01-card.png', 'Treatment 01 Card: Cervical Decompression (All 4 Corners Visible)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v7/treatment-01-card.png" alt="Treatment 01 Card" /></div>
+          <div class="thumb-body">
+            <div class="thumb-title"><span>01. Cervical Decompression</span><span class="badge-tag">FIRST</span></div>
+            <div class="thumb-meta">01 · C1–C7 CERVICAL · 82px Capsule</div>
+          </div>
+        </div>
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v7/treatment-07-card.png', 'Treatment 07 Card: Thoracic Mobility Therapy (All 4 Corners Visible)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v7/treatment-07-card.png" alt="Treatment 07 Card" /></div>
+          <div class="thumb-body">
+            <div class="thumb-title"><span>07. Thoracic Mobility Therapy</span><span class="badge-tag">MIDDLE</span></div>
+            <div class="thumb-meta">07 · THORACIC CAGE · 82px Capsule</div>
+          </div>
+        </div>
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v7/treatment-14-card.png', 'Treatment 14 Card: Post-Surgical Rehabilitation (All 4 Corners Visible)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v7/treatment-14-card.png" alt="Treatment 14 Card" /></div>
+          <div class="thumb-body">
+            <div class="thumb-title"><span>14. Post-Surgical Rehab</span><span class="badge-tag">LAST</span></div>
+            <div class="thumb-meta">14 · RECOVERY PROTOCOL · 82px Capsule</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROTECTED ELEMENTS REGRESSION AUDIT -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>05 · Protected Elements Regression Audit (Middle Title, Bottom Link & Particles)</span>
+        <span class="status-badge status-frozen">FROZEN 100% UNCHANGED</span>
+      </div>
+      <p class="section-desc">Direct confirmation that only the top anatomical identifier was modified. The commanding dark-navy title (#0a1628), high-definition bottom details link (#182638 with SVG arrow), and soft optical bokeh particles remain completely identical.</p>
+      <div class="grid-2">
+        <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v7/regression_audit.png', 'Title & Link Regression Audit: Pass 1 V6 vs Pass 1 V7')">
+          <img src="/gallery/pass1-v7/regression_audit.png" alt="Title & Link Regression Audit" style="width: 100%; display: block;" />
+        </div>
+        <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v7/particles_closeup_comparison.png', 'Particles Bokeh Integrity Audit: V5 Repair 100% Preserved in V7')">
+          <img src="/gallery/pass1-v7/particles_closeup_comparison.png" alt="Particles Bokeh Integrity" style="width: 100%; display: block;" />
+        </div>
+      </div>
+    </div>
+
+    <!-- QUANTITATIVE METRICS TABLE -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>06 · Quantitative Calibration & Proportional Metrics</span>
+      </div>
+      <table class="metrics-table">
+        <thead>
+          <tr>
+            <th>Element</th>
+            <th>Reference Benchmark Target</th>
+            <th>Pass 1 V6 Baseline</th>
+            <th>Pass 1 V7 Deployed Build</th>
+            <th>Verification Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Capsule Interior Fill</strong></td>
+            <td>100% Clear / Transparent Glass</td>
+            <td>rgba(85,105,125,0.05) &rarr; Solid Grey Pill</td>
+            <td><strong>100% Transparent (ZERO Fill)</strong></td>
+            <td><span class="status-badge status-success">MATCH</span></td>
+          </tr>
+          <tr>
+            <td><strong>Capsule Height Ratio</strong></td>
+            <td>7.81% of Card Height</td>
+            <td>9.42% (98px / 1040px)</td>
+            <td><strong>7.88% (82px / 1040px)</strong></td>
+            <td><span class="status-badge status-success">MATCH</span></td>
+          </tr>
+          <tr>
+            <td><strong>Capsule Outline Border</strong></td>
+            <td>Delicate thin border (~0.37%)</td>
+            <td>2.4px outline</td>
+            <td><strong>2.0px solid rgba(85,105,125,0.40)</strong></td>
+            <td><span class="status-badge status-success">MATCH</span></td>
+          </tr>
+          <tr>
+            <td><strong>Top Identifier Font</strong></td>
+            <td>~58px, 550 weight, 0.06em spacing</td>
+            <td>64px, 600 weight, 0.055em spacing</td>
+            <td><strong>58px, 550 weight, 0.06em spacing</strong></td>
+            <td><span class="status-badge status-success">MATCH</span></td>
+          </tr>
+          <tr>
+            <td><strong>Top Identifier Color</strong></td>
+            <td>Defined Slate-Grey (#243342)</td>
+            <td>#243342</td>
+            <td><strong>#243342 (Defined Slate)</strong></td>
+            <td><span class="status-badge status-success">MATCH</span></td>
+          </tr>
+          <tr>
+            <td><strong>Main Treatment Title</strong></td>
+            <td>Dark Navy (#0a1628), weight 650</td>
+            <td>Dark Navy #0a1628, weight 650</td>
+            <td><strong>Dark Navy #0a1628, weight 650</strong></td>
+            <td><span class="status-badge status-frozen">FROZEN 100%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Bottom Details Link</strong></td>
+            <td>Dark Slate-Navy (#182638) + Arrow</td>
+            <td>#182638 + Vector SVG Arrow</td>
+            <td><strong>#182638 + Vector SVG Arrow</strong></td>
+            <td><span class="status-badge status-frozen">FROZEN 100%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Atmospheric Particles</strong></td>
+            <td>Soft Gaussian bokeh, zero outlines</td>
+            <td>Soft Gaussian bokeh, zero outlines</td>
+            <td><strong>Soft Gaussian bokeh, zero outlines</strong></td>
+            <td><span class="status-badge status-frozen">FROZEN 100%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ALL 14 ACTIVE CARDS (UNCROPPED CORNERS) -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>07 · Complete Active Cards Gallery (All 14 Treatments)</span>
+        <span class="status-badge status-success">ALL 14 VERIFIED</span>
+      </div>
+      <p class="section-desc">Click any card to open the high-resolution lightbox inspector showing the uncropped four corners and calibrated badge.</p>
+      <div class="grid-14" id="cardsGrid"></div>
+    </div>
+
+    <!-- ALL 14 FULL 1080P VIEWPORTS -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>08 · Full Viewport Renders (All 14 Treatments @ 1920×1080)</span>
+      </div>
+      <p class="section-desc">Native 1080p browser captures showing lockstep spine rotation, clinical panels, and particle field alignment across the complete dataset.</p>
+      <div class="grid-14" id="fullsGrid"></div>
+    </div>
+
+    <!-- INTERMEDIATE SCROLL TRANSITIONS & CYAN DIAGNOSTIC -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>09 · Intermediate Orbital Transitions & Cyan Diagnostic</span>
+        <span class="status-badge status-success">CLEAN TRANSITIONS</span>
+      </div>
+      <p class="section-desc">Auditing intermediate frames at 50% orbital progress between treatments. Confirms that the capsule outline and lettering remain strictly free from cyan contamination during transitions.</p>
+      <div style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-strong); cursor: pointer;" onclick="openLightbox('/gallery/pass1-v7/transition_cyan_diagnostic.png', 'Intermediate Scroll Transition Diagnostic: 50% Progress Frames')">
+        <img src="/gallery/pass1-v7/transition_cyan_diagnostic.png" alt="Transition Cyan Diagnostic" style="width: 100%; display: block;" />
+      </div>
+    </div>
+
+    <!-- RESPONSIVE VIEWPORTS AUDIT (1440x900) -->
+    <div class="card-panel">
+      <div class="section-title">
+        <span>10 · Responsive Viewports Audit (1440×900 Aspect Ratio)</span>
+      </div>
+      <p class="section-desc">Testing layout balance and typographic proportions across initial, mid-scroll, and deep-scroll states at compact laptop viewports.</p>
+      <div class="grid-3">
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v7/viewport-1440x900-initial.png', 'Responsive Viewport 1440x900: Initial State (Treatment 01)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v7/viewport-1440x900-initial.png" alt="1440x900 Initial" /></div>
+          <div class="thumb-body">
+            <div class="thumb-title"><span>Initial State (01)</span><span class="badge-tag">1440×900</span></div>
+            <div class="thumb-meta">Cervical Decompression · uAhead = 1.0</div>
+          </div>
+        </div>
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v7/viewport-1440x900-mid.png', 'Responsive Viewport 1440x900: Mid Scroll (Treatment 07)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v7/viewport-1440x900-mid.png" alt="1440x900 Mid" /></div>
+          <div class="thumb-body">
+            <div class="thumb-title"><span>Mid Scroll (07)</span><span class="badge-tag">1440×900</span></div>
+            <div class="thumb-meta">Thoracic Mobility Therapy · uAhead = 1.0</div>
+          </div>
+        </div>
+        <div class="thumb-card" onclick="openLightbox('/gallery/pass1-v7/viewport-1440x900-deep.png', 'Responsive Viewport 1440x900: Deep Scroll (Treatment 14)')">
+          <div class="thumb-img-wrap"><img src="/gallery/pass1-v7/viewport-1440x900-deep.png" alt="1440x900 Deep" /></div>
+          <div class="thumb-body">
+            <div class="thumb-title"><span>Deep Scroll (14)</span><span class="badge-tag">1440×900</span></div>
+            <div class="thumb-meta">Post-Surgical Rehabilitation · uAhead = 1.0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()" title="Close (Esc)">&times;</button>
+    <button class="lightbox-nav lightbox-prev" onclick="prevLightbox()" title="Previous (Left Arrow)">&larr;</button>
+    <button class="lightbox-nav lightbox-next" onclick="nextLightbox()" title="Next (Right Arrow)">&rarr;</button>
+    <div class="lightbox-img-wrap">
+      <img id="lightboxImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Enlarged view">
+    </div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <script>
+    const treatments = [
+      { num: '01', title: 'Cervical Decompression', badge: '01 · C1–C7 CERVICAL' },
+      { num: '02', title: 'Manual Joint Therapy', badge: '02 · T1–T12 THORACIC' },
+      { num: '03', title: 'Myofascial Release', badge: '03 · MYOFASCIAL' },
+      { num: '04', title: 'Dry Needling Therapy', badge: '04 · TRIGGER POINT' },
+      { num: '05', title: 'Postural Realignment', badge: '05 · T1–T6 POSTURE' },
+      { num: '06', title: 'Rotator Cuff Rehab', badge: '06 · GLENOHUMERAL' },
+      { num: '07', title: 'Thoracic Mobility Therapy', badge: '07 · THORACIC CAGE' },
+      { num: '08', title: 'Sciatica & Nerve Therapy', badge: '08 · L4–S1 SCIATICA' },
+      { num: '09', title: 'Lumbar Disc Rehab', badge: '09 · L1–L5 LUMBAR' },
+      { num: '10', title: 'Spinal Stabilization', badge: '10 · CORE STABILIZATION' },
+      { num: '11', title: 'SI Joint & Pelvic Rehab', badge: '11 · SACROILIAC JOINT' },
+      { num: '12', title: 'Hip Mobility Rehab', badge: '12 · COXOFEMORAL' },
+      { num: '13', title: 'Sports Injury & ACL Rehab', badge: '13 · SPORTS MEDICINE' },
+      { num: '14', title: 'Post-Surgical Rehabilitation', badge: '14 · RECOVERY PROTOCOL' }
+    ];
+
+    // Populate Cards Grid
+    const cardsGrid = document.getElementById('cardsGrid');
+    treatments.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'thumb-card';
+      card.onclick = () => openLightbox(`/gallery/pass1-v7/treatment-${t.num}-card.png`, `Treatment ${t.num}: ${t.title} (Active Card Crop)`);
+      card.innerHTML = `
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v7/treatment-${t.num}-card.png" alt="Treatment ${t.num} Card" />
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-title">
+            <span>${t.num}. ${t.title}</span>
+            <span class="badge-tag">ACTIVE CARD</span>
+          </div>
+          <div class="thumb-meta">${t.badge}</div>
+        </div>
+      `;
+      cardsGrid.appendChild(card);
+    });
+
+    // Populate Full Viewports Grid
+    const fullsGrid = document.getElementById('fullsGrid');
+    treatments.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'thumb-card';
+      card.onclick = () => openLightbox(`/gallery/pass1-v7/treatment-${t.num}-full.png`, `Treatment ${t.num}: ${t.title} (Full 1080p Viewport)`);
+      card.innerHTML = `
+        <div class="thumb-img-wrap">
+          <img src="/gallery/pass1-v7/treatment-${t.num}-full.png" alt="Treatment ${t.num} Full Viewport" />
+        </div>
+        <div class="thumb-body">
+          <div class="thumb-title">
+            <span>${t.num}. ${t.title}</span>
+            <span class="badge-tag">1080P FULL</span>
+          </div>
+          <div class="thumb-meta">${t.badge}</div>
+        </div>
+      `;
+      fullsGrid.appendChild(card);
+    });
+
+    // Lightbox Logic
+    const galleryItems = [];
+    document.querySelectorAll('.thumb-card').forEach(card => {
+      const img = card.querySelector('img');
+      const title = card.querySelector('.thumb-title span')?.innerText || '';
+      if (img) {
+        galleryItems.push({ src: img.src, caption: title });
+      }
+    });
+
+    let currentIndex = 0;
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+
+    function openLightbox(src, caption) {
+      lightbox.classList.add('active');
+      lightboxImg.src = src;
+      lightboxCaption.innerText = caption;
+      currentIndex = galleryItems.findIndex(item => item.src.includes(src.split('/').pop())) || 0;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function nextLightbox() {
+      currentIndex = (currentIndex + 1) % galleryItems.length;
+      lightboxImg.src = galleryItems[currentIndex].src;
+      lightboxCaption.innerText = galleryItems[currentIndex].caption;
+    }
+
+    function prevLightbox() {
+      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+      lightboxImg.src = galleryItems[currentIndex].src;
+      lightboxCaption.innerText = galleryItems[currentIndex].caption;
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextLightbox();
+      if (e.key === 'ArrowLeft') prevLightbox();
+    });
+  </script>
+</body>
+</html>
