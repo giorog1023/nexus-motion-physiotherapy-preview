@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/gallery/pass1-v18/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 1 V18 Treatment Details Link: Calibrated Fine & Delicate Arrow Stroke (1.1px)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #030712;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent);
+    }
+    .container {
+      max-width: 1440px;
+      margin: 32px auto 0;
+      padding: 0 32px;
+    }
+    .audit-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .section-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-bottom: 20px;
+      max-width: 1100px;
+      line-height: 1.55;
+    }
+    .preview-img-container {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: #000;
+      margin: 0 auto 24px auto;
+      cursor: pointer;
+    }
+    .preview-img-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Interactive 4-Way Viewer */
+    .interactive-viewer-box {
+      background: #060d1a;
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .view-toggle-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .view-toggle-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .view-toggle-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .view-toggle-btn.active {
+      color: #030712;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .interactive-canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+      max-width: 530px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    }
+    .interactive-canvas-wrap canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .interactive-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 14px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Tabs */
+    .tabs-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-color: var(--border);
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    /* Grid for 14 Treatments */
+    .treatments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .treatment-item {
+      background: #080f21;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+    .treatment-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+    .treatment-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .treatment-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .treatment-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .treatment-thumb {
+      padding: 12px;
+      background: #000;
+      cursor: pointer;
+    }
+    .treatment-thumb img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      display: block;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .treatment-actions {
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.3);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .treatment-link {
+      font-size: 11.5px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .treatment-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Specifications Table */
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    .specs-table th {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      text-align: left;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-weight: 600;
+    }
+    .specs-table td {
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+    .specs-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .highlight-pass {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .highlight-fail {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .highlight-warn {
+      color: var(--warning);
+      font-weight: 700;
+    }
+
+    /* Responsive Viewports Section */
+    .viewport-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 20px;
+    }
+    .viewport-item {
+      background: #080f21;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .viewport-item h4 {
+      padding: 12px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+    .viewport-item img {
+      width: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Banner -->
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">PASS 1 · V18</span>
+        </div>
+        <div class="subtitle">Arrow Stroke Thickness ONLY: Calibrated Delicate 1.1px Stroke (3.48px Canvas / ~1.08px Screen Eq.) · Preserved 76px Box & translateY(7px) Alignment · 100% Frozen Text #243040 & Top Badge</div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn btn-primary" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          Live 3D Site (/work)
+        </a>
+        <a href="/gallery.html" class="nav-btn btn-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Gallery Hub
+        </a>
+        <a href="/gallery/pass1-v17/" class="nav-btn btn-secondary">
+          Pass 1 V17
+        </a>
+        <a href="/gallery/pass1-v16/" class="nav-btn btn-secondary">
+          Pass 1 V16
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Tabs Header -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('evolution')">Forensic Evolution & Audits</button>
+      <button class="tab-btn" onclick="switchTab('treatments')">All 14 Clinical Treatments</button>
+      <button class="tab-btn" onclick="switchTab('responsive')">Viewports & Transitions</button>
+      <button class="tab-btn" onclick="switchTab('specs')">Calibration Specifications</button>
+    </div>
+
+    <!-- TAB 1: EVOLUTION & FORENSIC AUDITS -->
+    <div id="tab-evolution" class="tab-pane">
+
+      <!-- Executive Overview Card -->
+      <div class="audit-card">
+        <h2 class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Executive Summary · Pass 1 V18 Arrow Stroke Calibration
+        </h2>
+        <p class="section-desc">
+          Pass 1 V17 achieved correct outer dimensions (76px SVG box) and baseline alignment (translateY(7px)), but its arrow still appeared substantially too bold because the SVG stroke width (3.8px in a 24x24 viewBox) scaled up by 3.167x on canvas to 12.03px (~3.75px on screen). 
+          <strong>Pass 1 V18 calibrates the arrow stroke width to 1.1px</strong> in the 24x24 viewBox, producing an exact <strong>3.48px canvas stroke / ~1.08px screen equivalent</strong> (-71% stroke volume). This delivers a genuinely fine-line, delicate, elegant diagonal shaft and arrowhead matching the original Nexus Motion reference, while 100% preserving the approved outer box (76px), baseline alignment (translateY(7px)), text gap (18px), text color (#243040), text size (68px), text vertical position (translateY(-72px)), and approved top anatomical identifier.
+        </p>
+
+        <!-- Interactive 4-Way Viewer -->
+        <div class="interactive-viewer-box">
+          <div class="view-toggle-bar">
+            <button class="view-toggle-btn" onclick="setInteractiveMode('ref')">Original Reference Benchmark</button>
+            <button class="view-toggle-btn" onclick="setInteractiveMode('v16')">Pass 1 V16 (Oversized 94px)</button>
+            <button class="view-toggle-btn" onclick="setInteractiveMode('v17')">Pass 1 V17 (Heavy 3.8px Stroke)</button>
+            <button class="view-toggle-btn active" onclick="setInteractiveMode('v18')">Pass 1 V18 (Calibrated Fine 1.1px Stroke)</button>
+          </div>
+          <div class="interactive-canvas-wrap">
+            <canvas id="interactiveCanvas" width="530" height="525"></canvas>
+          </div>
+          <div class="interactive-meta" id="interactiveMeta">
+            Pass 1 V18: 76px SVG Box · Fine 1.1px Stroke (~1.08px Screen Eq.) · Shaft at Baseline · Frozen Text #243040 · 25.0% Margin
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit 1: Complete Card Evolution -->
+      <div class="audit-card">
+        <h2 class="section-title">1. Complete Foreground Card Evolution (Natural Proportions)</h2>
+        <p class="section-desc">Four-version progression showing the Original Reference Benchmark, Pass 1 V16 (oversized bold arrow), Pass 1 V17 (heavy 3.8px stroke), and Pass 1 V18 (calibrated fine 1.1px stroke matching benchmark) at matched card scale.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/pass1_v18_card_evolution.png" alt="Card Evolution Comparison">
+        </div>
+      </div>
+
+      <!-- Audit 2: Genuine Bottom Link Comparison -->
+      <div class="audit-card">
+        <h2 class="section-title">2. Genuine Bottom Details Link & Lower Card Specular Rim</h2>
+        <p class="section-desc">Forensic crops capturing the full "View Treatment Details ↗" link, the refined delicate arrow weight, and the lower specular rim of each card. Verifying upward lift (~25.0% margin) and 0 spine bleed.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/pass1_v18_bottom_link_comparison.png" alt="Bottom Link Comparison">
+        </div>
+      </div>
+
+      <!-- Audit 3: Dedicated Arrow Close-up Comparison -->
+      <div class="audit-card">
+        <h2 class="section-title">3. Dedicated Arrow Geometry & Stroke Thickness (Verified Forensic Crops)</h2>
+        <p class="section-desc">High-magnification pixel inspection of the ACTUAL rendered arrows across versions, demonstrating genuine fine-line diagonal shaft and delicate arrowhead geometry matching the benchmark.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/pass1_v18_arrow_comparison.png" alt="Arrow Close-up Comparison">
+        </div>
+      </div>
+
+      <!-- Audit 4: Native Resolution Stroke Comparison -->
+      <div class="audit-card">
+        <h2 class="section-title">4. Native Resolution Full Link & Arrow Alignment</h2>
+        <p class="section-desc">Direct 1:1 pixel crops showing the full "View Treatment Details ↗" link at native resolution. Demonstrating that the diagonal shaft and arrowhead are noticeably thinner while outer dimensions and baseline alignment remain preserved.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/pass1_v18_native_stroke_audit.png" alt="Native Stroke Audit">
+        </div>
+      </div>
+
+      <!-- Audit 5: Card Bottom Spacing & Calipers Audit -->
+      <div class="audit-card">
+        <h2 class="section-title">5. Card Bottom Spacing & Measurement Calipers Audit</h2>
+        <p class="section-desc">Cyan caliper brackets demonstrating exact distance from text baseline to lower specular card rim. Pass 1 V18 completely preserves the approved ~25.0% margin ratio matching the original benchmark.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/pass1_v18_link_position_comparison.png" alt="Link Position Comparison">
+        </div>
+      </div>
+
+      <!-- Audit 6: Key Treatments Calibration -->
+      <div class="audit-card">
+        <h2 class="section-title">6. Key Clinical Treatments Calibration Audit (01, 02, 07, 14)</h2>
+        <p class="section-desc">Demonstrating uniform upward placement, typography scaling, neutral slate color, and delicate elegant arrow across varied clinical identifiers.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/pass1_v18_key_treatments_comparison.png" alt="Key Treatments Comparison">
+        </div>
+      </div>
+
+      <!-- Audit 7: Upper Card & Top Badge Preservation -->
+      <div class="audit-card">
+        <h2 class="section-title">7. Upper Card & Top Badge Regression Audit</h2>
+        <p class="section-desc">Confirming 100% preservation of the approved V14 top anatomical identifier (capsule height ~38px screen / 132px canvas, padding, centered dot & dash, font weight 580, color #08101a, 0.000px drift).</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/v18_crops_audit.png" alt="Upper Card Crops Audit">
+        </div>
+      </div>
+
+      <!-- Audit 8: Hero 1080p Side-by-Side -->
+      <div class="audit-card">
+        <h2 class="section-title">8. Native 1080p Hero Viewport Side-by-Side Comparison</h2>
+        <p class="section-desc">Full 1920x1080 direct visual comparison between the Original Reference Benchmark (Source of Truth) and Pass 1 V18 Production Preview.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/pass1_v18_side_by_side_comparison.png" alt="Side by Side Comparison">
+        </div>
+      </div>
+
+      <!-- Audit 9: Regression Audit -->
+      <div class="audit-card">
+        <h2 class="section-title">9. Non-Target Elements Stability Audit</h2>
+        <p class="section-desc">Verifying zero unintended drift across primary title typography and bottom treatment-details link face.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/regression_audit.png" alt="Non-Target Elements Audit">
+        </div>
+      </div>
+
+      <!-- Audit 10: Atmospheric Bokeh Particles -->
+      <div class="audit-card">
+        <h2 class="section-title">10. Atmospheric Soft Bokeh Particles Audit</h2>
+        <p class="section-desc">Confirming soft feathered alpha falloff (cyan, turquoise, mint bokeh) with zero hard black debris.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/particles_closeup_comparison.png" alt="Particles Comparison">
+        </div>
+      </div>
+
+      <!-- Audit 11: Card Scroll Transition Diagnostic -->
+      <div class="audit-card">
+        <h2 class="section-title">11. Card Scroll Transition Diagnostic (01 → 02)</h2>
+        <p class="section-desc">Verifying smooth glass transition without sudden color jumping or cyan bleed onto active foreground face.</p>
+        <div class="preview-img-container">
+          <img src="/gallery/pass1-v18/transition_cyan_diagnostic.png" alt="Transition Diagnostic">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: ALL 14 CLINICAL TREATMENTS -->
+    <div id="tab-treatments" class="tab-pane" style="display: none;">
+      <div class="audit-card">
+        <h2 class="section-title">All 14 Clinical Treatment Cards (Pass 1 V18 Calibrated)</h2>
+        <p class="section-desc">Forensic crops of all 14 treatment cards in the 3D scene, showing flawless consistency across all identifiers, titles, and bottom details links with delicate fine-line arrows.</p>
+        
+        <div class="treatments-grid">
+          <!-- 01 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">01 · Cervical Decompression</span>
+              <span class="treatment-tag">C1–C7</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-01-card.png" alt="Treatment 01 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-01-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-01-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 02 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">02 · Manual Joint Therapy</span>
+              <span class="treatment-tag">T1–T12</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-02-card.png" alt="Treatment 02 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-02-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-02-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 03 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">03 · Myofascial Release</span>
+              <span class="treatment-tag">MYOFASCIAL</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-03-card.png" alt="Treatment 03 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-03-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-03-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 04 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">04 · Dry Needling Therapy</span>
+              <span class="treatment-tag">TRIGGER POINT</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-04-card.png" alt="Treatment 04 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-04-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-04-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 05 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">05 · Postural Realignment</span>
+              <span class="treatment-tag">T1–T6</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-05-card.png" alt="Treatment 05 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-05-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-05-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 06 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">06 · Rotator Cuff Rehab</span>
+              <span class="treatment-tag">GLENOHUMERAL</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-06-card.png" alt="Treatment 06 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-06-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-06-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 07 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">07 · Thoracic Mobility</span>
+              <span class="treatment-tag">THORACIC CAGE</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-07-card.png" alt="Treatment 07 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-07-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-07-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 08 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">08 · Sciatica & Nerve Therapy</span>
+              <span class="treatment-tag">L4–S1</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-08-card.png" alt="Treatment 08 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-08-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-08-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 09 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">09 · Lumbar Disc Rehab</span>
+              <span class="treatment-tag">L1–L5</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-09-card.png" alt="Treatment 09 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-09-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-09-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 10 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">10 · Spinal Stabilization</span>
+              <span class="treatment-tag">CORE STABILIZATION</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-10-card.png" alt="Treatment 10 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-10-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-10-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 11 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">11 · SI Joint & Pelvic Rehab</span>
+              <span class="treatment-tag">SACROILIAC</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-11-card.png" alt="Treatment 11 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-11-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-11-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 12 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">12 · Hip Mobility Rehab</span>
+              <span class="treatment-tag">COXOFEMORAL</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-12-card.png" alt="Treatment 12 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-12-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-12-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 13 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">13 · Sports Injury & ACL</span>
+              <span class="treatment-tag">SPORTS MEDICINE</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-13-card.png" alt="Treatment 13 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-13-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-13-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+          <!-- 14 -->
+          <div class="treatment-item">
+            <div class="treatment-header">
+              <span class="treatment-title">14 · Post-Surgical Rehab</span>
+              <span class="treatment-tag">RECOVERY PROTOCOL</span>
+            </div>
+            <div class="treatment-thumb">
+              <img src="/gallery/pass1-v18/treatment-14-card.png" alt="Treatment 14 Card">
+            </div>
+            <div class="treatment-actions">
+              <a href="/gallery/pass1-v18/treatment-14-full.png" target="_blank" class="treatment-link">Full Viewport (1080p) ↗</a>
+              <a href="/gallery/pass1-v18/treatment-14-card.png" target="_blank" class="treatment-link">Card Crop ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: RESPONSIVE VIEWPORTS & TRANSITIONS -->
+    <div id="tab-responsive" class="tab-pane" style="display: none;">
+      <div class="audit-card">
+        <h2 class="section-title">Responsive Viewport Captures (1440x900 Laptop Display)</h2>
+        <p class="section-desc">Verification across standard 1440x900 viewport at initial, intermediate, and deep scroll positions.</p>
+        <div class="viewport-grid">
+          <div class="viewport-item">
+            <h4>Initial Viewport (Treatment 01 settled)</h4>
+            <img src="/gallery/pass1-v18/viewport-1440x900-initial.png" alt="Viewport 1440x900 Initial">
+          </div>
+          <div class="viewport-item">
+            <h4>Mid-Scroll Viewport (Treatment 07 settled)</h4>
+            <img src="/gallery/pass1-v18/viewport-1440x900-mid.png" alt="Viewport 1440x900 Mid">
+          </div>
+          <div class="viewport-item">
+            <h4>Deep-Scroll Viewport (Treatment 14 settled)</h4>
+            <img src="/gallery/pass1-v18/viewport-1440x900-deep.png" alt="Viewport 1440x900 Deep">
+          </div>
+        </div>
+      </div>
+
+      <div class="audit-card">
+        <h2 class="section-title">Intermediate Scroll Transitions</h2>
+        <p class="section-desc">Verifying smooth frosted card cross-fading and consistent glass materials without abrupt visual popping.</p>
+        <div class="viewport-grid">
+          <div class="viewport-item">
+            <h4>Transition 01 → 02 (kFraction = 0.5)</h4>
+            <img src="/gallery/pass1-v18/trans_01_to_02.png" alt="Transition 01 to 02">
+          </div>
+          <div class="viewport-item">
+            <h4>Transition 06 → 07 (kFraction = 5.5)</h4>
+            <img src="/gallery/pass1-v18/trans_06_to_07.png" alt="Transition 06 to 07">
+          </div>
+          <div class="viewport-item">
+            <h4>Transition 13 → 14 (kFraction = 12.5)</h4>
+            <img src="/gallery/pass1-v18/trans_13_to_14.png" alt="Transition 13 to 14">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: CALIBRATION SPECIFICATIONS -->
+    <div id="tab-specs" class="tab-pane" style="display: none;">
+      <div class="audit-card">
+        <h2 class="section-title">Pass 1 V18 Micro-Calibration Specifications & Parameter Audit</h2>
+        <p class="section-desc">Complete numerical specification matrix verifying exact adjustments and element freeze compliance.</p>
+        
+        <table class="specs-table">
+          <thead>
+            <tr>
+              <th>Element / Parameter</th>
+              <th>Original Benchmark</th>
+              <th>Pass 1 V16</th>
+              <th>Pass 1 V17</th>
+              <th>Pass 1 V18 (Current)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Arrow Stroke Thickness (ViewBox 24x24)</strong></td>
+              <td>~1.1px delicate stroke</td>
+              <td>5.2px (oversized bold)</td>
+              <td>3.8px (too heavy)</td>
+              <td><strong>1.1px</strong></td>
+              <td class="highlight-pass">CALIBRATED (-71%)</td>
+            </tr>
+            <tr>
+              <td><strong>Arrow Canvas Stroke Equivalent</strong></td>
+              <td>~3.5px canvas stroke</td>
+              <td>16.5px canvas</td>
+              <td>12.03px canvas</td>
+              <td><strong>3.48px canvas</strong></td>
+              <td class="highlight-pass">CALIBRATED (MATCH)</td>
+            </tr>
+            <tr>
+              <td><strong>Arrow Screen Equivalent Stroke</strong></td>
+              <td>~1.08px on screen</td>
+              <td>~5.1px on screen</td>
+              <td>~3.75px on screen</td>
+              <td><strong>~1.08px on screen</strong></td>
+              <td class="highlight-pass">PERFECT BENCHMARK MATCH</td>
+            </tr>
+            <tr>
+              <td><strong>Arrow Source Box</strong></td>
+              <td>~25px screen box</td>
+              <td>94px SVG</td>
+              <td>76px SVG</td>
+              <td><strong>76px SVG</strong></td>
+              <td class="highlight-pass">100% PRESERVED</td>
+            </tr>
+            <tr>
+              <td><strong>Arrow Baseline Alignment</strong></td>
+              <td>Shaft starts at text baseline</td>
+              <td>At baseline (+9px canvas)</td>
+              <td>translateY(7px)</td>
+              <td><strong>translateY(7px)</strong></td>
+              <td class="highlight-pass">100% PRESERVED</td>
+            </tr>
+            <tr>
+              <td><strong>Gap from "Details"</strong></td>
+              <td>~4px screen eq.</td>
+              <td>20px canvas (~5.2px)</td>
+              <td>18px canvas (~4.7px)</td>
+              <td><strong>18px canvas (~4.7px)</strong></td>
+              <td class="highlight-pass">100% PRESERVED</td>
+            </tr>
+            <tr>
+              <td><strong>Bottom Link Text Color</strong></td>
+              <td>Neutral slate-grey</td>
+              <td>#243040</td>
+              <td>#243040</td>
+              <td><strong>#243040</strong></td>
+              <td class="highlight-pass">100% FROZEN</td>
+            </tr>
+            <tr>
+              <td><strong>Bottom Link Font Size</strong></td>
+              <td>~18.2px screen eq.</td>
+              <td>68px canvas</td>
+              <td>68px canvas</td>
+              <td><strong>68px canvas</strong></td>
+              <td class="highlight-pass">100% FROZEN</td>
+            </tr>
+            <tr>
+              <td><strong>Bottom Link Font Weight</strong></td>
+              <td>Medium (540)</td>
+              <td>540</td>
+              <td>540</td>
+              <td><strong>540</strong></td>
+              <td class="highlight-pass">100% FROZEN</td>
+            </tr>
+            <tr>
+              <td><strong>Bottom Link Vertical Lift</strong></td>
+              <td>~25.5% margin to lower rim</td>
+              <td>~25.0% margin (lifted)</td>
+              <td>translateY(-72px)</td>
+              <td><strong>translateY(-72px) (~25.0% margin)</strong></td>
+              <td class="highlight-pass">100% FROZEN</td>
+            </tr>
+            <tr>
+              <td><strong>Top Anatomical Badge Height</strong></td>
+              <td>~36px screen eq.</td>
+              <td>132px canvas (~38px screen)</td>
+              <td>132px canvas (~38px screen)</td>
+              <td><strong>132px canvas (~38px screen)</strong></td>
+              <td class="highlight-pass">100% FROZEN</td>
+            </tr>
+            <tr>
+              <td><strong>Top Badge Dot & Range Dash</strong></td>
+              <td>Centered with lettering</td>
+              <td>Centered (-8px transform)</td>
+              <td>Centered (-8px transform)</td>
+              <td><strong>Centered (-8px transform)</strong></td>
+              <td class="highlight-pass">100% FROZEN</td>
+            </tr>
+            <tr>
+              <td><strong>Main Treatment Title</strong></td>
+              <td>Bold clinical title</td>
+              <td>180px, weight 650, #0a1628</td>
+              <td>180px, weight 650, #0a1628</td>
+              <td><strong>180px, weight 650, #0a1628</strong></td>
+              <td class="highlight-pass">100% FROZEN</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.style.display = 'none');
+      
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+      
+      const pane = document.getElementById('tab-' + tabId);
+      if (pane) pane.style.display = 'block';
+    }
+
+    // Interactive Viewer Images
+    const cvs = document.getElementById('interactiveCanvas');
+    const ctx = cvs.getContext('2d');
+    const meta = document.getElementById('interactiveMeta');
+
+    const images = {
+      ref: new Image(),
+      v16: new Image(),
+      v17: new Image(),
+      v18: new Image()
+    };
+
+    images.ref.src = '/gallery/pass1-v18/ref-card.png';
+    images.v16.src = '/gallery/pass1-v16/treatment-01-card.png';
+    images.v17.src = '/gallery/pass1-v17/treatment-01-card.png';
+    images.v18.src = '/gallery/pass1-v18/treatment-01-card.png';
+
+    images.v18.onload = () => {
+      drawInteractive('v18');
+    };
+
+    function setInteractiveMode(mode) {
+      document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.view-toggle-btn')).find(b => b.getAttribute('onclick').includes(mode));
+      if (activeBtn) activeBtn.classList.add('active');
+      drawInteractive(mode);
+    }
+
+    function drawInteractive(mode) {
+      const img = images[mode];
+      if (!img.complete) {
+        img.onload = () => drawInteractive(mode);
+        return;
+      }
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      ctx.imageSmoothingEnabled = true;
+
+      if (mode === 'ref') {
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, cvs.width, cvs.height);
+        meta.innerHTML = 'Original Benchmark Reference: Delicate Fine Arrow (1.1px eq.) · Shaft at Baseline · Margin ~25.5%';
+      } else if (mode === 'v16') {
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, cvs.width, cvs.height);
+        meta.innerHTML = 'Pass 1 V16: Overcorrected 94px SVG Arrow · 5.2px Stroke (Too Heavy/Bold) · Approved Lifted Margin';
+      } else if (mode === 'v17') {
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, cvs.width, cvs.height);
+        meta.innerHTML = 'Pass 1 V17: 76px SVG Arrow · Heavy 3.8px Stroke (12.03px Canvas / ~3.75px Screen - Too Bold)';
+      } else {
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, cvs.width, cvs.height);
+        meta.innerHTML = 'Pass 1 V18: 76px SVG Box · Calibrated 1.1px Stroke (3.48px Canvas / ~1.08px Screen Eq. - BENCHMARK MATCH)';
+      }
+    }
+  </script>
+</body>
+</html>
