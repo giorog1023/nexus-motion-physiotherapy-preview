@@ -5187,7 +5187,7 @@ void main() {
     vec3 emissive = color * alpha;
 
     #drawbuffer Color gl_FragColor = vec4(emissive, 1.0);
-    #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+    #drawbuffer WorkRefraction gl_FragColor = vec4(emissive, 1.0);
 }
 {@}LogoShader.glsl{@}#!ATTRIBUTES
 #!UNIFORMS
@@ -5393,14 +5393,27 @@ void main() {
 #require(normalmap.glsl)
 #require(blendmodes.glsl)
 
+// Physically-inspired frosted glass diffusion scattering kernel
+// 16 golden-angle spiral samples with Gaussian radial falloff and aspect correction
+vec3 frostedDiffusion(sampler2D tex, vec2 uv, float radiusPx, vec2 res) {
+    vec3 acc = vec3(0.0);
+    float totalWeight = 0.0;
+    vec2 aspect = vec2(res.y / max(res.x, 1.0), 1.0);
+    const float GOLDEN_ANGLE = 2.3999632;
+    for (float i = 0.0; i < 16.0; i += 1.0) {
+        float r = sqrt((i + 0.5) / 16.0);
+        float theta = i * GOLDEN_ANGLE;
+        vec2 offset = vec2(cos(theta), sin(theta)) * r * (radiusPx / max(res.y, 1.0)) * aspect;
+        float w = exp(-r * r * 2.0);
+        acc += texture2D(tex, uv + offset).rgb * w;
+        totalWeight += w;
+    }
+    return acc / max(totalWeight, 0.0001);
+}
+
 void main() {
     vec3 norm = normalize(vNormal);
     vec3 viewDir = normalize(vViewDir);
-
-    // Optical frosted refraction of the spine behind the card
-    vec2 ruv = gl_FragCoord.xy / resolution;
-    ruv -= 0.018 * norm.xy;
-    vec3 spineRefr = radialBlur(tRefraction, ruv, 10.0, 6.0).rgb;
 
     // 2D Euclidean aspect-corrected card surface coordinates for rounded silhouette SDF
     vec2 cardCoord = (vCardUV - 0.5) * vec2(1.53642, 1.0);
@@ -5412,7 +5425,6 @@ void main() {
     float d = min(max(q.x, q.y), 0.0) + length(max(q, vec2(0.0))) - cornerRadius;
 
     // Discard fragments protruding outside the rounded corner silhouette
-    // Anti-aliased outer edge mask
     float edgeWidth = max(fwidth(d), 0.0015);
     float edgeAlpha = clamp(1.0 - d / edgeWidth, 0.0, 1.0);
     if (edgeAlpha < 0.02) discard;
@@ -5423,15 +5435,26 @@ void main() {
 
     // Front-facing mask to keep typography strictly on the front face of the 3D card slab
     float frontFacing = vFrontFace;
-
-    // Natural, un-dilated typography coverage mask from texture alpha
-    // No artificial smoothstep thresholding: preserves natural subpixel antialiasing and true font stroke weight
     float textMask = cardTex.a * frontFacing;
 
-    // Luminous rounded perimeter rim glow that follows the curved corner arc continuously
-    float distFromEdge = -d;
-    float perimeterGlow = smoothstep(0.028, 0.003, distFromEdge) * frontFacing;
-    float cornerBevel = smoothstep(0.052, 0.012, distFromEdge) * (1.0 - smoothstep(0.012, 0.036, distFromEdge)) * frontFacing;
+    // Optical frosted refraction of the spine and atmosphere behind the card
+    vec2 ruv = gl_FragCoord.xy / resolution;
+    ruv -= (uDistortStrength > 0.0 ? 0.014 * uDistortStrength : 0.0) * norm.xy;
+    vec3 spineRefr = frostedDiffusion(tRefraction, ruv, 14.0, resolution);
+
+    // Diagnostic bypass modes for Pass 2 visual audit
+    if (uDistortStrength == -1.0) {
+        vec3 rawRefr = texture2D(tRefraction, gl_FragCoord.xy / resolution).rgb;
+        vec3 diagColor = mix(rawRefr, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(diagColor * 0.40, edgeAlpha);
+        return;
+    } else if (uDistortStrength == -2.0) {
+        vec3 diagColor = mix(spineRefr, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(diagColor * 0.40, edgeAlpha);
+        return;
+    }
 
     // uAhead: 1.0 when card is in active foreground focus, 0.0 when orbiting in background
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
@@ -5440,60 +5463,80 @@ void main() {
     vec3 lightDir = normalize(vec3(0.35, 0.85, 0.55));
     vec3 halfVec = normalize(lightDir + viewDir);
 
-    // 1. INACTIVE BACKGROUND CARDS: Translucent oceanic cyan-blue glass (#47687b to #5e869f matching reference)
-    // Clear optical transmission of spine & background through oceanic glass with soft turquoise reflections
-    vec3 oceanicBase = vec3(0.14, 0.36, 0.50);
-    vec3 inactiveGlass = mix(oceanicBase, spineRefr * 0.88 + vec3(0.08, 0.20, 0.28), 0.55);
-    inactiveGlass += vec3(0.04, 0.16, 0.26); // Ambient internal depth
+    // =========================================================================
+    // 1. INACTIVE BACKGROUND CARDS: Translucent oceanic cyan-blue glass
+    // (#47687b to #5e869f matching reference, not flat solid cyan blocks)
+    // =========================================================================
+    vec3 inactiveTransmitted = spineRefr * vec3(0.70, 0.88, 0.98);
+    vec3 oceanicBase = vec3(0.11, 0.26, 0.36);
+    vec3 inactiveGlass = mix(oceanicBase, inactiveTransmitted + vec3(0.04, 0.10, 0.15), 0.65);
     float inactiveFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.2);
-    vec3 turquoiseGlow = vec3(0.15, 0.86, 0.98);
-    inactiveGlass += turquoiseGlow * inactiveFresnel * 0.50;
-    float inactiveSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 20.0);
-    inactiveGlass += vec3(0.70, 0.92, 1.0) * inactiveSpec * 0.22;
+    vec3 oceanicRim = vec3(0.20, 0.82, 0.95);
+    inactiveGlass += oceanicRim * inactiveFresnel * 0.35;
+    float inactiveSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 24.0);
+    inactiveGlass += vec3(0.75, 0.95, 1.0) * inactiveSpec * 0.24;
+
     vec3 inactiveTextColor = vec3(1.0, 1.0, 1.0); // Pure brilliant crisp neutral white
-    vec3 inactiveBorderColor = vec3(0.12, 0.90, 1.00); // Luminous electric cyan
 
-    // 2. ACTIVE FOREGROUND CARD: Luminous frosted milky-white glass (#daf2f7 to #a4b1ba matching reference)
-    // Pearlescent milky-white frosted base with soft spine transmission through the frosted glass
-    vec3 frostedMilky = vec3(0.82, 0.92, 0.96);
-    float spineLuma = dot(spineRefr, vec3(0.299, 0.587, 0.114));
-    vec3 spineTransmitted = mix(frostedMilky, spineRefr * 1.05 + vec3(0.06, 0.12, 0.18), 0.44);
-    vec3 frostedWhite = mix(frostedMilky, spineTransmitted, clamp(spineLuma * 1.6, 0.15, 0.88));
-    // Studio diffuse lighting on the card face
+    // =========================================================================
+    // 2. ACTIVE FOREGROUND CARD: Luminous frosted milky pearl-white glass
+    // (Matching reference: #cfeaf3 to #dff2f8 top, #adcbcb mid, #86afc5 to #76a4c0 bottom)
+    // =========================================================================
+    vec3 pearlIvory = vec3(0.86, 0.94, 0.97);
+    vec3 sageUndertone = vec3(0.66, 0.78, 0.77);
+    vec3 deepAtmosphere = vec3(0.32, 0.54, 0.68);
+
+    float refrLuma = dot(spineRefr, vec3(0.299, 0.587, 0.114));
+    float yGrad = clamp(cardCoord.y + 0.45, 0.0, 1.0);
+    vec3 baseTranslucent = mix(pearlIvory, deepAtmosphere, yGrad * 0.70);
+
+    vec3 transmittedActive = mix(baseTranslucent, spineRefr * 1.15 + sageUndertone * 0.35, clamp(refrLuma * 1.5, 0.20, 0.85));
+    vec3 activeGlass = mix(baseTranslucent, transmittedActive, 0.72);
+
     float diffLight = dot(norm, normalize(vec3(0.25, 0.80, 0.45))) * 0.5 + 0.5;
-    frostedWhite *= (0.95 + 0.08 * diffLight);
-    // Surface specular glaze (smooth Blinn-Phong highlight)
-    float activeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 28.0);
-    frostedWhite += vec3(0.96, 0.99, 1.0) * activeSpec * 0.28;
-    // Soft cyan and mint edge Fresnel reflections
-    float activeFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.5);
-    vec3 cyanMintRim = mix(vec3(0.35, 0.92, 1.00), vec3(0.38, 0.98, 0.84), 0.35);
-    frostedWhite += cyanMintRim * activeFresnel * 0.45;
-    
-    // Inactive text is pure white; Active card typography uses calibrated reference colors directly from texture RGB
-    // (Title: commanding dark navy #0a1628; Top Badge: medium-grey slate #3b4d60; Bottom Link: medium-dark grey #263646)
-    vec3 activeTextColor = cardTex.rgb;
-    vec3 activeBorderColor = vec3(0.40, 0.92, 1.00); // Luminous cyan-mint ice
+    activeGlass *= (0.94 + 0.09 * diffLight);
 
+    float activeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 30.0);
+    activeGlass += vec3(0.96, 0.99, 1.0) * activeSpec * 0.26;
+
+    vec3 activeTextColor = cardTex.rgb;
+
+    // =========================================================================
     // 3. BLUE-TO-WHITE MATERIAL & TYPOGRAPHY TRANSITION
-    vec3 glassBody = mix(inactiveGlass, frostedWhite, uAhead);
-    vec3 borderColor = mix(inactiveBorderColor, activeBorderColor, uAhead);
-    // Seamless orbital typography transition from pure white on oceanic glass to calibrated dark navy/grey on frosted glass
+    // =========================================================================
+    vec3 glassBody = mix(inactiveGlass, activeGlass, uAhead);
     float textBlend = smoothstep(0.25, 0.75, uAhead);
     vec3 textColor = mix(inactiveTextColor, activeTextColor, textBlend);
 
-    // 4. EXTERIOR GLASS LIGHTING & REFLECTIONS
+    // =========================================================================
+    // 4. DIMENSIONAL GLASS EDGES & CYAN-TO-MINT PERIMETER LIGHTING
+    // (Delicate cyan-blue on top/left, transitioning to soft mint-green on bottom/right)
+    // =========================================================================
+    float edgeAngle = clamp((cardCoord.x + cardCoord.y * 1.2 + 0.8) / 1.6, 0.0, 1.0);
+    vec3 cyanEdge = vec3(0.62, 0.86, 0.96); // Soft luminous cyan-ice (#c1dfea / #b1d4e4)
+    vec3 mintEdge = vec3(0.52, 0.92, 0.80); // Soft mint-green (#84c2ae / #8fe5d5)
+    vec3 activePerimeterColor = mix(cyanEdge, mintEdge, edgeAngle);
+    vec3 inactivePerimeterColor = vec3(0.18, 0.82, 0.95);
+
+    vec3 perimeterColor = mix(inactivePerimeterColor, activePerimeterColor, uAhead);
+
+    float distFromEdge = -d;
+    float perimeterGlow = smoothstep(0.024, 0.003, distFromEdge) * frontFacing;
+    float cornerBevel = smoothstep(0.046, 0.008, distFromEdge) * (1.0 - smoothstep(0.008, 0.032, distFromEdge)) * frontFacing;
+
     vec3 finalGlass = glassBody;
-    finalGlass = mix(finalGlass, borderColor, perimeterGlow * (0.65 - 0.20 * uAhead));
-    finalGlass += borderColor * cornerBevel * 0.25;
+    finalGlass = mix(finalGlass, perimeterColor, perimeterGlow * (0.48 - 0.14 * uAhead));
+    finalGlass += perimeterColor * cornerBevel * 0.18;
+
     float bevel = pow(vSide, 2.0);
-    finalGlass += borderColor * bevel * (0.42 - 0.15 * uAhead);
+    finalGlass += perimeterColor * bevel * (0.35 - 0.10 * uAhead);
     float edgeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
-    finalGlass += (vec3(0.95, 0.99, 1.0) * 0.70 + borderColor * 0.30) * edgeSpec * bevel * 0.55;
+    finalGlass += (vec3(0.96, 0.99, 1.0) * 0.72 + perimeterColor * 0.28) * edgeSpec * bevel * 0.52;
     finalGlass += vec3(0.06, 0.20, 0.30) * uHover;
 
-    // 5. FINAL COMPOSITE: Pure linear alpha coverage directly onto polished glass surface
-    // Preserves true font-weight 600, thin grey capsule outline, and razor-sharp subpixel antialiasing
+    // =========================================================================
+    // 5. FINAL COMPOSITE: Pure linear alpha coverage directly onto polished glass
+    // =========================================================================
     vec3 color = mix(finalGlass, textColor, textMask);
 
     #drawbuffer Color gl_FragColor = vec4(color, edgeAlpha);

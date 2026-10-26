@@ -43,6 +43,14 @@
       "destination": "/index.html"
     },
     {
+      "source": "/gallery/pass2-v1",
+      "destination": "/gallery/pass2-v1/index.html"
+    },
+    {
+      "source": "/gallery/pass2-v1/",
+      "destination": "/gallery/pass2-v1/index.html"
+    },
+    {
       "source": "/gallery/pass1-v19",
       "destination": "/gallery/pass1-v19/index.html"
     },
