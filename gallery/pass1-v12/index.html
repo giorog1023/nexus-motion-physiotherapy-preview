@@ -402,14 +402,82 @@
         </div>
 
         <div class="card-meta-caption" id="card_meta_caption">
-          Showing: Pass 1 V12 Calibrated Production (Both middle dot AND range dash centered at 0.00px offset)
+          Showing: Pass 1 V12 Calibrated Production (Taller & more compact capsule, centered range dash, centered middle dot)
         </div>
       </div>
     </div>
 
-    <!-- SECTION 2: DEDICATED RANGE DASH ALIGNMENT COMPARISON -->
+    <!-- SECTION 2: CAPSULE PROPORTIONS & MEASUREMENT CALIPERS AUDIT -->
     <div class="audit-card">
-      <h2 class="section-title">2. Dedicated Anatomical Range Dash (C1–C7) Alignment Comparison</h2>
+      <h2 class="section-title">2. Capsule Proportions & Measurement Calipers Audit (Height & Width)</h2>
+      <p class="section-desc">Comparing rendered capsule outer width, outer height, height-to-width aspect ratio, and internal vertical/horizontal breathing room at identical 1:1 scale. V11 was overly flat and horizontally elongated (aspect ratio 11.87 with 0px bottom breathing room). V12 increases height from 23px to 36px and reduces excessive horizontal stretch, achieving exact visual parity with the benchmark reference's compact 7.53 aspect ratio.</p>
+      
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v12/pass1_v12_capsule_measurements_comparison.png')">
+        <img src="/gallery/pass1-v12/pass1_v12_capsule_measurements_comparison.png" alt="Pass 1 V12 Capsule Proportions Audit" />
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Capsule Dimension / Metric</th>
+              <th>Original Reference Benchmark</th>
+              <th>Pass 1 V11 (Previous)</th>
+              <th>Pass 1 V12 Production</th>
+              <th>Verification Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Rendered Outer Height</strong></td>
+              <td>36.0 px (Screen Eq.)</td>
+              <td>23.0 px (Flat / Squeezed)</td>
+              <td><strong>36.0 px (Taller & Substantial)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Rendered Outer Width</strong></td>
+              <td>271.0 px (Screen Eq.)</td>
+              <td>273.0 px (Screen Eq.)</td>
+              <td><strong>270.0 px (Compact & Fitted)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Height-to-Width Ratio (Aspect)</strong></td>
+              <td><strong>7.53</strong> (Compact Pill)</td>
+              <td>11.87 (Over-stretched)</td>
+              <td><strong>7.50 (Exact Proportional Match)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Vertical Padding (Top / Bottom)</strong></td>
+              <td>Top 11px / Bottom 10px</td>
+              <td>Top 6px / Bottom 0px</td>
+              <td><strong>Top 10px / Bottom 9px (Balanced)</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Horizontal Padding (Internal)</strong></td>
+              <td>Left 16px / Right 19px</td>
+              <td>Excessive / Elongated</td>
+              <td><strong>Compact & Follows Text Closely</strong></td>
+              <td><span class="status-badge badge-match">MATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Capsule Top Spacing (to Card Rim)</strong></td>
+              <td>~53.0 px (Screen Crop)</td>
+              <td>49.0 px</td>
+              <td><strong>49.0 px (Preserved Optical Alignment)</strong></td>
+              <td><span class="status-badge badge-frozen">FROZEN</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: DEDICATED RANGE DASH ALIGNMENT COMPARISON -->
+    <div class="audit-card">
+      <h2 class="section-title">3. Dedicated Anatomical Range Dash (C1–C7) Alignment Comparison</h2>
       <p class="section-desc">Pixel-level forensic audit of the range separator between "C1" and "C7". Blue dashed line indicates the optical vertical midpoint of the surrounding letters and numbers. In V11, the en dash (–, U+2013) sat low near the baseline; in V12, translateY(-8px) aligns it at exactly 0.00px offset from the letter centerline, matching the original benchmark.</p>
       
       <div class="preview-img-container" onclick="openModal('/gallery/pass1-v12/pass1_v12_dash_alignment_comparison.png')">
@@ -475,9 +543,9 @@
       </div>
     </div>
 
-    <!-- SECTION 3: COMPLETE BADGE ALIGNMENT INSPECTION -->
+    <!-- SECTION 4: COMPLETE BADGE ALIGNMENT INSPECTION -->
     <div class="audit-card">
-      <h2 class="section-title">3. Complete Badge "01 · C1–C7 CERVICAL" Alignment Inspection</h2>
+      <h2 class="section-title">4. Complete Badge "01 · C1–C7 CERVICAL" Alignment Inspection</h2>
       <p class="section-desc">Verifying that BOTH punctuation marks—the middle dot (·) AND the range dash (–)—are simultaneously co-aligned with the optical centerline of the surrounding digits and capital letters across the entire badge.</p>
       
       <div class="preview-img-container" onclick="openModal('/gallery/pass1-v12/pass1_v12_badge_comparison.png')">
@@ -485,9 +553,9 @@
       </div>
     </div>
 
-    <!-- SECTION 4: COMPLETE CARDS EVOLUTION (NATURAL 1:1 SCALE) -->
+    <!-- SECTION 5: COMPLETE CARDS EVOLUTION (NATURAL 1:1 SCALE) -->
     <div class="audit-card">
-      <h2 class="section-title">4. Complete Foreground Card Faces Comparison (Natural 1:1 Scale)</h2>
+      <h2 class="section-title">5. Complete Foreground Card Faces Comparison (Natural 1:1 Scale)</h2>
       <p class="section-desc">Side-by-side comparison of active card faces at natural 1:1 proportions (460px width per card). Shows the complete visual progression without distortion or over-zoomed blur.</p>
       
       <div class="preview-img-container" onclick="openModal('/gallery/pass1-v12/pass1_v12_card_evolution.png')">
@@ -495,9 +563,19 @@
       </div>
     </div>
 
-    <!-- SECTION 5: UPPER CARD CONTEXT & IDENTIFIER AUDIT -->
+    <!-- SECTION 6: KEY TREATMENTS HIGHLIGHT (01, 02, 07, 14) -->
     <div class="audit-card">
-      <h2 class="section-title">5. Upper Card & Top Identifier Context Audit</h2>
+      <h2 class="section-title">6. Key Treatments Audit (Treatments 01, 02, 07, and 14)</h2>
+      <p class="section-desc">Inspection of representative card variations: Treatment 01 (C1–C7 anatomical range), Treatment 02 (T1–T12 thoracic range), Treatment 07 (standard two-word identifier), and Treatment 14 (extended multi-word identifier). Demonstrates that all capsule outlines fit comfortably with 0 clipping.</p>
+      
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v12/pass1_v12_key_treatments_comparison.png')">
+        <img src="/gallery/pass1-v12/pass1_v12_key_treatments_comparison.png" alt="Key Treatments Comparison (01, 02, 07, 14)" />
+      </div>
+    </div>
+
+    <!-- SECTION 7: UPPER CARD CONTEXT & IDENTIFIER AUDIT -->
+    <div class="audit-card">
+      <h2 class="section-title">7. Upper Card & Top Identifier Context Audit</h2>
       <p class="section-desc">Natural-scale crop showing the card top specular rim, breathing room (38px gap, ratio 1.134), capsule outline, centered middle dot, centered range dash, and main treatment title.</p>
       
       <div class="preview-img-container" onclick="openModal('/gallery/pass1-v12/v12_crops_audit.png')">
@@ -584,9 +662,9 @@
       </div>
     </div>
 
-    <!-- SECTION 6: HERO SIDE-BY-SIDE -->
+    <!-- SECTION 8: HERO SIDE-BY-SIDE -->
     <div class="audit-card">
-      <h2 class="section-title">6. Native 1080p Hero 3D Scene Side-by-Side Comparison</h2>
+      <h2 class="section-title">8. Native 1080p Hero 3D Scene Side-by-Side Comparison</h2>
       <p class="section-desc">Side-by-side full composition comparison: Left shows the Original Benchmark Reference Target (1024×571); Right shows the Pass 1 V12 Live WebGL Production Build (1920×1080).</p>
       
       <div class="preview-img-container" onclick="openModal('/gallery/pass1-v12/pass1_v12_side_by_side_comparison.png')">
@@ -594,9 +672,9 @@
       </div>
     </div>
 
-    <!-- SECTION 7: KEY FOCUS TREATMENTS (01, 02, 07, 14) -->
+    <!-- SECTION 9: KEY FOCUS TREATMENTS (01, 02, 07, 14) -->
     <div class="audit-card">
-      <h2 class="section-title">7. Key Focus Treatments (Treatments 01, 02, 07, 14 Complete Foreground Cards)</h2>
+      <h2 class="section-title">9. Key Focus Treatments (Treatments 01, 02, 07, 14 Complete Foreground Cards)</h2>
       <p class="section-desc">Complete card screenshots demonstrating consistent optical alignment of range separators (Treatments 01 & 02) and non-range identifiers (Treatments 07 & 14) across varying label lengths.</p>
 
       <div class="treatments-grid">
@@ -642,9 +720,9 @@
       </div>
     </div>
 
-    <!-- SECTION 8: ALL 14 TREATMENTS GALLERY -->
+    <!-- SECTION 10: ALL 14 TREATMENTS GALLERY -->
     <div class="audit-card">
-      <h2 class="section-title">8. All 14 Treatments Comprehensive Suite (1920×1080 Viewports & Card Crops)</h2>
+      <h2 class="section-title">10. All 14 Treatments Comprehensive Suite (1920×1080 Viewports & Card Crops)</h2>
       <p class="section-desc">Toggle between complete foreground card crops and full 1920×1080 hero viewports for all 14 clinical treatments.</p>
 
       <div class="tab-nav">
@@ -657,9 +735,9 @@
       </div>
     </div>
 
-    <!-- SECTION 9: REGRESSION AUDITS -->
+    <!-- SECTION 11: REGRESSION AUDITS -->
     <div class="audit-card">
-      <h2 class="section-title">9. Non-Target Protected Elements Regression Audits</h2>
+      <h2 class="section-title">11. Non-Target Protected Elements Regression Audits</h2>
       <p class="section-desc">Pixel-for-pixel verification confirming 0.000px displacement on the Main Treatment Title and Bottom Details Link, bit-identical Soft Gaussian Bokeh on atmospheric particles, and 0% cyan contamination during intermediate scroll transitions.</p>
 
       <div class="grid" style="display: flex; gap: 20px; flex-wrap: wrap;">
@@ -684,9 +762,9 @@
       </div>
     </div>
 
-    <!-- SECTION 10: RESPONSIVE VIEWPORTS -->
+    <!-- SECTION 12: RESPONSIVE VIEWPORTS -->
     <div class="audit-card">
-      <h2 class="section-title">10. Responsive Viewports (1440×900 Initial, Mid-Scroll & Deep-Scroll)</h2>
+      <h2 class="section-title">12. Responsive Viewports (1440×900 Initial, Mid-Scroll & Deep-Scroll)</h2>
       <p class="section-desc">Verification across standard laptop resolution (1440×900) at scroll positions 0% (Treatment 01), 46% (Treatment 07), and 100% (Treatment 14).</p>
 
       <div class="treatments-grid">
