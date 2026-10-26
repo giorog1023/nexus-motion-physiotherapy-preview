@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 1 V16 Bottom Details Link: Vertical Position & Arrow Calibration</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #030712;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent);
+    }
+    .container {
+      max-width: 1440px;
+      margin: 32px auto 0;
+      padding: 0 32px;
+    }
+    .audit-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .section-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-bottom: 20px;
+      max-width: 1100px;
+      line-height: 1.55;
+    }
+    .preview-img-container {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: #000;
+      margin: 0 auto 24px auto;
+      cursor: pointer;
+      position: relative;
+      max-width: 1360px;
+    }
+    .preview-img-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.2s ease;
+    }
+    .preview-img-container:hover img {
+      transform: scale(1.003);
+    }
+    /* Interactive Card Switcher */
+    .interactive-viewer-box {
+      background: #060d1a;
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .view-toggle-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .view-toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 20px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .view-toggle-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .view-toggle-btn.active {
+      color: #030712;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .interactive-canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+      max-width: 530px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    }
+    .interactive-canvas-wrap canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .interactive-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 14px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Tabs */
+    .tabs-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-color: var(--border);
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    /* Grid for 14 Treatments */
+    .treatments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .treatment-item {
+      background: #080f21;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+    .treatment-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+    .treatment-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .treatment-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .treatment-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .treatment-thumb {
+      padding: 12px;
+      background: #000;
+      cursor: pointer;
+    }
+    .treatment-thumb img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(3, 7, 18, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      cursor: zoom-out;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+      border: 1px solid var(--border-strong);
+    }
+
+    /* Diagnostic Badges */
+    .callout-box {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .callout-icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+    .callout-text h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .callout-text p {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">Pass 1 · V16 Calibrated</span>
+        </div>
+        <p class="subtitle">Bottom Treatment-Details Link: Vertical Position & Prominent Arrow Baseline Alignment</p>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn btn-primary" target="_blank">Launch Live 3D Website ↗</a>
+        <a href="/gallery.html" class="nav-btn btn-secondary">Gallery Hub</a>
+        <a href="/gallery/pass1-v15" class="nav-btn btn-secondary">Pass 1 V15 (Archive)</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Callout Banner -->
+    <div class="callout-box">
+      <div class="callout-icon">🎯</div>
+      <div class="callout-text">
+        <h4>Pass 1 V16 Calibration Objective Delivered</h4>
+        <p>
+          Targeted correction strictly applied to the <strong>bottom treatment-details link</strong>:
+          1. <strong>Vertical Position</strong> shifted upward by ~7.5px screen eq. (translateY(-72px) on canvas), establishing a ~25.0% margin above the lower specular rim matching the benchmark reference ratio (~25.5%).
+          2. <strong>Arrow Dimensions</strong> enlarged to 94px SVG (+74% larger, stroke 5.2px) matching the reference's ~6.4% card width presence.
+          3. <strong>Baseline Alignment</strong> calibrated with translateY(9px) so the diagonal shaft begins directly at the text baseline level rather than floating as a superscript.
+          4. <strong>100% Frozen Elements</strong>: Approved slate color (#243040), font size (68px), font weight (540), top anatomical identifier badge (~38px height, 0.000px drift), and primary title typography.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 1: Complete Card Evolution (Natural Scale) -->
+    <section class="audit-card">
+      <h3 class="section-title">1. Complete Foreground Card Evolution (Natural Scale)</h3>
+      <p class="section-desc">
+        Normalized complete foreground cards comparing Original Benchmark Reference, Pass 1 V15, and Pass 1 V16. Notice the harmonious vertical breathing room below the details link and the prominent, cohesive arrow graphic.
+      </p>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/pass1_v16_card_evolution.png')">
+        <img src="/gallery/pass1-v16/pass1_v16_card_evolution.png" alt="Card Evolution" />
+      </div>
+    </section>
+
+    <!-- Section 2: Interactive Single Card Inspector -->
+    <section class="audit-card">
+      <h3 class="section-title">2. Interactive Single Card Inspector (Direct 1:1 Comparison)</h3>
+      <p class="section-desc">
+        Toggle between the Original Reference, Pass 1 V15, and Pass 1 V16 to visually inspect the upward link repositioning, arrow baseline alignment, and frozen top anatomical identifier.
+      </p>
+
+      <div class="interactive-viewer-box">
+        <div class="view-toggle-bar">
+          <button class="view-toggle-btn" id="btn_toggle_ref" onclick="selectCardView('ref')">Original Reference</button>
+          <button class="view-toggle-btn" id="btn_toggle_v15" onclick="selectCardView('v15')">Pass 1 V15 (Previous)</button>
+          <button class="view-toggle-btn active" id="btn_toggle_v16" onclick="selectCardView('v16')">Pass 1 V16 (Calibrated)</button>
+        </div>
+
+        <div class="interactive-canvas-wrap">
+          <canvas id="cvs_interactive_card" width="530" height="525"></canvas>
+        </div>
+        <div class="interactive-meta" id="card_meta_caption">
+          Loading interactive comparison...
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Genuine Bottom Link Comparison with Lower Card Rim -->
+    <section class="audit-card">
+      <h3 class="section-title">3. Genuine Bottom Link Comparison (with Lower Card Rim)</h3>
+      <p class="section-desc">
+        Accurate forensic crops showing the full "View Treatment Details ↗" link and the lower specular rim of each card. Verifying upward lift and breathing room with 0 spine bleed.
+      </p>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/pass1_v16_bottom_link_comparison.png')">
+        <img src="/gallery/pass1-v16/pass1_v16_bottom_link_comparison.png" alt="Bottom Link Comparison" />
+      </div>
+    </section>
+
+    <!-- Section 4: Dedicated Arrow Geometry & Baseline Alignment Audit -->
+    <section class="audit-card">
+      <h3 class="section-title">4. Dedicated Arrow Geometry & Baseline Alignment Audit</h3>
+      <p class="section-desc">
+        High-magnification pixel inspection demonstrating actual displayed arrow dimensions (94px SVG / ~15px screen eq.), stroke thickness (5.2px), and lower-shaft alignment starting near the text baseline region.
+      </p>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/pass1_v16_arrow_comparison.png')">
+        <img src="/gallery/pass1-v16/pass1_v16_arrow_comparison.png" alt="Arrow Comparison" />
+      </div>
+    </section>
+
+    <!-- Section 5: Card Bottom Spacing & Measurement Calipers Audit -->
+    <section class="audit-card">
+      <h3 class="section-title">5. Card Bottom Spacing & Measurement Calipers Audit</h3>
+      <p class="section-desc">
+        Caliper brackets indicating the exact distance from the visible text baseline to the lower specular card rim. Demonstrating restoration of the original ~25.5% margin ratio (Pass 1 V16: ~25.0%).
+      </p>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/pass1_v16_link_position_comparison.png')">
+        <img src="/gallery/pass1-v16/pass1_v16_link_position_comparison.png" alt="Link Position Comparison" />
+      </div>
+    </section>
+
+    <!-- Section 6: Key Clinical Treatment Variations (01, 02, 07, 14) -->
+    <section class="audit-card">
+      <h3 class="section-title">6. Key Clinical Treatment Variations (01, 02, 07, 14)</h3>
+      <p class="section-desc">
+        Verification of uniform link spacing, prominent arrow geometry, and zero text collision across varied anatomical titles.
+      </p>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/pass1_v16_key_treatments_comparison.png')">
+        <img src="/gallery/pass1-v16/pass1_v16_key_treatments_comparison.png" alt="Key Treatments Comparison" />
+      </div>
+    </section>
+
+    <!-- Section 7: Upper Card Context & Top Identifier Regression Audit -->
+    <section class="audit-card">
+      <h3 class="section-title">7. Upper Card Context & Top Identifier Regression Audit</h3>
+      <p class="section-desc">
+        Confirming 100% preservation of the approved V14 top anatomical identifier (capsule height ~38px screen / 132px canvas, padding, centered dot & dash, font weight 580, color #08101a). 0.000px drift detected.
+      </p>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/v16_crops_audit.png')">
+        <img src="/gallery/pass1-v16/v16_crops_audit.png" alt="Upper Card Crops Audit" />
+      </div>
+    </section>
+
+    <!-- Section 8: Native 1080p Hero Side-by-Side Comparison -->
+    <section class="audit-card">
+      <h3 class="section-title">8. Native 1080p Hero Side-by-Side Comparison</h3>
+      <p class="section-desc">
+        Full 1920x1080 viewport comparison directly evaluating the calibrated 3D scene against the Original Benchmark Reference.
+      </p>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/pass1_v16_side_by_side_comparison.png')">
+        <img src="/gallery/pass1-v16/pass1_v16_side_by_side_comparison.png" alt="Side-by-Side Hero Comparison" />
+      </div>
+    </section>
+
+    <!-- Section 9: Protected Non-Target Elements Regression Audits -->
+    <section class="audit-card">
+      <h3 class="section-title">9. Protected Non-Target Stability Audits</h3>
+      <p class="section-desc">
+        Rigorous regression audits confirming primary title stability, strictly cropped card-face link (0 spine bleed), soft bokeh atmospheric particles, and intermediate scroll transitions.
+      </p>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/regression_audit.png')">
+        <img src="/gallery/pass1-v16/regression_audit.png" alt="Regression Audit" />
+      </div>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/particles_closeup_comparison.png')">
+        <img src="/gallery/pass1-v16/particles_closeup_comparison.png" alt="Particles Bokeh Audit" />
+      </div>
+      <div class="preview-img-container" onclick="openModal('/gallery/pass1-v16/transition_cyan_diagnostic.png')">
+        <img src="/gallery/pass1-v16/transition_cyan_diagnostic.png" alt="Transition Cyan Diagnostic" />
+      </div>
+    </section>
+
+    <!-- Section 10: All 14 Clinical Treatments Matrix -->
+    <section class="audit-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+        <div>
+          <h3 class="section-title">10. Complete 14 Clinical Treatments Matrix</h3>
+          <p class="section-desc" style="margin-bottom: 0;">
+            Comprehensive high-resolution captures across all 14 clinical treatments. Click any card to inspect at 100% native resolution.
+          </p>
+        </div>
+        <div class="tabs-bar" style="margin-bottom: 0; border: none; padding: 0;">
+          <button class="tab-btn active" onclick="switchView('card')">True Card View</button>
+          <button class="tab-btn" onclick="switchView('full')">Full 1080p Viewport</button>
+        </div>
+      </div>
+
+      <div class="treatments-grid" id="treatmentsGrid"></div>
+    </section>
+  </main>
+
+  <!-- Modal Overlay -->
+  <div class="modal" id="imageModal" onclick="closeModal()">
+    <img class="modal-content" id="modalImg" src="" alt="Enlarged Inspection" />
+  </div>
+
+  <script>
+    const treatments = [
+      { num: '01', tag: '01 · C1–C7 CERVICAL', title: 'Cervical Decompression' },
+      { num: '02', tag: '02 · T1–T12 THORACIC', title: 'Manual Joint Therapy' },
+      { num: '03', tag: '03 · MYOFASCIAL', title: 'Myofascial Release' },
+      { num: '04', tag: '04 · TRIGGER POINT', title: 'Dry Needling Therapy' },
+      { num: '05', tag: '05 · T1–T6 POSTURE', title: 'Postural Realignment' },
+      { num: '06', tag: '06 · GLENOHUMERAL', title: 'Rotator Cuff Rehab' },
+      { num: '07', tag: '07 · THORACIC CAGE', title: 'Thoracic Mobility Therapy' },
+      { num: '08', tag: '08 · L4–S1 SCIATICA', title: 'Sciatica & Nerve Therapy' },
+      { num: '09', tag: '09 · L1–L5 LUMBAR', title: 'Lumbar Disc Rehab' },
+      { num: '10', tag: '10 · CORE STABILIZATION', title: 'Spinal Stabilization' },
+      { num: '11', tag: '11 · SACROILIAC JOINT', title: 'SI Joint & Pelvic Rehab' },
+      { num: '12', tag: '12 · COXOFEMORAL', title: 'Hip Mobility Rehab' },
+      { num: '13', tag: '13 · SPORTS MEDICINE', title: 'Sports Injury & ACL Rehab' },
+      { num: '14', tag: '14 · RECOVERY PROTOCOL', title: 'Post-Surgical Rehabilitation' }
+    ];
+
+    let currentMode = 'card';
+
+    function renderTreatments() {
+      const grid = document.getElementById('treatmentsGrid');
+      grid.innerHTML = treatments.map(t => `
+        <div class="treatment-item">
+          <div class="treatment-header">
+            <span class="treatment-title">${t.title}</span>
+            <span class="treatment-tag">${t.tag}</span>
+          </div>
+          <div class="treatment-thumb" onclick="openModal('/gallery/pass1-v16/treatment-${t.num}-${currentMode}.png')">
+            <img src="/gallery/pass1-v16/treatment-${t.num}-${currentMode}.png" alt="${t.title}" />
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function switchView(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(mode));
+      });
+      renderTreatments();
+    }
+
+    function openModal(src) {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('modalImg');
+      img.src = src;
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    renderTreatments();
+
+    // --- INTERACTIVE CARD INSPECTOR LOGIC ---
+    const imgRef = new Image();
+    const imgV15 = new Image();
+    const imgV16 = new Image();
+    imgRef.src = '/gallery/pass1-v16/ref-card.png';
+    imgV15.src = '/gallery/pass1-v15/treatment-01-card.png';
+    imgV16.src = '/gallery/pass1-v16/treatment-01-card.png';
+
+    function drawInteractiveCard(view) {
+      const cvs = document.getElementById('cvs_interactive_card');
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      ctx.imageSmoothingEnabled = true;
+
+      const caption = document.getElementById('card_meta_caption');
+
+      let targetImg = imgV16;
+      let labelHtml = '<span style="color:#34d399;">PASS 1 V16 (CALIBRATED):</span> Link shifted ~7.5px upward (margin ~25.0%), bold 94px arrow at baseline, slate #243040';
+
+      if (view === 'ref') {
+        targetImg = imgRef;
+        labelHtml = '<span style="color:#38bdf8;">ORIGINAL BENCHMARK REFERENCE:</span> Upward link placement (~25.5% margin), ~16px dark text, prominent ↗ arrow at baseline';
+      } else if (view === 'v15') {
+        targetImg = imgV15;
+        labelHtml = '<span style="color:#94a3b8;">PASS 1 V15 (PREVIOUS):</span> Sat too low (~10.4% margin), arrow undersized (~8.4px screen eq.), floating as superscript';
+      }
+
+      if (targetImg.complete && targetImg.naturalWidth > 0) {
+        ctx.drawImage(targetImg, 0, 0, targetImg.naturalWidth, targetImg.naturalHeight, 0, 0, cvs.width, cvs.height);
+      } else {
+        targetImg.onload = () => {
+          ctx.drawImage(targetImg, 0, 0, targetImg.naturalWidth, targetImg.naturalHeight, 0, 0, cvs.width, cvs.height);
+        };
+      }
+      caption.innerHTML = labelHtml;
+    }
+
+    function selectCardView(view) {
+      document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `btn_toggle_${view}`);
+      });
+      drawInteractiveCard(view);
+    }
+
+    window.addEventListener('load', () => {
+      drawInteractiveCard('v16');
+    });
+  </script>
+</body>
+</html>
