@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V2 — Translucent 3D Glass & Dimensional Edges</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --mint: #34d399;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text);
+    }
+    .nav-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border-color: #38bdf8;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    }
+    .nav-btn.primary:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 32px 40px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      max-width: 900px;
+    }
+
+    .matrix-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(12px);
+    }
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .matrix-item {
+      background: rgba(11, 19, 41, 0.6);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .matrix-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .matrix-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .matrix-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .matrix-detail {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .hero-banner-wrap {
+      margin-bottom: 40px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #060d1b;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    .hero-banner-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+    }
+    .hero-banner-caption {
+      padding: 14px 20px;
+      background: #081122;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .proof-sequence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .proof-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .proof-card-header {
+      padding: 10px 14px;
+      background: rgba(11, 19, 41, 0.9);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .proof-step-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .proof-step-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #0284c7;
+      color: #fff;
+    }
+    .proof-img-wrap {
+      padding: 10px;
+      background: #050a14;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-in;
+    }
+    .proof-img-wrap img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      display: block;
+    }
+    .proof-desc {
+      padding: 12px 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      background: rgba(11, 19, 41, 0.5);
+      flex: 1;
+    }
+
+    .gallery-grid-14 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .treatment-card-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .treatment-card-box:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .treatment-card-header {
+      padding: 12px 16px;
+      background: rgba(11, 19, 41, 0.9);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .treatment-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .treatment-zone {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .treatment-previews {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px;
+      background: #050a14;
+    }
+    .preview-pane {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: zoom-in;
+    }
+    .preview-pane span {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .preview-pane img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .treatment-footer {
+      padding: 10px 16px;
+      background: rgba(11, 19, 41, 0.4);
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Lightbox Modal */
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(2, 6, 23, 0.94);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+    }
+    .lightbox-modal.active {
+      display: flex;
+    }
+    .lightbox-content {
+      position: relative;
+      max-width: 95vw;
+      max-height: 95vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.2);
+      border: 1px solid var(--border);
+    }
+    .lightbox-caption {
+      margin-top: 12px;
+      color: #f1f5f9;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: -18px;
+      right: -18px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion Physiotherapy</span>
+          <span class="stage-pill">Pass 2 V2</span>
+          <span class="status-pill">Ready for External Review</span>
+        </div>
+        <div class="subtitle">Reconstruction of the Original Translucent 3D Glass, Scene Transmission & Left-Cyan / Right-Mint Lighting Balance</div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn primary" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          Live Interactive /work
+        </a>
+        <a href="/gallery/pass2-v1/" class="nav-btn" target="_blank">Pass 2 V1 Archive</a>
+        <a href="/gallery/pass1-v19/" class="nav-btn" target="_blank">Pass 1 V19 Baseline</a>
+        <a href="/gallery.html" class="nav-btn">Master Gallery Overview</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- EXECUTIVE MATRIX -->
+    <div class="matrix-card">
+      <div class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        Pass 2 V2 Core Reconstruction Matrix
+      </div>
+      <div class="section-desc">Comprehensive visual and optical corrections addressing every point from the Pass 2 V1 rejection review.</div>
+      <div class="matrix-grid">
+        <div class="matrix-item">
+          <div class="matrix-item-header">
+            <span class="matrix-label">1. Genuine Translucent Glass</span>
+            <span class="matrix-badge">RESOLVED</span>
+          </div>
+          <div class="matrix-detail">
+            Eliminated V1's synthetic opaque mix. The active card uses 58% direct scene transmission + 42% diffused pearl scattering. The 3D spine and background atmosphere are genuinely transmitted through the milky-white face.
+          </div>
+        </div>
+        <div class="matrix-item">
+          <div class="matrix-item-header">
+            <span class="matrix-label">2. Translucent Inactive Cards</span>
+            <span class="matrix-badge">RESOLVED</span>
+          </div>
+          <div class="matrix-detail">
+            Replaced V1's flat opaque dark-blue blocks with 55% scene transmission and sapphire volume tint. Background lights, particles, and spinal reflections shine through inactive cards.
+          </div>
+        </div>
+        <div class="matrix-item">
+          <div class="matrix-item-header">
+            <span class="matrix-label">3. 3D Slab Depth & Continuity</span>
+            <span class="matrix-badge">RESOLVED</span>
+          </div>
+          <div class="matrix-detail">
+            Side slab faces (vSide) are shaded with transmitted background + specular sheen. Continuous rounded bevel with luxurious corner radius (0.082) seamlessly bridges front and side geometry.
+          </div>
+        </div>
+        <div class="matrix-item">
+          <div class="matrix-item-header">
+            <span class="matrix-label">4. Cyan-Left / Mint-Right Balance</span>
+            <span class="matrix-badge">RESOLVED</span>
+          </div>
+          <div class="matrix-detail">
+            Lighting mapped via local card coordinates (cardCoord.x). Left edge exhibits primary cyan-ice key light (#38bdf8), right edge exhibits soft mint-green rim light (#34d399 / #84c2ae).
+          </div>
+        </div>
+        <div class="matrix-item">
+          <div class="matrix-item-header">
+            <span class="matrix-label">5. Pass 1 Typography Invariant</span>
+            <span class="matrix-badge">FROZEN 100%</span>
+          </div>
+          <div class="matrix-detail">
+            0.000px displacement, 100% frozen typography from Pass 1 V19. Approved top capsule (132px), title (#0a1628), bottom link (#243040), and arrow stroke (1.85) preserved with zero edge bleed.
+          </div>
+        </div>
+        <div class="matrix-item">
+          <div class="matrix-item-header">
+            <span class="matrix-label">6. Absolute Asset Routing</span>
+            <span class="matrix-badge">FIXED</span>
+          </div>
+          <div class="matrix-detail">
+            Eliminated V1's base-href issue. All image assets, previews, and links use root-relative paths (/gallery/pass2-v2/...) ensuring 100% reliable loading across all browsers and proxies.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 1: MANDATORY TRANSMISSION PROOF -->
+    <div class="section-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+      Mandatory Optical Transmission Proof (Sequence A through E)
+    </div>
+    <div class="section-desc">Definitive scientific proof that the card face genuinely transmits background scene content through frosted physical diffusion.</div>
+
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/diagnostics/diag_proof_master_composite.png" alt="Pass 2 V2 Diagnostic Proof Master Composite" onclick="openLightbox(this.src, 'Pass 2 V2 — Mandatory Optical Transmission Proof (Sequence A through E)')">
+      <div class="hero-banner-caption">
+        <span><strong>Master 5-Panel Proof Composite:</strong> Stage A (Scene) → Stage B (FBO Buffer) → Stage C (Raw Refraction) → Stage D (Frosted Scattering) → Stage E (Complete Material)</span>
+        <span style="color: #38bdf8; font-family: monospace;">diag_proof_master_composite.png</span>
+      </div>
+    </div>
+
+    <div class="proof-sequence-grid">
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Stage A: Direct Scene View</span>
+          <span class="proof-step-badge">STAGE A</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/diagnostics/diag_proof_A_scene_no_card.png', 'Stage A: Direct Scene View Without Card')">
+          <img src="/gallery/pass2-v2/diagnostics/diag_proof_A_scene_no_card.png" alt="Stage A">
+        </div>
+        <div class="proof-desc">Card hidden. High-contrast test pattern (magenta/yellow/cyan/orange/green stripes + NEXUS OPTIC emblem) positioned in scene space behind card.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Stage B: Optical Buffer (FBO)</span>
+          <span class="proof-step-badge">STAGE B</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/diagnostics/diag_proof_B_refraction_buffer.png', 'Stage B: Optical Buffer Source (tRefraction)')">
+          <img src="/gallery/pass2-v2/diagnostics/diag_proof_B_refraction_buffer.png" alt="Stage B">
+        </div>
+        <div class="proof-desc">High-contrast scene pattern sampled by the glass shader's tRefraction input pipeline in real time.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Stage C: Raw Refraction</span>
+          <span class="proof-step-badge">STAGE C</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/diagnostics/diag_proof_C_raw_refraction_card.png', 'Stage C: Card Displaying Raw Refraction')">
+          <img src="/gallery/pass2-v2/diagnostics/diag_proof_C_raw_refraction_card.png" alt="Stage C">
+        </div>
+        <div class="proof-desc">Card mapped with raw refraction (uDistortStrength = -1.0). Pattern shines directly through the card boundary with 1:1 geometry.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Stage D: Frosted Refraction</span>
+          <span class="proof-step-badge">STAGE D</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/diagnostics/diag_proof_D_frosted_refraction_card.png', 'Stage D: Frosted Diffusion Scattering')">
+          <img src="/gallery/pass2-v2/diagnostics/diag_proof_D_frosted_refraction_card.png" alt="Stage D">
+        </div>
+        <div class="proof-desc">16-tap golden-spiral physical frosted diffusion. The vibrant colored bars softly blur into a glowing optical gradient.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Stage E: Final Tinted Glass</span>
+          <span class="proof-step-badge">STAGE E</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/diagnostics/diag_proof_E_final_glass_with_pattern.png', 'Stage E: Final Tinted & Shaded Glass With Pattern')">
+          <img src="/gallery/pass2-v2/diagnostics/diag_proof_E_final_glass_with_pattern.png" alt="Stage E">
+        </div>
+        <div class="proof-desc">Complete material pipeline: Frosted pearl-white silica + cyan-left/mint-right lighting + typography. The background colors are clearly transmitted!</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Stage E-Prod: Production Scene</span>
+          <span class="proof-step-badge">STAGE E-PROD</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/diagnostics/diag_proof_E_prod_glass_spine.png', 'Stage E-Prod: Production Final Glass With Live Spine')">
+          <img src="/gallery/pass2-v2/diagnostics/diag_proof_E_prod_glass_spine.png" alt="Stage E-Prod">
+        </div>
+        <div class="proof-desc">Live production spine & particles transmitted through the active card face. Vertebrae, discs, and lighting balance all active.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: FORENSIC COMPARATIVE AUDITS -->
+    <div class="section-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      Forensic Comparative Audits (Ref vs V1 vs V2)
+    </div>
+    <div class="section-desc">Side-by-side, 3-way evolution, and full hero viewport comparisons proving the visual reconstruction.</div>
+
+    <!-- 1. Hero 3-way -->
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/pass2_v2_hero_comparison.png" alt="Pass 2 V2 Hero Comparison" onclick="openLightbox(this.src, 'Pass 2 V2 — Hero Viewport Audit: Reference vs V1 vs V2')">
+      <div class="hero-banner-caption">
+        <span><strong>Hero Multi-Card Audit:</strong> Target Reference Benchmark vs Rejected Pass 2 V1 vs Pass 2 V2 Live Implementation</span>
+        <span style="color: #38bdf8; font-family: monospace;">pass2_v2_hero_comparison.png</span>
+      </div>
+    </div>
+
+    <!-- 2. Side-by-Side Direct Comparison -->
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/pass2_v2_side_by_side_comparison.png" alt="Pass 2 V2 Side-by-Side Comparison" onclick="openLightbox(this.src, 'Pass 2 V2 — Direct Side-by-Side: Reference Closeup vs V2 Live Card')">
+      <div class="hero-banner-caption">
+        <span><strong>Side-by-Side Direct Closeup:</strong> Original Nexus Motion Benchmark vs Pass 2 V2 Live Active Card Crop</span>
+        <span style="color: #38bdf8; font-family: monospace;">pass2_v2_side_by_side_comparison.png</span>
+      </div>
+    </div>
+
+    <!-- 3. Material Evolution 3-way -->
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/pass2_v2_card_evolution.png" alt="Pass 2 V2 Card Evolution" onclick="openLightbox(this.src, 'Pass 2 V2 — Material Evolution: V1 Rejected vs V2 Live vs Target Reference')">
+      <div class="hero-banner-caption">
+        <span><strong>Material Evolution:</strong> Pass 2 V1 (Opaque pale-blue) → Pass 2 V2 (Translucent 3D glass) → Target Reference Benchmark</span>
+        <span style="color: #38bdf8; font-family: monospace;">pass2_v2_card_evolution.png</span>
+      </div>
+    </div>
+
+    <!-- 4. Left Cyan vs Right Mint Edge Lighting -->
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/pass2_v2_left_cyan_right_mint_audit.png" alt="Pass 2 V2 Edge Lighting Audit" onclick="openLightbox(this.src, 'Pass 2 V2 — Left-Cyan vs Right-Mint Edge Lighting Balance Audit')">
+      <div class="hero-banner-caption">
+        <span><strong>Perimeter Lighting Balance Audit:</strong> Left Edge Cyan (#38bdf8) vs Right Edge Mint (#34d399 / #84c2ae)</span>
+        <span style="color: #38bdf8; font-family: monospace;">pass2_v2_left_cyan_right_mint_audit.png</span>
+      </div>
+    </div>
+
+    <!-- 5. Front to Side Depth -->
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/pass2_v2_front_to_side_depth_audit.png" alt="Pass 2 V2 3D Slab Depth Audit" onclick="openLightbox(this.src, 'Pass 2 V2 — 3D Glass Slab Depth & Front-to-Side Continuity Audit')">
+      <div class="hero-banner-caption">
+        <span><strong>3D Slab Depth & Continuity:</strong> Front face vs angled 3D orbital perspective showing side thickness (vSide)</span>
+        <span style="color: #38bdf8; font-family: monospace;">pass2_v2_front_to_side_depth_audit.png</span>
+      </div>
+    </div>
+
+    <!-- 6. Key Treatments Progression -->
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/pass2_v2_key_treatments_comparison.png" alt="Pass 2 V2 Key Treatments Comparison" onclick="openLightbox(this.src, 'Pass 2 V2 — Key Anatomical Treatment Progression (01, 07, 14)')">
+      <div class="hero-banner-caption">
+        <span><strong>Key Anatomical Zones:</strong> Treatment 01 (Cervical C1–C7) · Treatment 07 (Thoracic T1–T12) · Treatment 14 (Sacral S1–S5)</span>
+        <span style="color: #38bdf8; font-family: monospace;">pass2_v2_key_treatments_comparison.png</span>
+      </div>
+    </div>
+
+    <!-- 7. Pass 1 Typography Regression Audit -->
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/pass2_v2_regression_audit.png" alt="Pass 2 V2 Regression Audit" onclick="openLightbox(this.src, 'Pass 2 V2 — Typography & Layout Regression Invariant Audit')">
+      <div class="hero-banner-caption">
+        <span><strong>Regression Invariant Verification:</strong> Pass 1 V19 Approved Baseline vs Pass 2 V2 Live Card (0.000px displacement)</span>
+        <span style="color: #38bdf8; font-family: monospace;">pass2_v2_regression_audit.png</span>
+      </div>
+    </div>
+
+    <!-- 8. Complete 14-Crops Audit Grid -->
+    <div class="hero-banner-wrap">
+      <img src="/gallery/pass2-v2/pass2_v2_crops_audit.png" alt="Pass 2 V2 Crops Audit" onclick="openLightbox(this.src, 'Pass 2 V2 — Complete 14-Treatment Card Crops Forensic Audit')">
+      <div class="hero-banner-caption">
+        <span><strong>Complete 14-Card Crop Matrix:</strong> Uniform frosted glass transmission and edge lighting across all 14 treatments</span>
+        <span style="color: #38bdf8; font-family: monospace;">pass2_v2_crops_audit.png</span>
+      </div>
+    </div>
+
+    <!-- SECTION 3: ALL 14 TREATMENTS GRID -->
+    <div class="section-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      All 14 Anatomical Treatment Cards (Interactive Previews)
+    </div>
+    <div class="section-desc">Click any card crop or full 1080p viewport to inspect in full-resolution lightbox modal.</div>
+
+    <div class="gallery-grid-14" id="treatments-grid">
+      <!-- Generated via JS below -->
+    </div>
+
+    <!-- SECTION 4: TRANSITIONS & RESPONSIVE VIEWPORTS -->
+    <div class="section-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+      Transitions & Responsive Viewports
+    </div>
+    <div class="section-desc">Interactive orbital motion, scroll interpolation frames, and 1440x900 responsive layout verification.</div>
+
+    <div class="proof-sequence-grid">
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Transition k=0.5</span>
+          <span class="proof-step-badge">MOTION</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/transition-k05.png', 'Scroll Transition Frame k=0.5')">
+          <img src="/gallery/pass2-v2/transition-k05.png" alt="Transition k=0.5">
+        </div>
+        <div class="proof-desc">Orbital interpolation between Treatment 01 and 02. Translucent glass slabs rotate smoothly in 3D depth.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Transition k=5.5</span>
+          <span class="proof-step-badge">MOTION</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/transition-k55.png', 'Scroll Transition Frame k=5.5')">
+          <img src="/gallery/pass2-v2/transition-k55.png" alt="Transition k=5.5">
+        </div>
+        <div class="proof-desc">Mid-carousel transition between Treatment 06 and 07 across thoracic spine curvature.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Transition k=12.5</span>
+          <span class="proof-step-badge">MOTION</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/transition-k125.png', 'Scroll Transition Frame k=12.5')">
+          <img src="/gallery/pass2-v2/transition-k125.png" alt="Transition k=12.5">
+        </div>
+        <div class="proof-desc">Deep-carousel transition between Treatment 13 and 14 at the lumbosacral base.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Angled 3D Slab View</span>
+          <span class="proof-step-badge">3D SLAB</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/angled-card-view.png', 'Angled 3D Slab View')">
+          <img src="/gallery/pass2-v2/angled-card-view.png" alt="Angled View">
+        </div>
+        <div class="proof-desc">Perspective view showing physical slab bevel, side face lighting, and text isolation.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Viewport 1440x900 (Initial)</span>
+          <span class="proof-step-badge">1440P</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/viewport-1440x900-initial.png', 'Responsive Viewport 1440x900 (Initial)')">
+          <img src="/gallery/pass2-v2/viewport-1440x900-initial.png" alt="1440x900 Initial">
+        </div>
+        <div class="proof-desc">Treatment 01 rendered in 1440x900 desktop viewport with proportional camera framing.</div>
+      </div>
+
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <span class="proof-step-name">Viewport 1440x900 (Mid)</span>
+          <span class="proof-step-badge">1440P</span>
+        </div>
+        <div class="proof-img-wrap" onclick="openLightbox('/gallery/pass2-v2/viewport-1440x900-mid.png', 'Responsive Viewport 1440x900 (Mid)')">
+          <img src="/gallery/pass2-v2/viewport-1440x900-mid.png" alt="1440x900 Mid">
+        </div>
+        <div class="proof-desc">Treatment 07 rendered in 1440x900 desktop viewport showing thoracic spinal alignment.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="lightbox-modal" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-content">
+      <button class="lightbox-close" onclick="closeLightbox(event)">×</button>
+      <img id="lightbox-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Zoomed view">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <script>
+    const treatments = [
+      { id: '01', title: 'Cervical Decompression', zone: 'C1 · C7' },
+      { id: '02', title: 'Thoracic Alignment', zone: 'T1 · T6' },
+      { id: '03', title: 'Lumbar Stabilization', zone: 'L1 · L5' },
+      { id: '04', title: 'Sacroiliac Relief', zone: 'SI · S1' },
+      { id: '05', title: 'Postural Restoration', zone: 'C3 · T4' },
+      { id: '06', title: 'Disc Regeneration', zone: 'L3 · S1' },
+      { id: '07', title: 'Sciatic Pathway Care', zone: 'L4 · S2' },
+      { id: '08', title: 'Scoliotic Balancing', zone: 'T3 · L2' },
+      { id: '09', title: 'Neural Tension Release', zone: 'C5 · T1' },
+      { id: '10', title: 'Facet Joint Therapy', zone: 'C2 · C6' },
+      { id: '11', title: 'Myofascial Unwinding', zone: 'T5 · L3' },
+      { id: '12', title: 'Dynamic Spine Flow', zone: 'C1 · S5' },
+      { id: '13', title: 'Spinal Motion Rehab', zone: 'T1 · T12' },
+      { id: '14', title: 'Core-Spine Integration', zone: 'L1 · S1' }
+    ];
+
+    const grid = document.getElementById('treatments-grid');
+    treatments.forEach(t => {
+      const box = document.createElement('div');
+      box.className = 'treatment-card-box';
+      box.innerHTML = `
+        <div class="treatment-card-header">
+          <span class="treatment-title">#${t.id} ${t.title}</span>
+          <span class="treatment-zone">${t.zone}</span>
+        </div>
+        <div class="treatment-previews">
+          <div class="preview-pane" onclick="openLightbox('/gallery/pass2-v2/treatment-${t.id}-card.png', 'Treatment ${t.id} — Card Closeup')">
+            <span>Card Crop (530x525)</span>
+            <img src="/gallery/pass2-v2/treatment-${t.id}-card.png" alt="Treatment ${t.id} Card Crop">
+          </div>
+          <div class="preview-pane" onclick="openLightbox('/gallery/pass2-v2/treatment-${t.id}-full.png', 'Treatment ${t.id} — Full Viewport (1920x1080)')">
+            <span>Full 1080p Viewport</span>
+            <img src="/gallery/pass2-v2/treatment-${t.id}-full.png" alt="Treatment ${t.id} Full Viewport">
+          </div>
+        </div>
+        <div class="treatment-footer">
+          <span>Frosted Diffusion: Active</span>
+          <span>Perimeter: Cyan / Mint</span>
+        </div>
+      `;
+      grid.appendChild(box);
+    });
+
+    function openLightbox(src, caption) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-caption').textContent = caption;
+      document.getElementById('lightbox').classList.add('active');
+    }
+
+    function closeLightbox(e) {
+      if (e.target.id === 'lightbox' || e.target.classList.contains('lightbox-close')) {
+        document.getElementById('lightbox').classList.remove('active');
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.getElementById('lightbox').classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
