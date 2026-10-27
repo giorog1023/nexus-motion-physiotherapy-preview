@@ -5398,12 +5398,13 @@ void main() {
 vec3 frostedDiffusion(sampler2D tex, vec2 uv, float radiusPx, vec2 res) {
     vec3 acc = vec3(0.0);
     float totalWeight = 0.0;
-    vec2 aspect = vec2(res.y / max(res.x, 1.0), 1.0);
+    vec2 safeRes = (res.x > 10.0 && res.y > 10.0) ? res : vec2(1920.0, 1080.0);
+    vec2 aspect = vec2(safeRes.y / safeRes.x, 1.0);
     const float GOLDEN_ANGLE = 2.3999632;
     for (float i = 0.0; i < 16.0; i += 1.0) {
         float r = sqrt((i + 0.5) / 16.0);
         float theta = i * GOLDEN_ANGLE;
-        vec2 offset = vec2(cos(theta), sin(theta)) * r * (radiusPx / max(res.y, 1.0)) * aspect;
+        vec2 offset = vec2(cos(theta), sin(theta)) * r * (radiusPx / safeRes.y) * aspect;
         float w = exp(-r * r * 2.0);
         acc += texture2D(tex, uv + offset).rgb * w;
         totalWeight += w;
@@ -5445,17 +5446,29 @@ void main() {
     vec3 spineRefr = frostedDiffusion(tRefraction, ruv, 10.0, resolution);
 
     // Diagnostic bypass modes for Pass 2 transmission proof
-    if (uDistortStrength == -1.0) {
-        // Mode C: Card displaying raw, unblurred refraction
+    if (abs(uDistortStrength - (-1.0)) < 0.1) {
+        // Mode C: Card displaying raw unblurred refraction
         vec3 diagColor = mix(rawRefraction, cardTex.rgb, textMask);
         #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
-        #drawbuffer WorkRefraction gl_FragColor = vec4(diagColor * 0.40, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
         return;
-    } else if (uDistortStrength == -2.0) {
-        // Mode D: Card displaying frosted refraction only
+    } else if (abs(uDistortStrength - (-2.0)) < 0.1) {
+        // Mode D: Card displaying frosted refraction only (no tint)
         vec3 diagColor = mix(spineRefr, cardTex.rgb, textMask);
         #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
-        #drawbuffer WorkRefraction gl_FragColor = vec4(diagColor * 0.40, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - (-3.0)) < 0.1) {
+        // Mode E: Card displaying raw refraction + pearl tint (no frosted diffusion)
+        vec3 pearlWhiteE = vec3(0.88, 0.94, 0.97);
+        vec3 coolAtmosphereE = vec3(0.50, 0.68, 0.78);
+        float yGradE = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
+        vec3 baseFrostedE = mix(pearlWhiteE, coolAtmosphereE, pow(yGradE, 1.1) * 0.55);
+        float spineRadE = dot(rawRefraction, vec3(0.299, 0.587, 0.114));
+        vec3 diagColor = mix(baseFrostedE, rawRefraction * 1.08 + pearlWhiteE * 0.18, clamp(spineRadE * 1.35, 0.0, 0.88));
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
         return;
     }
 
@@ -5480,28 +5493,30 @@ void main() {
     vec3 ambientGlow = mix(cyanLight, mintLight, hFactor);
 
     // =========================================================================
-    // 1. ACTIVE FOREGROUND CARD: GENUINE FROSTED PEARL-WHITE GLASS
-    // (Requirement Section 5: Visibly translucent, soft spine perception, no flat fill)
+    // 1. ACTIVE FOREGROUND CARD: GENUINE FROSTED PEARL-WHITE GLASS (PASS 2 V3)
+    // Translucent silica glass: milky pearl-white frosted body with transmitted spine
+    // Preserves full dynamic range: spine vertebrae shine brightly, dark cavity shows deep depth
+    // Matches original Nexus Motion reference: luminous milky pearl-white slab
     // =========================================================================
-    // Physical Frosted Glass Scattering:
-    // The transmitted scene (spine & particles) is the primary base!
-    vec3 pearlIvory = vec3(0.92, 0.96, 0.98);
-    // Subtle internal scattering density (0.42): 58% transmitted light + 42% diffused pearl scattering
-    vec3 frostedBase = mix(spineRefr, pearlIvory, 0.42);
-    // Transmitted bright features (spine vertebrae) illuminate the glass from within
+    vec3 pearlWhite = vec3(0.88, 0.94, 0.97);     // Luminous milky pearl-white top (#cfeaf3 - #dff2f8)
+    vec3 coolAtmosphere = vec3(0.50, 0.68, 0.78); // Deeper cool tone matching reference bottom (#76a4c0)
+    float yGrad = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
+    vec3 baseFrosted = mix(pearlWhite, coolAtmosphere, pow(yGrad, 1.1) * 0.55);
+
+    // Subtle ambient lighting: soft cyan on left, soft mint on right
+    baseFrosted = mix(baseFrosted, ambientGlow, 0.10);
+
+    // Spine scene radiance transmitting through frosted diffusion
     float spineRadiance = dot(spineRefr, vec3(0.299, 0.587, 0.114));
-    frostedBase += pearlIvory * clamp(spineRadiance * 0.65, 0.0, 0.38);
+    vec3 activeGlass = mix(baseFrosted, spineRefr * 1.08 + pearlWhite * 0.18, clamp(spineRadiance * 1.35, 0.0, 0.88));
 
-    // Subtle environmental illumination: left catches soft cyan, right catches soft mint
-    frostedBase += ambientGlow * 0.14 * (0.8 + 0.4 * cardCoord.y);
-
-    // Studio surface diffuse lighting
-    float diffLight = clamp(dot(norm, normalize(vec3(0.20, 0.85, 0.45))), 0.0, 1.0);
-    frostedBase *= (0.92 + 0.12 * diffLight);
+    // Forward scattering enhancement on bright vertebrae highlights
+    float highlight = smoothstep(0.40, 0.90, spineRadiance) * 0.22;
+    activeGlass += pearlWhite * highlight;
 
     // Polished surface specular glaze (Blinn-Phong)
     float activeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 28.0);
-    vec3 activeGlass = frostedBase + vec3(0.96, 0.99, 1.0) * activeSpec * 0.28;
+    activeGlass += vec3(0.96, 0.99, 1.0) * activeSpec * 0.22;
 
     vec3 activeTextColor = cardTex.rgb;
 
@@ -5546,8 +5561,8 @@ void main() {
     finalGlass = mix(finalGlass, perimeterColor, perimeterGlow * (0.68 - 0.20 * uAhead));
     finalGlass += perimeterColor * cornerBevel * 0.32;
 
-    // 3D Slab side faces (vSide): thick polished glass reflection
-    float sideThickness = pow(vSide, 1.8);
+    // 3D Slab side faces (vSide): thick polished glass reflection - strictly on side faces
+    float sideThickness = pow(vSide, 1.8) * (1.0 - frontFacing);
     // Side face receives transmitted scene + edge illumination, making it a coherent glass slab!
     vec3 sideColor = mix(glassBody * 0.85, perimeterColor, 0.45);
     finalGlass = mix(finalGlass, sideColor, sideThickness * 0.75);
@@ -5564,7 +5579,7 @@ void main() {
     vec3 color = mix(finalGlass, textColor, textMask);
 
     #drawbuffer Color gl_FragColor = vec4(color, edgeAlpha);
-    #drawbuffer WorkRefraction gl_FragColor = vec4(color * 0.40, edgeAlpha);
+    #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
 }{@}WorkItemUIShader.glsl{@}#!ATTRIBUTES
 #!UNIFORMS
 #!VARYINGS

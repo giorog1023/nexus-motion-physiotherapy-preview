@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V3 — Translucent Frosted Active Glass Face</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --mint: #34d399;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      color: var(--text);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .nav-btn.primary {
+      background: var(--accent);
+      color: #030712;
+      border-color: var(--accent);
+    }
+    .nav-btn.primary:hover {
+      background: #7dd3fc;
+    }
+    .main-wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 40px 40px 0;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(16, 185, 129, 0.08) 50%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+    .hero-banner h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 12px;
+    }
+    .hero-banner p {
+      font-size: 14px;
+      color: #cbd5e1;
+      max-width: 1100px;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .highlight-box {
+      background: rgba(15, 23, 42, 0.8);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 48px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.01em;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .gallery-grid.cols-3 {
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+    .gallery-grid.cols-2 {
+      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+    }
+    .card-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 12px 32px -8px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+    .card-thumb {
+      position: relative;
+      background: #020617;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 240px;
+    }
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .card-thumb:hover img {
+      transform: scale(1.02);
+    }
+    .card-info {
+      padding: 16px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #64748b;
+    }
+    .badge-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tag-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .tag-green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-orange { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    /* Modal Lightbox */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 7, 18, 0.94);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      max-width: 95vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .modal-content img {
+      max-width: 100%;
+      max-height: 82vh;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9);
+      object-fit: contain;
+    }
+    .modal-caption {
+      margin-top: 14px;
+      font-size: 14px;
+      color: #e2e8f0;
+      font-weight: 600;
+      text-align: center;
+    }
+    .close-btn {
+      position: absolute;
+      top: -36px;
+      right: 0;
+      color: #cbd5e1;
+      font-size: 28px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: color 0.2s;
+    }
+    .close-btn:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">Pass 2 V3</span>
+          <span class="status-pill">Active Glass Repaired</span>
+        </div>
+        <div class="subtitle">Translucent Milky Pearl-White Active Glass Face with Real Anatomical Spine Transmission</div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn primary" target="_blank">🌐 Live Production Site</a>
+        <a href="/gallery/pass2-v2/" class="nav-btn">← Pass 2 V2</a>
+        <a href="/gallery/pass1-v19/" class="nav-btn">Pass 1 V19 (Typography)</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+
+    <section class="hero-banner">
+      <h2>Pass 2 V3 Visual Correction: Active Foreground Glass Only</h2>
+      <p>
+        In Pass 2 V2, an external review identified that while diagnostic high-contrast patterns transmitted through the card, the real 3D cervical spine collapsed into a flat, opaque pale-cyan panel (uniform Lum 70).
+      </p>
+      <div class="highlight-box">
+        <strong>Root Cause Discovered & Resolved:</strong><br>
+        In Multiple Render Target (MRT) pipeline, `#drawbuffer WorkRefraction` was writing <code>color * 0.40</code> on the front face. Because <code>WorkRefraction</code> feeds the refraction buffer <code>tRefraction</code>, the card was feedback-looping into its own refraction target each frame, crushing transmitted scene dynamic range. Decoupling <code>#drawbuffer WorkRefraction gl_FragColor = vec4(0.0)</code> immediately restored 100% optical transmission of the cervical vertebrae through the milky pearl-white frosted glass body. Pass 1 V19 typography remains 100% frozen (0.000px displacement, 0 edge bleed).
+      </div>
+    </section>
+
+    <!-- SECTION 1: MASTER VERIFICATION COMPOSITES -->
+    <h3 class="section-title">Master Verification Composites</h3>
+    <div class="gallery-grid cols-2">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/pass2_v3_side_by_side_comparison.png', 'Pass 2 V3 — Side-by-Side Verification: Target Reference vs V3 Live')">
+          <img src="/gallery/pass2-v3/pass2_v3_side_by_side_comparison.png" alt="Side by Side Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Side-by-Side Comparison: Target Reference vs V3 Live</div>
+            <div class="card-desc">Direct visual side-by-side comparison of the active foreground card: Original Nexus Motion Benchmark vs Pass 2 V3 Live Production Render.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-blue">Target Benchmark vs Live</span>
+            <span>1920 × 1080</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/pass2_v3_card_evolution.png', 'Pass 2 Card Evolution: V1 → V2 → V3 → Reference')">
+          <img src="/gallery/pass2-v3/pass2_v3_card_evolution.png" alt="Card Evolution">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Card Evolution: V1 → V2 → V3 → Target Reference</div>
+            <div class="card-desc">Chronological progression showing the resolution of the MRT self-refraction feedback loop to produce genuine translucent frosted transmission.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Evolution Audit</span>
+            <span>1920 × 1080</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/pass2_v3_hero_comparison.png', 'Pass 2 V3 Hero Viewport Comparison')">
+          <img src="/gallery/pass2-v3/pass2_v3_hero_comparison.png" alt="Hero Viewport Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Hero Viewport Comparison (1920x1080)</div>
+            <div class="card-desc">Full 1080p spatial context comparison of the entire scene: original benchmark reference vs Pass 2 V3 live site.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-blue">Full Viewport</span>
+            <span>1920 × 1080</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/pass2_v3_regression_audit.png', 'Pass 2 V3 Typography Regression Audit')">
+          <img src="/gallery/pass2-v3/pass2_v3_regression_audit.png" alt="Typography Regression Audit">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Typography Regression Audit (Pass 1 V19 vs Pass 2 V3)</div>
+            <div class="card-desc">Invariant verification: confirms 0.000px displacement, 0 edge bleed, and identical font size, weight, and arrow geometry.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Zero Regression</span>
+            <span>1920 × 1080</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/pass2_v3_key_treatments_comparison.png', 'Pass 2 V3 Key Treatments: 01, 07, 14')">
+          <img src="/gallery/pass2-v3/pass2_v3_key_treatments_comparison.png" alt="Key Treatments Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Key Treatments Comparison: 01 (Cervical) · 07 (Thoracic) · 14 (Pelvic/Sacral)</div>
+            <div class="card-desc">Verifies consistent translucent frosted glass transmission across the beginning, middle, and end of the spine trajectory.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-blue">Spine Trajectory</span>
+            <span>1920 × 1080</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/pass2_v3_crops_audit.png', 'Pass 2 V3 All 14 Card Crops Audit Grid')">
+          <img src="/gallery/pass2-v3/pass2_v3_crops_audit.png" alt="All 14 Crops Audit">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Complete 14 Treatment Cards Audit Grid</div>
+            <div class="card-desc">Systematic verification of all 14 treatment cards: verified translucent frosted active glass and 100% frozen typography.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">14 / 14 Complete</span>
+            <span>1920 × 1080</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: SIX-STAGE DIAGNOSTIC PROOF SEQUENCE -->
+    <h3 class="section-title">Six-Stage Diagnostic Transmission Proof (Stages A to F)</h3>
+    <div style="margin-bottom: 24px;">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/diagnostics/diag_prod_master_composite.png', 'Pass 2 V3 — Complete 6-Stage Transmission Sequence')">
+          <img src="/gallery/pass2-v3/diagnostics/diag_prod_master_composite.png" alt="Diagnostic Master Composite">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Master Composite: Stages A through F Diagnostic Pipeline</div>
+            <div class="card-desc">Exhaustive proof tracing the optical transmission pipeline: from background spine scene, to render target capture, raw transmission, frosted diffusion, pearl tinting, and final active material.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Diagnostic Proof A–F</span>
+            <span>1800 × 1200</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery-grid cols-3">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/diagnostics/diag_prod_A_scene_no_card.png', 'Stage A: Real Scene Without Foreground Card')">
+          <img src="/gallery/pass2-v3/diagnostics/diag_prod_A_scene_no_card.png" alt="Stage A">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage A: Scene Without Card</div>
+          <div class="card-desc">Real 3D cervical vertebrae and atmospheric volume in background behind card position.</div>
+          <span class="badge-tag tag-blue">STAGE A</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/diagnostics/diag_prod_B_refraction_buffer.png', 'Stage B: Refraction Render Target (tRefraction)')">
+          <img src="/gallery/pass2-v3/diagnostics/diag_prod_B_refraction_buffer.png" alt="Stage B">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage B: Refraction RT (tRefraction)</div>
+          <div class="card-desc">Actual render target buffer feeding the glass shader before foreground rendering.</div>
+          <span class="badge-tag tag-blue">STAGE B</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/diagnostics/diag_prod_C_raw_refraction.png', 'Stage C: Raw Scene Transmission (0 Blur)')">
+          <img src="/gallery/pass2-v3/diagnostics/diag_prod_C_raw_refraction.png" alt="Stage C">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage C: Raw Scene Transmission</div>
+          <div class="card-desc">Zero-blur transmission proving 1:1 screen-space optical alignment of real spine.</div>
+          <span class="badge-tag tag-blue">STAGE C</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/diagnostics/diag_prod_D_frosted_no_tint.png', 'Stage D: Frosted Diffusion Only (10px Radius)')">
+          <img src="/gallery/pass2-v3/diagnostics/diag_prod_D_frosted_no_tint.png" alt="Stage D">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage D: Frosted Diffusion Only</div>
+          <div class="card-desc">10px circular blur kernel diffusing real scene light without tint or surface wash.</div>
+          <span class="badge-tag tag-blue">STAGE D</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/diagnostics/diag_prod_E_tint_no_scatter.png', 'Stage E: Pearl Tint Transmission')">
+          <img src="/gallery/pass2-v3/diagnostics/diag_prod_E_tint_no_scatter.png" alt="Stage E">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage E: Pearl Tint Transmission</div>
+          <div class="card-desc">Milky pearl-white silica tint composited with transmitted scene radiance.</div>
+          <span class="badge-tag tag-blue">STAGE E</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/diagnostics/diag_prod_F_final_active_material.png', 'Stage F: Final Active Glass Material')">
+          <img src="/gallery/pass2-v3/diagnostics/diag_prod_F_final_active_material.png" alt="Stage F">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage F: Final Active Material</div>
+          <div class="card-desc">Translucent milky pearl-white frosted glass with specular highlight and frozen typography.</div>
+          <span class="badge-tag tag-green">STAGE F FINAL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: RESPONSIVE & TRANSITION STUDIES -->
+    <h3 class="section-title">Responsive & Transition Studies</h3>
+    <div class="gallery-grid cols-3">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/viewport-1440x900-initial.png', 'Responsive 1440x900: Initial (Treatment 01)')">
+          <img src="/gallery/pass2-v3/viewport-1440x900-initial.png" alt="1440x900 Initial">
+        </div>
+        <div class="card-info">
+          <div class="card-name">1440x900 Initial: Treatment 01</div>
+          <div class="card-desc">Responsive desktop viewport showing active cervical card and scene scaling.</div>
+          <span class="badge-tag tag-blue">1440 × 900</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/viewport-1440x900-mid.png', 'Responsive 1440x900: Mid-Spine (Treatment 07)')">
+          <img src="/gallery/pass2-v3/viewport-1440x900-mid.png" alt="1440x900 Mid">
+        </div>
+        <div class="card-info">
+          <div class="card-name">1440x900 Mid: Treatment 07</div>
+          <div class="card-desc">Responsive desktop viewport scrolled to mid-spine thoracic treatment.</div>
+          <span class="badge-tag tag-blue">1440 × 900</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/viewport-1440x900-deep.png', 'Responsive 1440x900: Deep Spine (Treatment 14)')">
+          <img src="/gallery/pass2-v3/viewport-1440x900-deep.png" alt="1440x900 Deep">
+        </div>
+        <div class="card-info">
+          <div class="card-name">1440x900 Deep: Treatment 14</div>
+          <div class="card-desc">Responsive desktop viewport scrolled to deep lumbo-sacral rehabilitation.</div>
+          <span class="badge-tag tag-blue">1440 × 900</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/transition-k05.png', 'Transition Frame: k = 0.05')">
+          <img src="/gallery/pass2-v3/transition-k05.png" alt="Transition k05">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Transition Frame (k = 0.05)</div>
+          <div class="card-desc">Early orbital blend between background sapphire and foreground pearl glass.</div>
+          <span class="badge-tag tag-orange">TRANSITION</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/transition-k55.png', 'Transition Frame: k = 0.55')">
+          <img src="/gallery/pass2-v3/transition-k55.png" alt="Transition k55">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Transition Frame (k = 0.55)</div>
+          <div class="card-desc">Midway orbital transition demonstrating dynamic material interpolation.</div>
+          <span class="badge-tag tag-orange">TRANSITION</span>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/angled-card-view.png', 'Angled Card View: 3D Perspective')">
+          <img src="/gallery/pass2-v3/angled-card-view.png" alt="Angled View">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Angled Card Perspective View</div>
+          <div class="card-desc">Off-axis camera perspective showing front-face frosted glass and side slab thickness.</div>
+          <span class="badge-tag tag-blue">PERSPECTIVE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: ALL 14 INDIVIDUAL TREATMENTS -->
+    <h3 class="section-title">All 14 Individual Treatments (1080p Full Viewport & Card Crops)</h3>
+    <div class="gallery-grid cols-2">
+      <!-- Generated 14 treatments -->
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-01-full.png', 'Treatment 01 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-01-card.png" alt="Treatment 01">
+        </div>
+        <div class="card-info">
+          <div class="card-name">01 · Cervical Decompression</div>
+          <div class="card-desc">C1–C7 Cervical spine decompression with luminous frosted pearl-white glass face.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 01</span>
+            <a href="/gallery/pass2-v3/treatment-01-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-02-full.png', 'Treatment 02 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-02-card.png" alt="Treatment 02">
+        </div>
+        <div class="card-info">
+          <div class="card-name">02 · Manual Joint Therapy</div>
+          <div class="card-desc">C5–T2 Cervicothoracic junction joint articulation therapy.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 02</span>
+            <a href="/gallery/pass2-v3/treatment-02-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-03-full.png', 'Treatment 03 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-03-card.png" alt="Treatment 03">
+        </div>
+        <div class="card-info">
+          <div class="card-name">03 · Myofascial Release</div>
+          <div class="card-desc">T1–T6 Upper thoracic paraspinal fascial mobilization.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 03</span>
+            <a href="/gallery/pass2-v3/treatment-03-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-04-full.png', 'Treatment 04 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-04-card.png" alt="Treatment 04">
+        </div>
+        <div class="card-info">
+          <div class="card-name">04 · Dry Needling Therapy</div>
+          <div class="card-desc">Targeted neuromuscular trigger point deactivation along thoracic column.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 04</span>
+            <a href="/gallery/pass2-v3/treatment-04-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-05-full.png', 'Treatment 05 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-05-card.png" alt="Treatment 05">
+        </div>
+        <div class="card-info">
+          <div class="card-name">05 · Postural Realignment</div>
+          <div class="card-desc">Correction of sagittal spinal curvature and kyphotic thoracic angles.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 05</span>
+            <a href="/gallery/pass2-v3/treatment-05-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-06-full.png', 'Treatment 06 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-06-card.png" alt="Treatment 06">
+        </div>
+        <div class="card-info">
+          <div class="card-name">06 · Rotator Cuff Rehab</div>
+          <div class="card-desc">Scapulothoracic rhythm restoration and rotator cuff dynamic control.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 06</span>
+            <a href="/gallery/pass2-v3/treatment-06-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-07-full.png', 'Treatment 07 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-07-card.png" alt="Treatment 07">
+        </div>
+        <div class="card-info">
+          <div class="card-name">07 · Thoracic Mobility Therapy</div>
+          <div class="card-desc">T1–T12 Segmental thoracic extension and costovertebral mobilization.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 07</span>
+            <a href="/gallery/pass2-v3/treatment-07-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-08-full.png', 'Treatment 08 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-08-card.png" alt="Treatment 08">
+        </div>
+        <div class="card-info">
+          <div class="card-name">08 · Sciatica & Nerve Therapy</div>
+          <div class="card-desc">L4–S3 Sciatic nerve neurodynamic flossing and decompression.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 08</span>
+            <a href="/gallery/pass2-v3/treatment-08-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-09-full.png', 'Treatment 09 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-09-card.png" alt="Treatment 09">
+        </div>
+        <div class="card-info">
+          <div class="card-name">09 · Lumbar Disc Rehab</div>
+          <div class="card-desc">L1–L5 Intervertebral disc unloading and lumbar core stabilization.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 09</span>
+            <a href="/gallery/pass2-v3/treatment-09-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-10-full.png', 'Treatment 10 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-10-card.png" alt="Treatment 10">
+        </div>
+        <div class="card-info">
+          <div class="card-name">10 · Spinal Stabilization</div>
+          <div class="card-desc">Deep multifidus and transversus abdominis segmental recruitment.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 10</span>
+            <a href="/gallery/pass2-v3/treatment-10-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-11-full.png', 'Treatment 11 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-11-card.png" alt="Treatment 11">
+        </div>
+        <div class="card-info">
+          <div class="card-name">11 · SI Joint & Pelvic Rehab</div>
+          <div class="card-desc">Sacroiliac joint biomechanical alignment and pelvic girdle stability.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 11</span>
+            <a href="/gallery/pass2-v3/treatment-11-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-12-full.png', 'Treatment 12 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-12-card.png" alt="Treatment 12">
+        </div>
+        <div class="card-info">
+          <div class="card-name">12 · Hip Mobility Rehab</div>
+          <div class="card-desc">Femoroacetabular joint capsule stretching and dynamic rotatory mobility.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 12</span>
+            <a href="/gallery/pass2-v3/treatment-12-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-13-full.png', 'Treatment 13 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-13-card.png" alt="Treatment 13">
+        </div>
+        <div class="card-info">
+          <div class="card-name">13 · Sports Injury & ACL Rehab</div>
+          <div class="card-desc">Lower kinetic chain neuromuscular control and ACL progressive loading.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 13</span>
+            <a href="/gallery/pass2-v3/treatment-13-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v3/treatment-14-full.png', 'Treatment 14 Full Viewport')">
+          <img src="/gallery/pass2-v3/treatment-14-card.png" alt="Treatment 14">
+        </div>
+        <div class="card-info">
+          <div class="card-name">14 · Post-Surgical Rehabilitation</div>
+          <div class="card-desc">Comprehensive spinal post-operative functional restoration.</div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Treatment 14</span>
+            <a href="/gallery/pass2-v3/treatment-14-full.png" target="_blank" style="color:var(--accent);text-decoration:none;">Full 1080p ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div id="imageModal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="close-btn" onclick="closeModal()">✕</button>
+      <img id="modalImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Enlarged view">
+      <div id="modalCaption" class="modal-caption"></div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(src, caption) {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('modalImg');
+      const cap = document.getElementById('modalCaption');
+      img.src = src;
+      cap.innerText = caption;
+      modal.classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('imageModal').classList.remove('active');
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
