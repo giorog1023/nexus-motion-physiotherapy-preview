@@ -1,0 +1,321 @@
+[
+  {
+    "file": "var_01_D1_T1.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "var_02_D1_T2.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "var_03_D1_T3.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "var_04_D2_T1.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "var_05_D2_T2.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "var_06_D2_T3.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "var_07_D3_T1.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "var_08_D3_T2.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "var_09_D3_T3.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "baseline_v3.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  },
+  {
+    "file": "baseline_v4.png",
+    "openFace": {
+      "r": 111,
+      "g": 241,
+      "b": 255,
+      "lum": 204
+    },
+    "vertCrest": {
+      "r": 129,
+      "g": 144,
+      "b": 149,
+      "lum": 140
+    },
+    "discShadow": {
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "lum": 255
+    },
+    "bottomIce": {
+      "r": 42,
+      "g": 104,
+      "b": 146,
+      "lum": 90
+    },
+    "deltaLum": -115,
+    "contrastRatio": "0.55"
+  }
+]

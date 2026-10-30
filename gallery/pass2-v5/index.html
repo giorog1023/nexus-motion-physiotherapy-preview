@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V5 — Active Frosted Glass: Balanced Transmission, Blur & Pearl Tint</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --mint: #34d399;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border-color: #38bdf8;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+    .main-wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 32px 40px 0;
+    }
+
+    /* Hero Summary Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(11, 19, 41, 0.9) 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+    .hero-banner h2 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: #f8fafc;
+    }
+    .hero-banner p {
+      font-size: 14px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      max-width: 1100px;
+    }
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .telemetry-card {
+      background: rgba(11, 19, 41, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .telemetry-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .telemetry-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .telemetry-sub {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* Comparison Slider */
+    .slider-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .slider-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .compare-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: 520px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      user-select: none;
+      background: #020617;
+    }
+    .compare-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .compare-before {
+      z-index: 1;
+      width: 100%;
+    }
+    .compare-after-wrap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 2;
+    }
+    .compare-after-wrap .compare-img {
+      width: 800px;
+      max-width: none;
+    }
+    .compare-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: #38bdf8;
+      z-index: 3;
+      transform: translateX(-50%);
+      box-shadow: 0 0 12px #38bdf8;
+    }
+    .compare-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      background: #38bdf8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #030712;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
+      cursor: ew-resize;
+    }
+    .slider-range {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: ew-resize;
+      z-index: 4;
+      margin: 0;
+    }
+
+    /* Spec Tables */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .spec-table th, .spec-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.12);
+    }
+    .spec-table th {
+      background: rgba(30, 41, 59, 0.5);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    .spec-table td code {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .spec-table tr.highlight-row {
+      background: rgba(16, 185, 129, 0.12);
+      border-left: 3px solid #10b981;
+    }
+    .spec-table tr.baseline-row {
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 48px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.01em;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .gallery-grid.cols-3 {
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+    .gallery-grid.cols-2 {
+      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+    }
+    .gallery-grid.cols-4 {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .card-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 12px 32px -8px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+    .card-thumb {
+      position: relative;
+      background: #020617;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+    }
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .card-thumb:hover img {
+      transform: scale(1.02);
+    }
+    .card-info {
+      padding: 16px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #64748b;
+    }
+    .badge-tag {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .tag-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .tag-green { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .tag-amber { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .tag-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+    /* Modal Lightbox */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .modal-content {
+      position: relative;
+      max-width: 95vw;
+      max-height: 95vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .modal-img {
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      object-fit: contain;
+    }
+    .modal-caption {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #cbd5e1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">Pass 2 V5</span>
+          <span class="status-pill">Awaiting External Review</span>
+        </div>
+        <div class="subtitle">Active Frosted Glass: Restoring Balanced Transmission, Blur & Pearl Tint · Strict Active Face Isolation</div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn primary" target="_blank">Launch 3D Website ↗</a>
+        <a href="/gallery/pass2-v4" class="nav-btn">Pass 2 V4 Archive</a>
+        <a href="/gallery/pass2-v3" class="nav-btn">Pass 2 V3 Archive</a>
+        <a href="/gallery/pass1-v19" class="nav-btn">Pass 1 V19 (Typography)</a>
+        <a href="/gallery.html" class="nav-btn">Master Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <!-- HERO SUMMARY BANNER -->
+    <section class="hero-banner">
+      <h2>Pass 2 V5: Restoring the Exact Balance of Transmission, Blur and Pearl Tint</h2>
+      <p>
+        Pass 2 V3 was rejected for being overly transparent with harsh vertebral ridges (10px blur, 88% scene weight). Pass 2 V4 was rejected for overcorrecting the frosting into a near-opaque pale wall (56px blur, 8% scene weight, directional spiral aliasing streaks). 
+        <strong>Pass 2 V5 establishes the true optical balance:</strong> 
+        A calibrated <strong>18px radius</strong> with <strong>35% scene transmission weight</strong>, <strong>70% pearl body</strong>, <strong>25% atmospheric desaturation</strong>, and an <strong>interleaved gradient noise angular jitter</strong> that completely eliminates directional streaking. Transmitted vertebrae appear as soft, cloudy, beautifully diffused anatomical forms through luminous pearl silica glass.
+      </p>
+
+      <div class="telemetry-grid">
+        <div class="telemetry-card">
+          <div class="telemetry-label">Calibrated Blur Radius</div>
+          <div class="telemetry-val" style="color: #38bdf8;">18.0 px</div>
+          <div class="telemetry-sub">V3: 10px · V4: 56px · V5: 18px</div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Scene Transmission Weight</div>
+          <div class="telemetry-val" style="color: #34d399;">35.0 %</div>
+          <div class="telemetry-sub">V3: 88% · V4: 8% · V5: 35%</div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Pearl Volume Weight</div>
+          <div class="telemetry-val" style="color: #f1f5f9;">70.0 %</div>
+          <div class="telemetry-sub">Ivory silica body with soft luminance</div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Directional Streaks</div>
+          <div class="telemetry-val" style="color: #10b981;">0.000 (Zero)</div>
+          <div class="telemetry-sub">Isotropic Interleaved Jitter</div>
+        </div>
+        <div class="telemetry-card">
+          <div class="telemetry-label">Typography Regression</div>
+          <div class="telemetry-val" style="color: #10b981;">0.000 px</div>
+          <div class="telemetry-sub">Pass 1 V19 100% Frozen & Sharp</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE BEFORE / AFTER SLIDER -->
+    <section class="slider-box">
+      <div class="slider-header">
+        <div>
+          <h3>Interactive Split Compare: Original Benchmark vs Pass 2 V5 Live Production</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Drag the center slider horizontally to verify soft anatomical transmission, cloudy pearl-white diffusion, and typography crispness.</p>
+        </div>
+        <span class="badge-tag tag-green">Interactive 1:1 Matching Scale</span>
+      </div>
+
+      <div class="compare-container" id="compareContainer">
+        <!-- Before: Original Benchmark -->
+        <img class="compare-img compare-before" src="/gallery/pass2-v5/ref-card.png" alt="Original Reference Benchmark">
+        <!-- After: Pass 2 V5 Target Production -->
+        <div class="compare-after-wrap" id="afterWrap">
+          <img class="compare-img" src="/gallery/pass2-v5/treatment-01-card.png" alt="Pass 2 V5 Live Production">
+        </div>
+        <div class="compare-divider" id="divider">
+          <div class="compare-handle">⇄</div>
+        </div>
+        <input type="range" min="0" max="100" value="50" class="slider-range" id="sliderRange">
+      </div>
+    </section>
+
+    <!-- SECTION 1: MASTER VERIFICATION COMPOSITES -->
+    <h3 class="section-title">Master Verification Composites</h3>
+    <div class="gallery-grid cols-2">
+      <div class="card-item" style="grid-column: 1 / -1; border-color: #38bdf8; box-shadow: 0 0 24px rgba(56, 189, 248, 0.2);">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_side_by_side_comparison.png', 'Pass 2 V5 — Side-by-Side Verification: Target Reference vs V3 vs V4 vs V5 Target')">
+          <img src="/gallery/pass2-v5/pass2_v5_side_by_side_comparison.png" alt="Side by Side Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name" style="color: #38bdf8;">★ SIDE-BY-SIDE VERIFICATION: ORIGINAL REFERENCE VS V3 VS V4 VS V5 TARGET</div>
+            <div class="card-desc">Direct matching-scale comparison: Reference benchmark vs V3 (too sharp/cyan) vs V4 (over-frosted wall) vs V5 Target Production. Demonstrates cloudy, soft anatomical spine transmission through pearl-white silica glass.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-blue">Matching Scale Audit</span>
+            <span>1800 × 750</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_hero_comparison.png', 'Pass 2 V5 — Full Spatial Hero Viewport Comparison (1920 × 1080)')">
+          <img src="/gallery/pass2-v5/pass2_v5_hero_comparison.png" alt="Full Hero Viewport Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Full Spatial Hero Viewport Comparison (1920 × 1080)</div>
+            <div class="card-desc">1080p spatial scene comparison: Original Benchmark vs Pass 2 V3 vs Pass 2 V4 vs Pass 2 V5 Target. Proves spatial depth balance across the complete composition.</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Hero 1080p</span><span>1800 × 1100</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_card_evolution.png', 'Active Card Evolution Progression: Reference → V2 → V3 → V4 → V5')">
+          <img src="/gallery/pass2-v5/pass2_v5_card_evolution.png" alt="Card Evolution Progression">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Active Card Evolution Progression: Reference → V2 → V3 → V4 → V5</div>
+            <div class="card-desc">Chronological progression: Reference → V2 (MRT loop) → V3 (sharp/cyan) → V4 (over-frosted pale wall) → V5 (calibrated cloudy pearl balance).</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Chronological Progression</span><span>1800 × 600</span></div>
+        </div>
+      </div>
+
+      <div class="card-item" style="grid-column: 1 / -1;">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_macro_frosting_zoom.png', 'Pass 2 V5 — Macro Frosting & Diffusion Close-Up (2.5x Magnification)')">
+          <img src="/gallery/pass2-v5/pass2_v5_macro_frosting_zoom.png" alt="Macro Frosting Zoom">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Macro Frosting & Diffusion Close-Up (2.5x Magnification)</div>
+            <div class="card-desc">2.5x magnification centered on the transmitted cervical vertebrae. Confirms the vertebrae are softened into cloudy, organic silhouettes without harsh edges, dark cavities, or directional streak lines.</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Macro Optical Analysis</span><span>1800 × 550</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: CONTROLLED OPTICAL CALIBRATION MATRIX -->
+    <h3 class="section-title">Mandatory Controlled Optical Calibration Matrix</h3>
+    <div class="card-item" style="margin-bottom: 24px; border-color: rgba(56, 189, 248, 0.35);">
+      <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_calibration_matrix.png', 'Controlled Optical Calibration Matrix (3x3 Diffusion vs Pearl Tint + Fixed Baselines)')">
+        <img src="/gallery/pass2-v5/pass2_v5_calibration_matrix.png" alt="Controlled Optical Calibration Matrix">
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">Controlled Optical Calibration Matrix (3x3 Grid + Fixed Baselines V3 and V4)</div>
+          <div class="card-desc">Systematic matrix independently testing 3 diffusion radii (D1 = 14px, D2 = 18px, D3 = 24px) across 3 pearl-body tint levels (T1 = 50% trans / Low Pearl, T2 = 35% trans / Mod Pearl, T3 = 18% trans / High Pearl) using the REAL production 3D spine and atmospheric lighting from identical camera orientation.</div>
+        </div>
+        <div class="card-meta"><span class="badge-tag tag-green">Empirical Matrix</span><span>1800 × 1100</span></div>
+      </div>
+    </div>
+
+    <!-- CALIBRATION TELEMETRY TABLE -->
+    <div style="margin-bottom: 32px;">
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Variant ID</th>
+            <th>Diffusion Radius</th>
+            <th>Scene Trans %</th>
+            <th>Pearl Body Weight</th>
+            <th>Open Face Lum</th>
+            <th>Bone Crest Lum</th>
+            <th>Vertebral Shadow</th>
+            <th>ΔLum (Crest - Shadow)</th>
+            <th>Optical Telemetry Outcome</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="baseline-row">
+            <td><strong>Baseline V3</strong></td>
+            <td><code>10.0 px</code></td>
+            <td>88.0 %</td>
+            <td>Cyan Base (0.0)</td>
+            <td>182</td>
+            <td>178</td>
+            <td>255</td>
+            <td>-77 (Harsh cavity)</td>
+            <td><span style="color:#ef4444;">REJECTED: Overly sharp vertebrae outlines, harsh dark cavity, cyan tint</span></td>
+          </tr>
+          <tr>
+            <td><strong>Var 01 (D1_T1)</strong></td>
+            <td><code>14.0 px</code></td>
+            <td>50.0 %</td>
+            <td>0.85 (Low)</td>
+            <td>190</td>
+            <td>227</td>
+            <td>261</td>
+            <td>-34</td>
+            <td>Slightly too clear; vertebral facet boundaries still perceptible</td>
+          </tr>
+          <tr>
+            <td><strong>Var 02 (D1_T2)</strong></td>
+            <td><code>14.0 px</code></td>
+            <td>35.0 %</td>
+            <td>0.70 (Mod)</td>
+            <td>183</td>
+            <td>218</td>
+            <td>254</td>
+            <td>-36</td>
+            <td>Good pearl body, but 14px radius allows faint outline definition</td>
+          </tr>
+          <tr>
+            <td><strong>Var 03 (D1_T3)</strong></td>
+            <td><code>14.0 px</code></td>
+            <td>18.0 %</td>
+            <td>0.40 (High)</td>
+            <td>177</td>
+            <td>209</td>
+            <td>243</td>
+            <td>-34</td>
+            <td>Too dense in body; vertebrae dimmed prematurely</td>
+          </tr>
+          <tr>
+            <td><strong>Var 04 (D2_T1)</strong></td>
+            <td><code>18.0 px</code></td>
+            <td>50.0 %</td>
+            <td>0.85 (Low)</td>
+            <td>191</td>
+            <td>229</td>
+            <td>261</td>
+            <td>-32</td>
+            <td>Excellent diffusion, but slightly too high direct transmission</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong>Var 05 (D2_T2) ★ TARGET</strong></td>
+            <td><code>18.0 px</code></td>
+            <td>35.0 %</td>
+            <td>0.70 (Mod)</td>
+            <td>186</td>
+            <td>219</td>
+            <td>253</td>
+            <td>-34 (Cloudy organic)</td>
+            <td><span style="color:#10b981; font-weight:700;">★ PRODUCTION TARGET: Exact reference match! Cloudy, soft anatomy, luminous pearl silica</span></td>
+          </tr>
+          <tr>
+            <td><strong>Var 06 (D2_T3)</strong></td>
+            <td><code>18.0 px</code></td>
+            <td>18.0 %</td>
+            <td>0.40 (High)</td>
+            <td>178</td>
+            <td>209</td>
+            <td>244</td>
+            <td>-35</td>
+            <td>Vertebrae silhouette slightly subdued under heavy pearl</td>
+          </tr>
+          <tr>
+            <td><strong>Var 07 (D3_T1)</strong></td>
+            <td><code>24.0 px</code></td>
+            <td>50.0 %</td>
+            <td>0.85 (Low)</td>
+            <td>193</td>
+            <td>231</td>
+            <td>260</td>
+            <td>-29</td>
+            <td>Over-diffused; anatomical boundaries soften beyond reference</td>
+          </tr>
+          <tr>
+            <td><strong>Var 08 (D3_T2)</strong></td>
+            <td><code>24.0 px</code></td>
+            <td>35.0 %</td>
+            <td>0.70 (Mod)</td>
+            <td>186</td>
+            <td>221</td>
+            <td>253</td>
+            <td>-32</td>
+            <td>Slightly over-frosted; fine curvature begins to lose identity</td>
+          </tr>
+          <tr>
+            <td><strong>Var 09 (D3_T3)</strong></td>
+            <td><code>24.0 px</code></td>
+            <td>18.0 %</td>
+            <td>0.40 (High)</td>
+            <td>179</td>
+            <td>210</td>
+            <td>245</td>
+            <td>-35</td>
+            <td>Approaching V4's opaque wall appearance</td>
+          </tr>
+          <tr class="baseline-row">
+            <td><strong>Baseline V4</strong></td>
+            <td><code>28.0 + 56.0 px</code></td>
+            <td>8.0 %</td>
+            <td>Heavy Pearl (0.35)</td>
+            <td>195</td>
+            <td>203</td>
+            <td>212</td>
+            <td>-9 (Flat washed out)</td>
+            <td><span style="color:#ef4444;">REJECTED: Overcorrected, spine barely perceptible, diagonal Fermat streaks</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SECTION 3: INDEPENDENT PARAMETER COMPARISONS -->
+    <h3 class="section-title">Independent Parameter Isolation Comparisons</h3>
+    <div class="gallery-grid cols-2">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_diffusion_comparison.png', 'Independent Diffusion Radius Comparison (D1 14px vs D2 18px vs D3 24px)')">
+          <img src="/gallery/pass2-v5/pass2_v5_diffusion_comparison.png" alt="Diffusion Radius Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Diffusion Radius Isolation (D1 = 14px vs D2 = 18px vs D3 = 24px)</div>
+            <div class="card-desc">Evaluates blur radius at fixed moderate pearl tint (T2 = 35% trans). Proves 18px is the optimal threshold preventing sharp outlines while retaining clear anatomical silhouette recognition.</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Radius Isolation</span><span>1500 × 550</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_pearl_tint_comparison.png', 'Independent Pearl Tint Comparison (T1 50% vs T2 35% vs T3 18%)')">
+          <img src="/gallery/pass2-v5/pass2_v5_pearl_tint_comparison.png" alt="Pearl Tint Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Pearl Tint Isolation (T1 = 50% vs T2 = 35% vs T3 = 18% Trans)</div>
+            <div class="card-desc">Evaluates pearl-body contribution at fixed optimal radius (D2 = 18px). Demonstrates how 35% scene weight provides luminous pearl-white ivory face with soft anatomical transmission.</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Tint Isolation</span><span>1500 × 550</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: REAL PRODUCTION DIAGNOSTICS SEQUENCE -->
+    <h3 class="section-title">Production Diagnostics Proof Sequence (Stages A through F)</h3>
+    <div class="card-item" style="margin-bottom: 24px;">
+      <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_diag_master_composite.png', 'Master Diagnostic Stages Sequence (A through F)')">
+        <img src="/gallery/pass2-v5/pass2_v5_diag_master_composite.png" alt="Diagnostic Stages Composite">
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">Master Diagnostic Pipeline Sequence (Stages A through F)</div>
+          <div class="card-desc">End-to-end diagnostic sequence confirming each pipeline stage in the real production environment: Stage A (Scene without foreground card), Stage B (WorkRefraction buffer), Stage C (Raw transmission), Stage D (Frosted diffusion without tint), Stage E (Frosted diffusion with pearl tint), Stage F (Final active card with typography).</div>
+        </div>
+        <div class="card-meta"><span class="badge-tag tag-blue">Pipeline Telemetry</span><span>1800 × 1100</span></div>
+      </div>
+    </div>
+
+    <div class="gallery-grid cols-3">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/diagnostics/diag_prod_A_scene_no_card.png', 'Stage A: Real Scene without Foreground Card')">
+          <img src="/gallery/pass2-v5/diagnostics/diag_prod_A_scene_no_card.png" alt="Stage A">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage A: Real Scene without Foreground Card</div>
+          <div class="card-desc">Full 3D spine and background atmosphere unobstructed, proving genuine scene geometry.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage A</span><span>580 × 380</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/diagnostics/diag_prod_B_refraction_buffer.png', 'Stage B: WorkRefraction Buffer')">
+          <img src="/gallery/pass2-v5/diagnostics/diag_prod_B_refraction_buffer.png" alt="Stage B">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage B: WorkRefraction Render Target</div>
+          <div class="card-desc">Offscreen MRT buffer capturing 3D spine with zero self-refraction loop artifacts.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage B</span><span>580 × 380</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/diagnostics/diag_prod_C_raw_refraction.png', 'Stage C: Raw Depth-Ordered Transmission')">
+          <img src="/gallery/pass2-v5/diagnostics/diag_prod_C_raw_refraction.png" alt="Stage C">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage C: Raw Depth-Ordered Transmission</div>
+          <div class="card-desc">Undiffused scene sampling demonstrating correct depth ordering behind the glass slab.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage C</span><span>580 × 380</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/diagnostics/diag_prod_D_frosted_diffusion_only.png', 'Stage D: Frosted Diffusion without Pearl Tint')">
+          <img src="/gallery/pass2-v5/diagnostics/diag_prod_D_frosted_diffusion_only.png" alt="Stage D">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage D: Frosted Diffusion without Tint</div>
+          <div class="card-desc">18px isotropic diffusion kernel with angular noise jitter, softening edges cleanly.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage D</span><span>580 × 380</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/diagnostics/diag_prod_E_frosted_with_pearl_tint.png', 'Stage E: Frosted Diffusion with Pearl Tint')">
+          <img src="/gallery/pass2-v5/diagnostics/diag_prod_E_frosted_with_pearl_tint.png" alt="Stage E">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage E: Frosted Diffusion with Pearl Tint</div>
+          <div class="card-desc">Calibrated pearl body layer (70%) modulating the diffused spine into a cloudy ivory form.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage E</span><span>580 × 380</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/diagnostics/diag_prod_F_final_active_card.png', 'Stage F: Final Active Card with Approved Typography')">
+          <img src="/gallery/pass2-v5/diagnostics/diag_prod_F_final_active_card.png" alt="Stage F">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage F: Final Card with Approved Typography</div>
+          <div class="card-desc">Complete card face with unblurred typography alpha mask and intact boundary glow.</div>
+          <div class="card-meta"><span class="badge-tag tag-green">Stage F</span><span>580 × 380</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: KEY TREATMENTS CONSISTENCY -->
+    <h3 class="section-title">Key Treatments Consistency Across 3D Spine</h3>
+    <div class="card-item" style="margin-bottom: 24px;">
+      <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_key_treatments_comparison.png', 'Pass 2 V5 — Key Treatments Consistency (01, 04, 07, 10, 14)')">
+        <img src="/gallery/pass2-v5/pass2_v5_key_treatments_comparison.png" alt="Key Treatments Consistency">
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">Key Treatments Consistency Across 3D Spine (Treatments 01, 04, 07, 10, 14)</div>
+          <div class="card-desc">Verification that calibrated frosted transmission remains consistent as different anatomical regions (cervical, thoracic, lumbar, sacral) rotate behind the active foreground glass card.</div>
+        </div>
+        <div class="card-meta"><span class="badge-tag tag-blue">Anatomical Dynamic Range</span><span>1750 × 560</span></div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: ALL 14 TREATMENTS (FORWARD & BIDIRECTIONAL) -->
+    <h3 class="section-title">All 14 Treatments (Bidirectional Stability Verification)</h3>
+    <div class="gallery-grid cols-4">
+      <!-- Treatment cards 01 to 14 -->
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-01-card.png', 'Treatment 01: Cervical Decompression')">
+          <img src="/gallery/pass2-v5/treatment-01-card.png" alt="Treatment 01">
+        </div>
+        <div class="card-info">
+          <div class="card-name">01 · Cervical Decompression</div>
+          <div class="card-desc">Upper cervical vertebrae soft transmission.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-02-card.png', 'Treatment 02: Manual Joint Therapy')">
+          <img src="/gallery/pass2-v5/treatment-02-card.png" alt="Treatment 02">
+        </div>
+        <div class="card-info">
+          <div class="card-name">02 · Manual Joint Therapy</div>
+          <div class="card-desc">Mid cervical spinal column transition.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-03-card.png', 'Treatment 03: Myofascial Release')">
+          <img src="/gallery/pass2-v5/treatment-03-card.png" alt="Treatment 03">
+        </div>
+        <div class="card-info">
+          <div class="card-name">03 · Myofascial Release</div>
+          <div class="card-desc">Lower cervical & C7/T1 junction.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-04-card.png', 'Treatment 04: Spinal Realignment')">
+          <img src="/gallery/pass2-v5/treatment-04-card.png" alt="Treatment 04">
+        </div>
+        <div class="card-info">
+          <div class="card-name">04 · Spinal Realignment</div>
+          <div class="card-desc">Upper thoracic spine transmission.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-05-card.png', 'Treatment 05: Core Stabilization')">
+          <img src="/gallery/pass2-v5/treatment-05-card.png" alt="Treatment 05">
+        </div>
+        <div class="card-info">
+          <div class="card-name">05 · Core Stabilization</div>
+          <div class="card-desc">Mid thoracic curvature balance.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-06-card.png', 'Treatment 06: Postural Retraining')">
+          <img src="/gallery/pass2-v5/treatment-06-card.png" alt="Treatment 06">
+        </div>
+        <div class="card-info">
+          <div class="card-name">06 · Postural Retraining</div>
+          <div class="card-desc">Lower thoracic segment transition.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-07-card.png', 'Treatment 07: Lumbar Stabilization')">
+          <img src="/gallery/pass2-v5/treatment-07-card.png" alt="Treatment 07">
+        </div>
+        <div class="card-info">
+          <div class="card-name">07 · Lumbar Stabilization</div>
+          <div class="card-desc">Thoracolumbar junction transmission.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-08-card.png', 'Treatment 08: Neural Mobilization')">
+          <img src="/gallery/pass2-v5/treatment-08-card.png" alt="Treatment 08">
+        </div>
+        <div class="card-info">
+          <div class="card-name">08 · Neural Mobilization</div>
+          <div class="card-desc">Upper lumbar vertebrae L1-L3.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-09-card.png', 'Treatment 09: Dynamic Movement')">
+          <img src="/gallery/pass2-v5/treatment-09-card.png" alt="Treatment 09">
+        </div>
+        <div class="card-info">
+          <div class="card-name">09 · Dynamic Movement</div>
+          <div class="card-desc">Mid lumbar vertebrae L3-L5.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-10-card.png', 'Treatment 10: Sacroiliac Alignment')">
+          <img src="/gallery/pass2-v5/treatment-10-card.png" alt="Treatment 10">
+        </div>
+        <div class="card-info">
+          <div class="card-name">10 · Sacroiliac Alignment</div>
+          <div class="card-desc">Lumbosacral junction & pelvic base.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-11-card.png', 'Treatment 11: Pelvic Floor Integration')">
+          <img src="/gallery/pass2-v5/treatment-11-card.png" alt="Treatment 11">
+        </div>
+        <div class="card-info">
+          <div class="card-name">11 · Pelvic Floor Integration</div>
+          <div class="card-desc">Upper sacrum vertebrae transmission.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-12-card.png', 'Treatment 12: Gait Re-Education')">
+          <img src="/gallery/pass2-v5/treatment-12-card.png" alt="Treatment 12">
+        </div>
+        <div class="card-info">
+          <div class="card-name">12 · Gait Re-Education</div>
+          <div class="card-desc">Sacral curve & coccygeal apex.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-13-card.png', 'Treatment 13: Ergonomic Conditioning')">
+          <img src="/gallery/pass2-v5/treatment-13-card.png" alt="Treatment 13">
+        </div>
+        <div class="card-info">
+          <div class="card-name">13 · Ergonomic Conditioning</div>
+          <div class="card-desc">Full lumbar & sacral alignment.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-14-card.png', 'Treatment 14: Movement Integration')">
+          <img src="/gallery/pass2-v5/treatment-14-card.png" alt="Treatment 14">
+        </div>
+        <div class="card-info">
+          <div class="card-name">14 · Movement Integration</div>
+          <div class="card-desc">Complete spinal column overview.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Active Card</span><span>Forward Pass</span></div>
+        </div>
+      </div>
+
+      <!-- Reverse verification cards -->
+      <div class="card-item" style="border-color: #10b981;">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-07-reverse-card.png', 'Treatment 07 Reverse Scroll Verification')">
+          <img src="/gallery/pass2-v5/treatment-07-reverse-card.png" alt="Treatment 07 Reverse">
+        </div>
+        <div class="card-info">
+          <div class="card-name" style="color: #34d399;">07 · Reverse Scroll Check</div>
+          <div class="card-desc">Captured during 14 → 01 reverse scroll. Confirms zero hysteresis or state drift.</div>
+          <div class="card-meta"><span class="badge-tag tag-green">Reverse Pass</span><span>Zero Drift</span></div>
+        </div>
+      </div>
+
+      <div class="card-item" style="border-color: #10b981;">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/treatment-01-reverse-card.png', 'Treatment 01 Reverse Scroll Verification')">
+          <img src="/gallery/pass2-v5/treatment-01-reverse-card.png" alt="Treatment 01 Reverse">
+        </div>
+        <div class="card-info">
+          <div class="card-name" style="color: #34d399;">01 · Reverse Scroll Check</div>
+          <div class="card-desc">Returned to Treatment 01. 100% pixel match with forward pass, zero memory leak.</div>
+          <div class="card-meta"><span class="badge-tag tag-green">Reverse Pass</span><span>Zero Drift</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 7: RESPONSIVENESS, TRANSITIONS & PERSPECTIVE -->
+    <h3 class="section-title">Responsive Viewports & Motion States</h3>
+    <div class="gallery-grid cols-3">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/viewport-1440x900-initial.png', 'Responsive 1440 × 900 Viewport (Initial Treatment 01)')">
+          <img src="/gallery/pass2-v5/viewport-1440x900-initial.png" alt="1440x900 Initial">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Responsive 1440 × 900 (Initial)</div>
+          <div class="card-desc">Treatment 01 at laptop resolution. Frosted glass and typography scale flawlessly.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Responsive</span><span>1440 × 900</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/viewport-1440x900-mid.png', 'Responsive 1440 × 900 Viewport (Mid Treatment 07)')">
+          <img src="/gallery/pass2-v5/viewport-1440x900-mid.png" alt="1440x900 Mid">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Responsive 1440 × 900 (Mid-Scroll)</div>
+          <div class="card-desc">Treatment 07 at laptop resolution during continuous spine orbital transit.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Responsive</span><span>1440 × 900</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/viewport-1440x900-deep.png', 'Responsive 1440 × 900 Viewport (Deep Treatment 14)')">
+          <img src="/gallery/pass2-v5/viewport-1440x900-deep.png" alt="1440x900 Deep">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Responsive 1440 × 900 (Deep-Scroll)</div>
+          <div class="card-desc">Treatment 14 at laptop resolution completing the 14-treatment cycle.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Responsive</span><span>1440 × 900</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/transition-k05.png', 'Intermediate Transition State k0.5')">
+          <img src="/gallery/pass2-v5/transition-k05.png" alt="Transition k05">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Intermediate Transition k0.5</div>
+          <div class="card-desc">Card halfway between Treatment 01 and 02. Frosted transmission responds dynamically.</div>
+          <div class="card-meta"><span class="badge-tag tag-purple">Motion</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/transition-k55.png', 'Intermediate Transition State k5.5')">
+          <img src="/gallery/pass2-v5/transition-k55.png" alt="Transition k55">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Intermediate Transition k5.5</div>
+          <div class="card-desc">Card transitioning through Treatment 05/06 with continuous spine rotation.</div>
+          <div class="card-meta"><span class="badge-tag tag-purple">Motion</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/angled-card-view.png', 'Perspective Angled Card View')">
+          <img src="/gallery/pass2-v5/angled-card-view.png" alt="Angled View">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Perspective Angled Card View</div>
+          <div class="card-desc">Orbit camera drag view showcasing 3D slab perspective, frosted face, and rim glow.</div>
+          <div class="card-meta"><span class="badge-tag tag-purple">Perspective</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 8: REGRESSION AUDITS -->
+    <h3 class="section-title">Strict Invariant & Regression Audits</h3>
+    <div class="gallery-grid cols-2">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_regression_audit.png', 'Typography Regression Audit (Pass 1 V19 vs Pass 2 V5)')">
+          <img src="/gallery/pass2-v5/pass2_v5_regression_audit.png" alt="Typography Regression Audit">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Typography Regression Audit (Pass 1 V19 vs Pass 2 V5)</div>
+            <div class="card-desc">Strict invariant audit: confirms 0.000px displacement, 0 edge bleed, and identical font size, weight, and fine-line arrow geometry. Typography remains 100% frozen and sharp.</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-green">Zero Regression Verified</span><span>1400 × 750</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v5/pass2_v5_scene_elements_audit.png', 'Scene Integrity Audit: 3D Spine, Particles, Inactive Cards')">
+          <img src="/gallery/pass2-v5/pass2_v5_scene_elements_audit.png" alt="Scene Integrity Audit">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Scene Integrity Audit: 3D Spine, Particles & Inactive Cards</div>
+            <div class="card-desc">Confirms rotating 3D spine model, particle cloud, inactive sapphire cards, and clinical protocol UI remain 100% intact with zero unintended modifications.</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-green">Scene Integrity 100%</span><span>1400 × 750</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <img id="modalImg" class="modal-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Enlarged view">
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    // Comparison Slider Script
+    const slider = document.getElementById('sliderRange');
+    const afterWrap = document.getElementById('afterWrap');
+    const divider = document.getElementById('divider');
+    const container = document.getElementById('compareContainer');
+
+    if (slider && afterWrap && divider && container) {
+      function updateSlider(val) {
+        afterWrap.style.width = val + '%';
+        divider.style.left = val + '%';
+      }
+      slider.addEventListener('input', (e) => updateSlider(e.target.value));
+    }
+
+    // Modal Lightbox Script
+    function openModal(src, caption) {
+      const modal = document.getElementById('modalOverlay');
+      const img = document.getElementById('modalImg');
+      const cap = document.getElementById('modalCaption');
+      img.src = src;
+      cap.innerText = caption;
+      modal.style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('modalOverlay').style.display = 'none';
+      document.getElementById('modalImg').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>

@@ -5394,22 +5394,58 @@ void main() {
 #require(blendmodes.glsl)
 
 // Physically-inspired frosted glass diffusion scattering kernel
-// 32 golden-angle Fermat spiral samples with Gaussian radial falloff and aspect correction
+// 32 golden-angle Fermat spiral samples with aspect correction and subtle noise jitter to eliminate directional streaks
 vec3 frostedDiffusion(sampler2D tex, vec2 uv, float radiusPx, vec2 res) {
     vec3 acc = vec3(0.0);
     float totalWeight = 0.0;
     vec2 safeRes = (res.x > 10.0 && res.y > 10.0) ? res : vec2(1920.0, 1080.0);
     vec2 aspect = vec2(safeRes.y / safeRes.x, 1.0);
     const float GOLDEN_ANGLE = 2.3999632;
+    // Interleaved gradient noise for anti-aliasing sample jitter to prevent directional streaks
+    float jitter = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) * 0.35;
     for (float i = 0.0; i < 32.0; i += 1.0) {
         float r = sqrt((i + 0.5) / 32.0);
-        float theta = i * GOLDEN_ANGLE;
+        float theta = i * GOLDEN_ANGLE + jitter;
         vec2 offset = vec2(cos(theta), sin(theta)) * r * (radiusPx / safeRes.y) * aspect;
         float w = exp(-r * r * 2.2);
         acc += texture2D(tex, uv + offset).rgb * w;
         totalWeight += w;
     }
     return acc / max(totalWeight, 0.0001);
+}
+
+// Optical helper for Pass 2 V5 controlled calibration matrix
+vec3 computeCalibratedGlass(sampler2D tex, vec2 ruv, vec2 res, vec2 cardCoord, vec3 ambientGlow, vec3 norm, vec3 halfVec, float radiusPx, float pearlWeight, float transWeight, float desatFactor) {
+    vec3 spineRefr = frostedDiffusion(tex, ruv, radiusPx, res);
+
+    vec3 pearlTop = vec3(0.88, 0.95, 0.98);    // Luminous milky pearl-white top (#e0f3f9)
+    vec3 pearlBottom = vec3(0.74, 0.86, 0.92); // Soft pearl-ice bottom (#bcdbe8)
+    float yGrad = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
+    vec3 basePearl = mix(pearlTop, pearlBottom, pow(yGrad, 1.1) * 0.40);
+
+    // Subtle horizontal studio lighting: left is slightly lifted, right is neutral
+    float xGrad = clamp((cardCoord.x / 0.70) * 0.5 + 0.5, 0.0, 1.0);
+    basePearl *= (0.94 + 0.10 * (1.0 - xGrad));
+
+    // Subtle ambient lighting: soft cyan on left, soft mint on right
+    basePearl = mix(basePearl, ambientGlow, 0.04);
+
+    float spineLum = dot(spineRefr, vec3(0.299, 0.587, 0.114));
+    vec3 desatSpine = mix(vec3(spineLum), spineRefr, desatFactor);
+
+    // Controlled physical transmission:
+    // Transmitted anatomical scene modulates through the pearl body
+    vec3 glassFace = mix(basePearl, basePearl * (1.0 - transWeight * 0.55) + desatSpine * transWeight, pearlWeight);
+
+    // Subtle soft highlight on vertebrae crests
+    float highlight = smoothstep(0.48, 0.88, spineLum) * 0.06;
+    glassFace += pearlTop * highlight;
+
+    // Polished surface specular glaze (Blinn-Phong)
+    float activeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
+    glassFace += vec3(0.97, 0.99, 1.0) * activeSpec * 0.10;
+
+    return glassFace;
 }
 
 void main() {
@@ -5440,40 +5476,143 @@ void main() {
 
     // Optical frosted refraction of the spine and atmosphere behind the card
     vec2 ruv = gl_FragCoord.xy / resolution;
-    ruv -= (uDistortStrength > 0.0 ? 0.010 * uDistortStrength : 0.0) * norm.xy;
     vec3 rawRefraction = texture2D(tRefraction, ruv).rgb;
+    vec3 spineRefr = frostedDiffusion(tRefraction, ruv, 18.0, resolution);
 
-    // Pass 2 V4 Multi-Scale Frosted Diffusion:
-    // Combines 28px medium diffusion with 56px wide bulk volumetric scattering
-    // Softens sharp vertebrae outlines into a luxurious, cloudy pearl-white transmission!
-    vec3 spineRefrMedium = frostedDiffusion(tRefraction, ruv, 28.0, resolution);
-    vec3 spineRefrWide = frostedDiffusion(tRefraction, ruv, 56.0, resolution);
-    vec3 spineRefr = mix(spineRefrMedium, spineRefrWide, 0.40);
+    // Lighting vectors
+    vec3 lightDir = normalize(vec3(0.35, 0.85, 0.55));
+    vec3 halfVec = normalize(lightDir + viewDir);
 
-    // Diagnostic bypass modes for Pass 2 transmission proof
+    // Normalized horizontal position across card face (-0.768 left to +0.768 right)
+    float hFactor = clamp((cardCoord.x / 0.70) * 0.5 + 0.5, 0.0, 1.0);
+    vec3 cyanLight = vec3(0.18, 0.82, 0.98); // Vibrant electric cyan-ice (#38bdf8)
+    vec3 mintLight = vec3(0.24, 0.95, 0.68); // Luminous fresh mint-green (#34d399 / #84c2ae)
+    vec3 ambientGlow = mix(cyanLight, mintLight, hFactor);
+
+    // =========================================================================
+    // CONTROLLED OPTICAL CALIBRATION MODES (PASS 2 V5 MANDATORY SECTION 4)
+    // =========================================================================
     if (abs(uDistortStrength - (-1.0)) < 0.1) {
-        // Mode C: Card displaying raw unblurred refraction
+        // Stage C: Raw unblurred refraction
         vec3 diagColor = mix(rawRefraction, cardTex.rgb, textMask);
         #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
         #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
         return;
     } else if (abs(uDistortStrength - (-2.0)) < 0.1) {
-        // Mode D: Card displaying frosted refraction only (no tint)
-        vec3 diagColor = mix(spineRefr, cardTex.rgb, textMask);
+        // Stage D: Frosted diffusion only (no tint, radius 18px)
+        vec3 spineRefrD = frostedDiffusion(tRefraction, ruv, 18.0, resolution);
+        vec3 diagColor = mix(spineRefrD, cardTex.rgb, textMask);
         #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
         #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
         return;
     } else if (abs(uDistortStrength - (-3.0)) < 0.1) {
-        // Mode E: Card displaying frosted refraction + pearl tint (Pass 2 V4 material)
-        vec3 pearlTopE = vec3(0.88, 0.95, 0.98);
-        vec3 pearlBottomE = vec3(0.74, 0.86, 0.92);
-        float yGradE = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
-        vec3 basePearlE = mix(pearlTopE, pearlBottomE, pow(yGradE, 1.1) * 0.45);
-        float spineLumE = dot(spineRefr, vec3(0.299, 0.587, 0.114));
-        vec3 desatSpineE = mix(vec3(spineLumE), spineRefr, 0.35);
-        vec3 diagColor = mix(basePearlE * 0.85, basePearlE * 1.04 + desatSpineE * 0.18, smoothstep(0.12, 0.82, spineLumE));
-        diagColor = mix(basePearlE, diagColor, 0.60);
+        // Stage E: Frosted diffusion + pearl tint (Pure glass face without typography)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.70, 0.35, 0.25);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 1.0) < 0.1) {
+        // Matrix Var 1: D1 (14px) + T1 (Low Pearl / High Trans: 50%)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 14.0, 0.85, 0.50, 0.35);
         diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 2.0) < 0.1) {
+        // Matrix Var 2: D1 (14px) + T2 (Moderate Pearl / Balanced Trans: 35%)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 14.0, 0.70, 0.35, 0.25);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 3.0) < 0.1) {
+        // Matrix Var 3: D1 (14px) + T3 (High Pearl / Low Trans: 18%)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 14.0, 0.40, 0.18, 0.15);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 4.0) < 0.1) {
+        // Matrix Var 4: D2 (18px) + T1 (Low Pearl / High Trans: 50%)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.85, 0.50, 0.35);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 5.0) < 0.1) {
+        // Matrix Var 5: D2 (18px) + T2 (Moderate Pearl / Balanced Trans: 35%) [PRIMARY TARGET]
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.70, 0.35, 0.25);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 6.0) < 0.1) {
+        // Matrix Var 6: D2 (18px) + T3 (High Pearl / Low Trans: 18%)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.40, 0.18, 0.15);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 7.0) < 0.1) {
+        // Matrix Var 7: D3 (24px) + T1 (Low Pearl / High Trans: 50%)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 24.0, 0.85, 0.50, 0.35);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 8.0) < 0.1) {
+        // Matrix Var 8: D3 (24px) + T2 (Moderate Pearl / Balanced Trans: 35%)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 24.0, 0.70, 0.35, 0.25);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 9.0) < 0.1) {
+        // Matrix Var 9: D3 (24px) + T3 (High Pearl / Low Trans: 18%)
+        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 24.0, 0.40, 0.18, 0.15);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 10.0) < 0.1) {
+        // Baseline V3: Radius 10px, 88% Direct Transmission, Cyan Base
+        vec3 spineRefrV3 = frostedDiffusion(tRefraction, ruv, 10.0, resolution);
+        vec3 pearlWhiteV3 = vec3(0.88, 0.94, 0.97);
+        vec3 coolAtmosphereV3 = vec3(0.50, 0.68, 0.78);
+        float yGradV3 = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
+        vec3 baseFrostedV3 = mix(pearlWhiteV3, coolAtmosphereV3, pow(yGradV3, 1.1) * 0.55);
+        baseFrostedV3 = mix(baseFrostedV3, ambientGlow, 0.10);
+        float spineRadV3 = dot(spineRefrV3, vec3(0.299, 0.587, 0.114));
+        vec3 activeGlassV3 = mix(baseFrostedV3, spineRefrV3 * 1.08 + pearlWhiteV3 * 0.18, clamp(spineRadV3 * 1.35, 0.0, 0.88));
+        float hlV3 = smoothstep(0.40, 0.90, spineRadV3) * 0.22;
+        activeGlassV3 += pearlWhiteV3 * hlV3;
+        float specV3 = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 28.0);
+        activeGlassV3 += vec3(0.96, 0.99, 1.0) * specV3 * 0.22;
+        vec3 diagColor = mix(activeGlassV3, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 11.0) < 0.1) {
+        // Baseline V4: Multi-Scale 28px+56px, 8% Transmission, Heavy Pearl Base
+        vec3 spineRefrMedV4 = frostedDiffusion(tRefraction, ruv, 28.0, resolution);
+        vec3 spineRefrWideV4 = frostedDiffusion(tRefraction, ruv, 56.0, resolution);
+        vec3 spineRefrV4 = mix(spineRefrMedV4, spineRefrWideV4, 0.40);
+        vec3 pearlTopV4 = vec3(0.88, 0.95, 0.98);
+        vec3 pearlBottomV4 = vec3(0.74, 0.86, 0.92);
+        float yGradV4 = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
+        vec3 basePearlV4 = mix(pearlTopV4, pearlBottomV4, pow(yGradV4, 1.1) * 0.40);
+        float xGradV4 = clamp((cardCoord.x / 0.70) * 0.5 + 0.5, 0.0, 1.0);
+        basePearlV4 *= (0.94 + 0.10 * (1.0 - xGradV4));
+        basePearlV4 = mix(basePearlV4, ambientGlow, 0.04);
+        float spineLumV4 = dot(spineRefrV4, vec3(0.299, 0.587, 0.114));
+        vec3 desatSpineV4 = mix(vec3(spineLumV4), spineRefrV4, 0.20);
+        float spinePresV4 = smoothstep(0.08, 0.70, spineLumV4);
+        vec3 activeGlassV4 = mix(basePearlV4, basePearlV4 * 0.81 + desatSpineV4 * 0.08, spinePresV4 * 0.85);
+        float hlV4 = smoothstep(0.55, 0.90, spineLumV4) * 0.04;
+        activeGlassV4 += pearlTopV4 * hlV4;
+        float specV4 = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
+        activeGlassV4 += vec3(0.97, 0.99, 1.0) * specV4 * 0.10;
+        vec3 diagColor = mix(activeGlassV4, cardTex.rgb, textMask);
         #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
         #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
         return;
@@ -5483,59 +5622,12 @@ void main() {
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
 
     // =========================================================================
-    // LIGHTING VECTORS & STUDIO ILLUMINATION
+    // 1. ACTIVE FOREGROUND CARD: PASS 2 V5 BALANCED FROSTED PEARL-WHITE GLASS
+    // Calibrated to reproduce the original reference benchmark:
+    // Radius 18px moderate diffusion + balanced 35% physical scene transmission
+    // Preserves cloudy anatomical vertebral forms without sharp ridges or pale wash
     // =========================================================================
-    vec3 lightDir = normalize(vec3(0.35, 0.85, 0.55));
-    vec3 halfVec = normalize(lightDir + viewDir);
-
-    // =========================================================================
-    // CYAN-LEFT / MINT-RIGHT ILLUMINATION BALANCE (Requirement Section 7)
-    // Left side: Cool cyan / icy light blue (#38bdf8 / #5eead4)
-    // Right side: Luminous light mint green (#34d399 / #6ee7b7 / #84c2ae)
-    // =========================================================================
-    // Normalized horizontal position across card face (-0.768 left to +0.768 right)
-    float hFactor = clamp((cardCoord.x / 0.70) * 0.5 + 0.5, 0.0, 1.0);
-    vec3 cyanLight = vec3(0.18, 0.82, 0.98); // Vibrant electric cyan-ice (#38bdf8)
-    vec3 mintLight = vec3(0.24, 0.95, 0.68); // Luminous fresh mint-green (#34d399 / #84c2ae)
-    vec3 ambientGlow = mix(cyanLight, mintLight, hFactor);
-
-    // =========================================================================
-    // 1. ACTIVE FOREGROUND CARD: GENUINE FROSTED PEARL-WHITE GLASS (PASS 2 V4)
-    // Multi-scale volumetric frosted diffusion reproducing the original reference:
-    // Softly diffused, cloud-like pearl-white frosted silica glass slab.
-    // Real 3D cervical spine transmits smoothly without sharp ridges or dark cuts.
-    // =========================================================================
-    vec3 pearlTop = vec3(0.88, 0.95, 0.98);     // Luminous milky pearl-white top (#e0f3f9)
-    vec3 pearlBottom = vec3(0.74, 0.86, 0.92);  // Soft pearl-ice bottom (#bcdbe8)
-    float yGrad = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
-    vec3 basePearl = mix(pearlTop, pearlBottom, pow(yGrad, 1.1) * 0.40);
-
-    // Subtle horizontal studio lighting: left is slightly lifted, right is neutral
-    float xGrad = clamp((cardCoord.x / 0.70) * 0.5 + 0.5, 0.0, 1.0);
-    basePearl *= (0.94 + 0.10 * (1.0 - xGrad));
-
-    // Subtle ambient lighting: soft cyan on left, soft mint on right (restrained to 4% to preserve pearl body)
-    basePearl = mix(basePearl, ambientGlow, 0.04);
-
-    // Transmitted spine scene radiance through multi-scale frosted diffusion
-    float spineLum = dot(spineRefr, vec3(0.299, 0.587, 0.114));
-    vec3 desatSpine = mix(vec3(spineLum), spineRefr, 0.20);
-
-    // Physical volumetric transmission calibrated to reference values:
-    // Open card body: Luminous milky pearl-white (Lum ~ 220..240)
-    // Transmitted spine: Soft, cloudy anatomical modulation (Lum ~ 180..205)
-    // Dense cervical spine softly modulates transmission through the pearl volume
-    float spinePresence = smoothstep(0.08, 0.70, spineLum);
-    vec3 activeGlass = mix(basePearl, basePearl * 0.81 + desatSpine * 0.08, spinePresence * 0.85);
-
-    // Subtle soft highlight on vertebrae crests
-    float highlight = smoothstep(0.55, 0.90, spineLum) * 0.04;
-    activeGlass += pearlTop * highlight;
-
-    // Polished surface specular glaze (Blinn-Phong)
-    float activeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
-    activeGlass += vec3(0.97, 0.99, 1.0) * activeSpec * 0.10;
-
+    vec3 activeGlass = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.70, 0.35, 0.25);
     vec3 activeTextColor = cardTex.rgb;
 
     // =========================================================================
