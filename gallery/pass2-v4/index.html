@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V4 — Calibrated Frosted Active Glass Face</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border: rgba(56, 189, 248, 0.20);
+      --border-strong: rgba(56, 189, 248, 0.40);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning: #f59e0b;
+      --mint: #34d399;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.95) 0%, rgba(3, 7, 18, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      color: var(--text);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .nav-btn.primary {
+      background: var(--accent);
+      color: #030712;
+      border-color: var(--accent);
+    }
+    .nav-btn.primary:hover {
+      background: #7dd3fc;
+    }
+    .main-wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 40px 40px 0;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.14) 0%, rgba(16, 185, 129, 0.08) 50%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+    .hero-banner h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 12px;
+    }
+    .hero-banner p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 1100px;
+      margin-bottom: 20px;
+    }
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .spec-table th, .spec-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.12);
+    }
+    .spec-table th {
+      background: rgba(30, 41, 59, 0.5);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    .spec-table td code {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 48px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.01em;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .gallery-grid.cols-3 {
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+    .gallery-grid.cols-2 {
+      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+    }
+    .card-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 12px 32px -8px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+    .card-thumb {
+      position: relative;
+      background: #020617;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+    }
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .card-thumb:hover img {
+      transform: scale(1.02);
+    }
+    .card-info {
+      padding: 16px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #64748b;
+    }
+    .badge-tag {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .tag-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .tag-green { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .tag-amber { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+    /* Modal Lightbox */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .modal-content {
+      position: relative;
+      max-width: 95vw;
+      max-height: 95vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .modal-img {
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      object-fit: contain;
+    }
+    .modal-caption {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #cbd5e1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">Pass 2 V4</span>
+          <span class="status-pill">Active Frosted Face Repaired</span>
+        </div>
+        <div class="subtitle">Multi-Scale Frosted Pearl-White Glass Transmission · Verified against Original Reference Benchmark</div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn primary" target="_blank">Launch 3D Website ↗</a>
+        <a href="/gallery/pass2-v3" class="nav-btn">Pass 2 V3 Archive</a>
+        <a href="/gallery/pass2-v2" class="nav-btn">Pass 2 V2 Archive</a>
+        <a href="/gallery/pass1-v19" class="nav-btn">Pass 1 V19 (Typography)</a>
+        <a href="/gallery.html" class="nav-btn">Master Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <!-- HERO SUMMARY BANNER -->
+    <section class="hero-banner">
+      <h2>Pass 2 V4: Active Foreground Card's Frosted Glass Face Corrected</h2>
+      <p>
+        In accordance with external review findings, Pass 2 V4 strictly addresses <strong>ONE element only</strong>: the active foreground card's frosted glass face. In V3, the vertebrae passing behind the card were too sharp and the glass appeared cyan-tinted and flat. In V4, we first empirically verified the scene's spatial depth and render order (confirming the spine is 100% physically behind the card and occluded under solid test fill), then calibrated a true <strong>multi-scale Fermat spiral diffusion kernel (28px + 56px)</strong> with desaturated pearl volume modulation.
+      </p>
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Parameter / Architecture</th>
+            <th>Pass 2 V3 (Baseline)</th>
+            <th>Pass 2 V4 (Corrected Implementation)</th>
+            <th>Original Benchmark Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Spatial Depth & Compositing</strong></td>
+            <td>Spine viewZ = 3.45, Card viewZ = 3.80</td>
+            <td>Spine viewZ = 3.45, Card viewZ = 3.80 (renderOrder: 0 vs 13)</td>
+            <td>Spine physically behind card · 100% Occlusion verified</td>
+          </tr>
+          <tr>
+            <td><strong>Diffusion Kernel & Radius</strong></td>
+            <td><code>radiusPx = 10.0</code> (16 samples)</td>
+            <td><code>radiusPx = 28.0 + 56.0</code> (32-sample Fermat spiral)</td>
+            <td>Soft, cloudy, multi-scale volumetric scattering</td>
+          </tr>
+          <tr>
+            <td><strong>Direct Scene Transmission Weight</strong></td>
+            <td>88% direct transmission (harsh ridges)</td>
+            <td>Controlled volumetric modulation (Lum 180..205)</td>
+            <td>Soft anatomical silhouette without black cuts</td>
+          </tr>
+          <tr>
+            <td><strong>Base Pearl Glass Tint</strong></td>
+            <td>Deep cyan atmosphere (0.50, 0.68, 0.78)</td>
+            <td>Milky pearl-white ivory (#e0f3f9 to #bcdbe8)</td>
+            <td>Predominantly milky pearl-white / ivory body</td>
+          </tr>
+          <tr>
+            <td><strong>Typography Invariant</strong></td>
+            <td>Pass 1 V19 approved typography frozen</td>
+            <td>Pass 1 V19 approved typography <strong>100% frozen</strong></td>
+            <td>0.000px displacement, 0 edge bleed, pure crispness</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION 1: MASTER VERIFICATION COMPOSITES -->
+    <h3 class="section-title">Master Verification Composites</h3>
+    <div class="gallery-grid cols-2">
+      <div class="card-item" style="grid-column: 1 / -1; border-color: #059669; box-shadow: 0 0 24px rgba(5, 150, 105, 0.2);">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_side_by_side_comparison.png', 'Pass 2 V4 — Side-by-Side Verification: Target Reference vs V4 Live')">
+          <img src="/gallery/pass2-v4/pass2_v4_side_by_side_comparison.png" alt="Side by Side Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name" style="color: #6ee7b7;">★ SIDE-BY-SIDE VERIFICATION: TARGET REFERENCE VS PASS 2 V4 LIVE</div>
+            <div class="card-desc">Direct 1:1 visual comparison of the active foreground card at identical matching scale. Original Reference Benchmark vs Pass 2 V4 Live. Demonstrates the soft, cloudy, multi-scale frosted pearl-white glass face reproducing the original reference without sharp ridges or contrast collapse.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Matching Scale Audit</span>
+            <span>1400 × 800</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_card_evolution.png', 'Pass 2 Card Evolution: Reference vs V2 vs V3 vs V4')">
+          <img src="/gallery/pass2-v4/pass2_v4_card_evolution.png" alt="Card Evolution">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Active Card Evolution: Reference → V2 → V3 → V4</div>
+            <div class="card-desc">Chronological optical progression: Original Reference Benchmark vs Defective MRT loop (V2) vs Sharp/cyan transmission (V3) vs Calibrated multi-scale frosted pearl glass (V4).</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-blue">Evolution Progression</span>
+            <span>1700 × 750</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_frosting_comparison.png', 'Pass 2 V4 Macro Frosting Zoom Comparison')">
+          <img src="/gallery/pass2-v4/pass2_v4_frosting_comparison.png" alt="Frosting Zoom Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Macro Frosting Zoom Comparison (Vertebrae Diffusion Detail)</div>
+            <div class="card-desc">High-magnification crop focusing directly on the transmitted cervical spine vertebrae. Highlights the transition from V3's sharp individual ridges to V4's luxurious, cloudy, softly diffused anatomical presence.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-green">Macro Frosting Detail</span>
+            <span>1500 × 600</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_hero_comparison.png', 'Pass 2 V4 Full Hero Viewport Comparison')">
+          <img src="/gallery/pass2-v4/pass2_v4_hero_comparison.png" alt="Hero Viewport Comparison">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Full Hero Viewport Comparison (1920 × 1080)</div>
+            <div class="card-desc">Full 1080p spatial scene comparison: Original Reference Benchmark vs Pass 2 V3 vs Pass 2 V4 live production viewport.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-blue">Full Viewport 1080p</span>
+            <span>1800 × 1100</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_depth_compositing_diagnostic.png', 'Pass 2 V4 Dedicated Depth & Compositing Diagnostic')">
+          <img src="/gallery/pass2-v4/pass2_v4_depth_compositing_diagnostic.png" alt="Depth Diagnostic">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Dedicated Depth & Compositing Order Diagnostic</div>
+            <div class="card-desc">Mathematical and empirical proof: World/View Z depth coordinates, Three.js renderOrder hierarchy, and Mode G solid opaque occlusion test proving 100% depth occlusion and zero post-card draw.</div>
+          </div>
+          <div class="card-meta">
+            <span class="badge-tag tag-amber">Depth Order Proof</span>
+            <span>1400 × 850</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: PRODUCTION SCENE TRANSMISSION SEQUENCE -->
+    <h3 class="section-title">Production Scene Transmission Sequence (Stages A to F)</h3>
+    <div class="card-item" style="margin-bottom: 32px;">
+      <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/diagnostics/diag_prod_master_composite.png', 'Pass 2 V4 — Master Transmission Diagnostic Sequence (Stages A to F)')">
+        <img src="/gallery/pass2-v4/diagnostics/diag_prod_master_composite.png" alt="Master Transmission Sequence">
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">Pass 2 V4 Transmission Diagnostics Composite (Stages A to F)</div>
+          <div class="card-desc">Complete diagnostic pipeline sequence captured directly from the live WebGL scene: Stage A (Scene behind card) → Stage B (Refraction RT) → Stage C (Raw unblurred transmission) → Stage D (Frosted diffusion without tint) → Stage E (Transmitted scene + pearl tint) → Stage F (Final active card with approved typography).</div>
+        </div>
+        <div class="card-meta">
+          <span class="badge-tag tag-blue">Stages A through F</span>
+          <span>1800 × 1350</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery-grid cols-3">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/diagnostics/diag_prod_A_scene_no_card.png', 'Stage A: Scene Behind Foreground Card')">
+          <img src="/gallery/pass2-v4/diagnostics/diag_prod_A_scene_no_card.png" alt="Stage A">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage A: Scene Behind Foreground Card</div>
+          <div class="card-desc">Foreground card hidden (visible=false); proves real 3D cervical spine and particles exist in the background.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage A</span><span>560 × 575</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/diagnostics/diag_prod_B_refraction_buffer.png', 'Stage B: Refraction Render Target')">
+          <img src="/gallery/pass2-v4/diagnostics/diag_prod_B_refraction_buffer.png" alt="Stage B">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage B: Refraction Render Target</div>
+          <div class="card-desc">Direct readPixels from ws.refraction.rt before card rendering; uncorrupted scene radiance.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage B</span><span>560 × 575</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/diagnostics/diag_prod_C_raw_refraction.png', 'Stage C: Raw Scene Transmission')">
+          <img src="/gallery/pass2-v4/diagnostics/diag_prod_C_raw_refraction.png" alt="Stage C">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage C: Raw Scene Transmission (Mode C)</div>
+          <div class="card-desc">Active card sampling tRefraction with radius 0.0; demonstrates zero-distortion direct optical mapping.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage C</span><span>560 × 575</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/diagnostics/diag_prod_D_frosted_no_tint.png', 'Stage D: Frosted Diffusion')">
+          <img src="/gallery/pass2-v4/diagnostics/diag_prod_D_frosted_no_tint.png" alt="Stage D">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage D: Multi-Scale Frosted Diffusion (Mode D)</div>
+          <div class="card-desc">28px + 56px Fermat spiral diffusion without tint; pure optical diffusion of transmitted spine.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage D</span><span>560 × 575</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/diagnostics/diag_prod_E_tint_no_scatter.png', 'Stage E: Transmitted Scene + Pearl Tint')">
+          <img src="/gallery/pass2-v4/diagnostics/diag_prod_E_tint_no_scatter.png" alt="Stage E">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage E: Transmitted Scene + Pearl Tint (Mode E)</div>
+          <div class="card-desc">Diffused spine radiance with calibrated pearl-white volumetric tinting.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Stage E</span><span>560 × 575</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/diagnostics/diag_prod_F_final_active_material.png', 'Stage F: Final Active Card Face')">
+          <img src="/gallery/pass2-v4/diagnostics/diag_prod_F_final_active_material.png" alt="Stage F">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Stage F: Final Active Card Face</div>
+          <div class="card-desc">Production material combining frosted transmission, pearl body, subtle specular glaze & approved typography.</div>
+          <div class="card-meta"><span class="badge-tag tag-green">Stage F</span><span>560 × 575</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: KEY TREATMENTS TRAJECTORY AUDIT -->
+    <h3 class="section-title">Key Treatments Trajectory Audit (01, 02, 07, 14)</h3>
+    <div class="card-item" style="margin-bottom: 24px;">
+      <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_key_treatments_comparison.png', 'Pass 2 V4 Key Treatments Trajectory Comparison')">
+        <img src="/gallery/pass2-v4/pass2_v4_key_treatments_comparison.png" alt="Key Treatments Comparison">
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">Key Treatments Trajectory Comparison (01 · 02 · 07 · 14)</div>
+          <div class="card-desc">Verifies consistent translucent frosted pearl glass transmission across Cervical, Upper Thoracic, Mid Thoracic, and Sacral anatomical sections.</div>
+        </div>
+        <div class="card-meta"><span class="badge-tag tag-green">Trajectory Audit</span><span>1700 × 750</span></div>
+      </div>
+    </div>
+
+    <div class="gallery-grid cols-2">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/treatment-01-full.png', 'Treatment 01 Full Viewport (1920x1080)')">
+          <img src="/gallery/pass2-v4/treatment-01-full.png" alt="Treatment 01 Full">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Treatment 01 · Cervical Decompression (Full Viewport)</div>
+          <div class="card-desc">C1–C7 cervical focus: softly diffused cervical spine, inactive sapphire cards, and approved typography.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Treatment 01</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/treatment-02-full.png', 'Treatment 02 Full Viewport (1920x1080)')">
+          <img src="/gallery/pass2-v4/treatment-02-full.png" alt="Treatment 02 Full">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Treatment 02 · Manual Joint Therapy (Full Viewport)</div>
+          <div class="card-desc">T1–T12 thoracic focus: flawless transition, consistent pearl-white frosted face.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Treatment 02</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/treatment-07-full.png', 'Treatment 07 Full Viewport (1920x1080)')">
+          <img src="/gallery/pass2-v4/treatment-07-full.png" alt="Treatment 07 Full">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Treatment 07 · Thoracic Mobilization (Full Viewport)</div>
+          <div class="card-desc">Mid-spine trajectory: soft volumetric transmission with zero edge bleed or text blur.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Treatment 07</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/treatment-14-full.png', 'Treatment 14 Full Viewport (1920x1080)')">
+          <img src="/gallery/pass2-v4/treatment-14-full.png" alt="Treatment 14 Full">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Treatment 14 · Sacral Stabilization (Full Viewport)</div>
+          <div class="card-desc">L1–S1 pelvic section: flawless optical transmission and stability at end of carousel trajectory.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Treatment 14</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: COMPLETE 14-TREATMENT MATRIX -->
+    <h3 class="section-title">Complete 14-Treatment Matrix Audit</h3>
+    <div class="card-item" style="margin-bottom: 32px;">
+      <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_crops_audit.png', 'Pass 2 V4 All 14 Treatments Crops Matrix')">
+        <img src="/gallery/pass2-v4/pass2_v4_crops_audit.png" alt="All 14 Treatments Matrix">
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">All 14 Treatments Card Crops Matrix</div>
+          <div class="card-desc">High-resolution catalog matrix verifying consistent frosted pearl-white glass appearance across all 14 treatments in both forward and reverse scrolling.</div>
+        </div>
+        <div class="card-meta"><span class="badge-tag tag-green">14 / 14 Treatments Verified</span><span>1800 × 1400</span></div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: RESPONSIVE & TRANSITION CAPTURES -->
+    <h3 class="section-title">Responsive (1440×900) & Transition Frame Captures</h3>
+    <div class="gallery-grid cols-3">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/viewport-1440x900-initial.png', '1440x900 Responsive Viewport: Initial')">
+          <img src="/gallery/pass2-v4/viewport-1440x900-initial.png" alt="1440x900 Initial">
+        </div>
+        <div class="card-info">
+          <div class="card-name">1440×900 Viewport · Initial (Treatment 01)</div>
+          <div class="card-desc">Cervical decompression active card rendered at 1440x900 laptop resolution.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">1440 × 900</span><span>Laptop Initial</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/viewport-1440x900-mid.png', '1440x900 Responsive Viewport: Mid')">
+          <img src="/gallery/pass2-v4/viewport-1440x900-mid.png" alt="1440x900 Mid">
+        </div>
+        <div class="card-info">
+          <div class="card-name">1440×900 Viewport · Mid (Treatment 07)</div>
+          <div class="card-desc">Mid-scroll active card rendered at 1440x900 resolution.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">1440 × 900</span><span>Laptop Mid</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/viewport-1440x900-deep.png', '1440x900 Responsive Viewport: Deep')">
+          <img src="/gallery/pass2-v4/viewport-1440x900-deep.png" alt="1440x900 Deep">
+        </div>
+        <div class="card-info">
+          <div class="card-name">1440×900 Viewport · Deep (Treatment 14)</div>
+          <div class="card-desc">Deep-scroll pelvic stabilization active card rendered at 1440x900.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">1440 × 900</span><span>Laptop Deep</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/transition-k05.png', 'Transition Frame: k = 0.5')">
+          <img src="/gallery/pass2-v4/transition-k05.png" alt="Transition k05">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Intermediate Transition · Frame k = 0.5</div>
+          <div class="card-desc">Dynamic transition state between Treatment 01 and 02 during wheel scroll.</div>
+          <div class="card-meta"><span class="badge-tag tag-amber">Transition</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/transition-k55.png', 'Transition Frame: k = 5.5')">
+          <img src="/gallery/pass2-v4/transition-k55.png" alt="Transition k55">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Intermediate Transition · Frame k = 5.5</div>
+          <div class="card-desc">Dynamic transition state midway through thoracic section.</div>
+          <div class="card-meta"><span class="badge-tag tag-amber">Transition</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/angled-card-view.png', 'Perspective Angled Card View')">
+          <img src="/gallery/pass2-v4/angled-card-view.png" alt="Angled View">
+        </div>
+        <div class="card-info">
+          <div class="card-name">Perspective Angled Card View</div>
+          <div class="card-desc">Orbit camera angled view showcasing 3D slab thickness, specular surface glaze and bevels.</div>
+          <div class="card-meta"><span class="badge-tag tag-blue">Perspective</span><span>1920 × 1080</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: INVARIANT REGRESSION AUDITS -->
+    <h3 class="section-title">Invariant & Scene Integrity Audits</h3>
+    <div class="gallery-grid cols-2">
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_regression_audit.png', 'Typography Regression Audit (Pass 1 V19 vs Pass 2 V4)')">
+          <img src="/gallery/pass2-v4/pass2_v4_regression_audit.png" alt="Typography Regression Audit">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Typography Regression Audit (Pass 1 V19 vs Pass 2 V4)</div>
+            <div class="card-desc">Strict invariant verification: confirms 0.000px displacement, 0 edge bleed, and identical font size, weight, and fine-line arrow geometry.</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-green">Zero Regression Verified</span><span>1400 × 800</span></div>
+        </div>
+      </div>
+
+      <div class="card-item">
+        <div class="card-thumb" onclick="openModal('/gallery/pass2-v4/pass2_v4_scene_elements_audit.png', 'Scene Integrity Audit: Spine, Particles, Inactive Cards')">
+          <img src="/gallery/pass2-v4/pass2_v4_scene_elements_audit.png" alt="Scene Integrity Audit">
+        </div>
+        <div class="card-info">
+          <div>
+            <div class="card-name">Scene Integrity Audit: 3D Spine, Particles & Inactive Cards</div>
+            <div class="card-desc">Confirms rotating 3D spine model, particle cloud, inactive sapphire cards, and clinical protocol UI remain 100% intact.</div>
+          </div>
+          <div class="card-meta"><span class="badge-tag tag-green">Scene Integrity 100%</span><span>1400 × 850</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <img id="modalImg" class="modal-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Enlarged view">
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(src, caption) {
+      const modal = document.getElementById('modalOverlay');
+      const img = document.getElementById('modalImg');
+      const cap = document.getElementById('modalCaption');
+      img.src = src;
+      cap.innerText = caption;
+      modal.style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('modalOverlay').style.display = 'none';
+      document.getElementById('modalImg').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
