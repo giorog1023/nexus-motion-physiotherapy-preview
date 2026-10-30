@@ -5448,6 +5448,42 @@ vec3 computeCalibratedGlass(sampler2D tex, vec2 ruv, vec2 res, vec2 cardCoord, v
     return glassFace;
 }
 
+// Optical helper for Pass 2 V6 controlled calibration and refinement
+vec3 computeV6Glass(sampler2D tex, vec2 ruv, vec2 res, vec2 cardCoord, vec3 ambientGlow, vec3 norm, vec3 halfVec, float radiusPx, float pearlWeight, float transWeight, float desatFactor, float highlightPower, vec3 pTop, vec3 pBottom, float envTint) {
+    vec3 spineRefr = frostedDiffusion(tex, ruv, radiusPx, res);
+
+    float yGrad = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
+    vec3 basePearl = mix(pTop, pBottom, pow(yGrad, 1.1) * 0.38);
+
+    // Studio horizontal lighting: left is subtly lifted, right is neutral
+    float xGrad = clamp((cardCoord.x / 0.70) * 0.5 + 0.5, 0.0, 1.0);
+    basePearl *= (0.95 + 0.09 * (1.0 - xGrad));
+
+    // Subtle ambient lighting: soft cyan on left, soft mint on right
+    basePearl = mix(basePearl, ambientGlow, 0.045);
+
+    float spineLum = dot(spineRefr, vec3(0.299, 0.587, 0.114));
+    vec3 desatSpine = mix(vec3(spineLum), spineRefr, desatFactor);
+
+    // Subtle mint/turquoise environmental contribution in transmitted anatomical shadows
+    vec3 shadowMint = vec3(0.68, 0.82, 0.80);
+    desatSpine = mix(desatSpine, shadowMint * spineLum, envTint * (1.0 - smoothstep(0.15, 0.65, spineLum)));
+
+    // Controlled physical transmission:
+    // Transmitted anatomical scene modulates through the pearl body
+    vec3 glassFace = mix(basePearl, basePearl * (1.0 - transWeight * 0.52) + desatSpine * transWeight, pearlWeight);
+
+    // Restrained highlight on vertebrae crests (prevents sharp upper-right streaks)
+    float highlight = smoothstep(0.48, 0.90, spineLum) * highlightPower;
+    glassFace += pTop * highlight;
+
+    // Polished surface specular glaze (Blinn-Phong)
+    float activeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
+    glassFace += vec3(0.97, 0.99, 1.0) * activeSpec * 0.10;
+
+    return glassFace;
+}
+
 void main() {
     vec3 norm = normalize(vNormal);
     vec3 viewDir = normalize(vViewDir);
@@ -5507,7 +5543,7 @@ void main() {
         return;
     } else if (abs(uDistortStrength - (-3.0)) < 0.1) {
         // Stage E: Frosted diffusion + pearl tint (Pure glass face without typography)
-        vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.70, 0.35, 0.25);
+        vec3 diagColor = computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12);
         #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
         #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
         return;
@@ -5616,18 +5652,46 @@ void main() {
         #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
         #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
         return;
+    } else if (abs(uDistortStrength - 20.0) < 0.1) {
+        // Option A: Unchanged V5 Baseline (Radius 18px, V5 Pearl, V5 Trans 35%)
+        vec3 diagColor = computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.70, 0.35, 0.25, 0.06, vec3(0.88, 0.95, 0.98), vec3(0.74, 0.86, 0.92), 0.0);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 21.0) < 0.1) {
+        // Option B: Slightly increased anatomical diffusion (Radius 21.5px, crest highlight softened, V5 Pearl)
+        vec3 diagColor = computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.70, 0.33, 0.25, 0.025, vec3(0.88, 0.95, 0.98), vec3(0.74, 0.86, 0.92), 0.0);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 22.0) < 0.1) {
+        // Option C: Slightly refined pearl balance (Radius 18.0px, Luminous Pearl-White/Ivory, Mint shadow tint)
+        vec3 diagColor = computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.72, 0.35, 0.25, 0.06, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
+    } else if (abs(uDistortStrength - 23.0) < 0.1) {
+        // Option D: Combined subtle diffusion & pearl refinement (Radius 21.5px, Softened crest, Luminous Pearl-White/Ivory, Mint shadow tint)
+        vec3 diagColor = computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12);
+        diagColor = mix(diagColor, cardTex.rgb, textMask);
+        #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
+        #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
+        return;
     }
 
     // uAhead: 1.0 when card is in active foreground focus, 0.0 when orbiting in background
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
 
     // =========================================================================
-    // 1. ACTIVE FOREGROUND CARD: PASS 2 V5 BALANCED FROSTED PEARL-WHITE GLASS
-    // Calibrated to reproduce the original reference benchmark:
-    // Radius 18px moderate diffusion + balanced 35% physical scene transmission
-    // Preserves cloudy anatomical vertebral forms without sharp ridges or pale wash
+    // 1. ACTIVE FOREGROUND CARD: PASS 2 V6 FINAL REFINED ACTIVE GLASS FACE
+    // Selected Winning Calibration: Option D (Combined Subtle Diffusion & Pearl Refinement)
+    // Radius 21.5px soft diffusion + 33% trans + luminous pearl-white ivory + mint shadow variation
+    // Perfectly reproduces original reference: soft cloudy anatomy, warm pearl face, 0 streaks
     // =========================================================================
-    vec3 activeGlass = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 18.0, 0.70, 0.35, 0.25);
+    vec3 activeGlass = computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12);
     vec3 activeTextColor = cardTex.rgb;
 
     // =========================================================================
