@@ -5484,8 +5484,131 @@ vec3 computeV6Glass(sampler2D tex, vec2 ruv, vec2 res, vec2 cardCoord, vec3 ambi
     return glassFace;
 }
 
+// =========================================================================
+// PASS 2 V7: TRANSLUCENT CYAN-BLUE INACTIVE GLASS OPTICAL HELPERS
+// Reconstructs full real scene behind inactive cards (Spine + Bokeh + Studio Atmosphere)
+// with isotropic Fermat diffusion, Beer-Lambert cyan-blue glass filtering, and 3D reflection.
+// Strictly isolated from Pass 2 V6 approved active pearl-white glass.
+// =========================================================================
+vec3 evaluateInactiveStudioBg(vec2 uv) {
+    vec3 bgCorner = vec3(0.043, 0.071, 0.125);
+    vec3 bgMid    = vec3(0.063, 0.102, 0.170);
+    vec3 studioBg = mix(bgMid, bgCorner, smoothstep(0.12, 0.72, length(uv - 0.50)));
+
+    vec2 centralGlowCenter = vec2(0.50, 0.56);
+    float dCentral = length((uv - centralGlowCenter) * vec2(1.70, 0.95));
+
+    float broadHalo = exp(-pow(dCentral / 0.42, 2.0));
+    studioBg += vec3(0.14, 0.54, 0.75) * broadHalo * 0.85;
+
+    float luminousCore = exp(-pow(dCentral / 0.22, 2.0));
+    studioBg += vec3(0.52, 0.86, 0.95) * luminousCore * 0.90;
+
+    float dCervical = length((uv - vec2(0.50, 0.74)) * vec2(2.2, 1.6));
+    float cervicalAccent = exp(-pow(dCervical / 0.15, 2.0));
+    studioBg += vec3(0.80, 0.94, 0.98) * cervicalAccent * 0.60;
+
+    return clamp(studioBg, 0.0, 1.0);
+}
+
+vec3 sampleCompleteSceneBehindCard(sampler2D tex, vec2 sUV, float cardFrontOfSpine) {
+    vec3 mrt = texture2D(tex, sUV).rgb;
+    vec3 envBg = evaluateInactiveStudioBg(sUV);
+    float pRatio = (mrt.g + mrt.b) / (2.0 * max(mrt.r, 0.0001));
+    float isPart = (1.0 - smoothstep(0.016, 0.026, mrt.r)) * smoothstep(6.0, 12.0, pRatio);
+    float maxMrt = max(mrt.r, max(mrt.g, mrt.b));
+    float spineMask = smoothstep(0.004, 0.025, maxMrt) * (1.0 - isPart) * cardFrontOfSpine;
+    vec3 spaceCol = envBg + mrt * isPart;
+    return clamp(mix(spaceCol, mrt, spineMask), 0.0, 1.0);
+}
+
+vec3 frostedInactiveScene(sampler2D tex, vec2 uv, float radiusPx, vec2 res, float cardFrontOfSpine) {
+    vec3 acc = vec3(0.0);
+    float totalWeight = 0.0;
+    vec2 safeRes = (res.x > 10.0 && res.y > 10.0) ? res : vec2(1920.0, 1080.0);
+    vec2 aspect = vec2(safeRes.y / safeRes.x, 1.0);
+    const float GOLDEN_ANGLE = 2.3999632;
+    float jitter = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) * 0.35;
+    for (float i = 0.0; i < 32.0; i += 1.0) {
+        float r = sqrt((i + 0.5) / 32.0);
+        float theta = i * GOLDEN_ANGLE + jitter;
+        vec2 offset = vec2(cos(theta), sin(theta)) * r * (radiusPx / safeRes.y) * aspect;
+        vec2 sUV = clamp(uv + offset, 0.001, 0.999);
+        float w = exp(-r * r * 2.2);
+        acc += sampleCompleteSceneBehindCard(tex, sUV, cardFrontOfSpine) * w;
+        totalWeight += w;
+    }
+    return acc / max(totalWeight, 0.0001);
+}
+
+vec3 computeV7InactiveGlass(
+    sampler2D tex,
+    vec2 ruv,
+    vec2 res,
+    vec2 cardCoord,
+    vec3 norm,
+    vec3 viewDir,
+    float camDist,
+    vec3 halfVec,
+    float cardFrontOfSpine,
+    float radiusPx,
+    float transWeight,
+    vec3 glassBase,
+    vec3 glassFilter,
+    float scatterStrength,
+    float chromaKeep,
+    float reflWeight,
+    float fresnelWeight
+) {
+    // Smooth physical Snell's-law refraction offset driven by 3D surface normal (zero bumpy normal-map blotches)
+    vec2 refractedUV = clamp(ruv - norm.xy * 0.018, 0.002, 0.998);
+
+    // Softly diffused real 3D scene behind card (3D Spine + 3D Bokeh Particles + Studio Atmosphere)
+    vec3 sceneBehind = frostedInactiveScene(tex, refractedUV, radiusPx, res, cardFrontOfSpine);
+    float sceneLum = dot(sceneBehind, vec3(0.299, 0.587, 0.114));
+
+    // Real 3D camera-depth aerial response & 3D radial distance to the luminous Spine column (x=0, z=0)
+    float nearField = smoothstep(12.2, 6.6, camDist);
+    float spineProx3D = smoothstep(5.15, 2.55, length(vWorldPos.xz));
+    float plumeReach = exp(-pow(length((refractedUV - vec2(0.50, 0.53)) * vec2(0.78, 0.72)) / 0.42, 2.0));
+    float lateralGlow = mix(plumeReach, spineProx3D, 0.45) * (0.26 + 0.74 * nearField);
+    // Preserve high local contrast when bright 3D Spine vertebrae are directly behind the glass
+    lateralGlow *= (1.0 - 0.52 * smoothstep(0.26, 0.78, sceneLum));
+
+    vec3 scatterLight = vec3(0.32, 0.50, 0.59) * lateralGlow * scatterStrength;
+    vec3 incomingLight = sceneBehind * transWeight + scatterLight;
+
+    float inLum = dot(incomingLight, vec3(0.299, 0.587, 0.114));
+    vec3 balancedLight = mix(vec3(inLum), incomingLight, chromaKeep);
+
+    // Beer-Lambert colored-glass spectral transmission with smooth highlight shoulder (preserves 3D bone relief)
+    vec3 transmitted = balancedLight * glassFilter;
+    transmitted = transmitted / (1.0 + max(transmitted - vec3(0.52), vec3(0.0)) * 0.42);
+
+    // Frosted cyan-blue glass internal body volume modulated by 3D studio key & depth
+    float studioGrad = 0.92 + 0.16 * clamp(0.52 - cardCoord.y * 0.62 - cardCoord.x * 0.22 + norm.y * 0.15, 0.0, 1.0);
+    vec3 ambientGlass = glassBase * (0.48 + 0.52 * nearField) * studioGrad * (1.0 - 0.32 * clamp(inLum, 0.0, 1.0));
+    vec3 glassFace = ambientGlass + transmitted;
+
+    // Smooth 3D view-dependent equirectangular studio reflection (tEnv via vReflection)
+    vec3 envRaw = envColorEqui(tEnv, normalize(vReflection)).rgb;
+    float envLum = dot(envRaw, vec3(0.299, 0.587, 0.114));
+    glassFace += vec3(0.55, 0.75, 0.85) * clamp(envLum, 0.08, 0.78) * reflWeight * (0.45 + 0.55 * nearField);
+
+    // Coherent dielectric viewing-angle Fresnel & subtle specular sheen (clamped against oblique over-saturation)
+    float cosTheta = clamp(abs(dot(norm, viewDir)), 0.0, 1.0);
+    float dielFresnel = clamp(pow(1.0 - cosTheta, 2.4), 0.0, 0.50);
+    glassFace = mix(glassFace, vec3(0.49, 0.70, 0.81), dielFresnel * fresnelWeight);
+
+    float inactiveSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 28.0);
+    glassFace += vec3(0.78, 0.92, 0.97) * inactiveSpec * 0.09;
+
+    return clamp(glassFace, 0.0, 1.0);
+}
+
 void main() {
     vec3 norm = normalize(vNormal);
+    float camDist = length(vViewDir);
     vec3 viewDir = normalize(vViewDir);
 
     // 2D Euclidean aspect-corrected card surface coordinates for rounded silhouette SDF
@@ -5513,7 +5636,6 @@ void main() {
     // Optical frosted refraction of the spine and atmosphere behind the card
     vec2 ruv = gl_FragCoord.xy / resolution;
     vec3 rawRefraction = texture2D(tRefraction, ruv).rgb;
-    vec3 spineRefr = frostedDiffusion(tRefraction, ruv, 18.0, resolution);
 
     // Lighting vectors
     vec3 lightDir = normalize(vec3(0.35, 0.85, 0.55));
@@ -5686,35 +5808,71 @@ void main() {
     float uAhead = clamp(uVideoBlend, 0.0, 1.0);
 
     // =========================================================================
-    // 1. ACTIVE FOREGROUND CARD: PASS 2 V6 FINAL REFINED ACTIVE GLASS FACE
+    // 1. ACTIVE FOREGROUND CARD: PASS 2 V6 APPROVED BASELINE (100% LOCKED)
     // Selected Winning Calibration: Option D (Combined Subtle Diffusion & Pearl Refinement)
     // Radius 21.5px soft diffusion + 33% trans + luminous pearl-white ivory + mint shadow variation
-    // Perfectly reproduces original reference: soft cloudy anatomy, warm pearl face, 0 streaks
     // =========================================================================
-    vec3 activeGlass = computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12);
+    vec3 activeGlass = (uAhead > 0.0001)
+        ? computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12)
+        : vec3(0.0);
     vec3 activeTextColor = cardTex.rgb;
 
     // =========================================================================
-    // 2. INACTIVE BACKGROUND CARDS: TRANSLUCENT CYAN-BLUE GLASS
-    // (Requirement Section 6: Dimensional, visible transmission, not flat dark blocks)
+    // 2. INACTIVE BACKGROUND CARDS: PASS 2 V7 TRANSLUCENT CYAN-BLUE GLASS
+    // Strictly isolated from active card (uAhead == 1.0 skips this block entirely).
+    // Transmits real 3D spine, animated bokeh particles, and studio radial atmosphere.
     // =========================================================================
-    // Inactive cards allow 55% of the scene behind them to transmit through with rich sapphire tint
-    vec3 inactiveTransmitted = spineRefr * vec3(0.55, 0.85, 1.00);
-    vec3 sapphireDepth = vec3(0.10, 0.28, 0.42);
-    vec3 inactiveGlass = mix(inactiveTransmitted, sapphireDepth, 0.45);
-    // Oceanic Fresnel & ambient rim
-    float inactiveFresnel = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.2);
-    inactiveGlass += cyanLight * inactiveFresnel * 0.35;
-    float inactiveSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 24.0);
-    inactiveGlass += vec3(0.75, 0.95, 1.0) * inactiveSpec * 0.25;
+    float cardFrontOfSpine = smoothstep(-6.0, 3.0, dot(vWorldPos.xz, cameraPosition.xz));
+    vec3 inactiveGlass = vec3(0.0);
+
+    if (uAhead < 0.9999) {
+        if (abs(uDistortStrength - (-4.0)) < 0.1) {
+            // V7 Diag Stage 1: Raw unblurred complete scene behind inactive card
+            vec2 refractedUV = clamp(ruv - norm.xy * 0.016, 0.002, 0.998);
+            inactiveGlass = sampleCompleteSceneBehindCard(tRefraction, refractedUV, cardFrontOfSpine);
+        } else if (abs(uDistortStrength - (-5.0)) < 0.1) {
+            // V7 Diag Stage 2: Frosted diffused scene behind inactive card (before cyan-blue tint)
+            vec2 refractedUV = clamp(ruv - norm.xy * 0.016, 0.002, 0.998);
+            inactiveGlass = frostedInactiveScene(tRefraction, refractedUV, 18.5, resolution, cardFrontOfSpine);
+        } else if (abs(uDistortStrength - 30.0) < 0.1) {
+            // V7 Calibration Variant A: Unchanged V6 Inactive Baseline
+            vec3 spineRefrV6 = frostedDiffusion(tRefraction, ruv, 18.0, resolution);
+            vec3 inactiveTransmittedV6 = spineRefrV6 * vec3(0.55, 0.85, 1.00);
+            vec3 sapphireDepthV6 = vec3(0.10, 0.28, 0.42);
+            inactiveGlass = mix(inactiveTransmittedV6, sapphireDepthV6, 0.45);
+            float inactiveFresnelV6 = pow(1.0 - clamp(abs(dot(norm, viewDir)), 0.0, 1.0), 2.2);
+            inactiveGlass += cyanLight * inactiveFresnelV6 * 0.35;
+            float inactiveSpecV6 = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 24.0);
+            inactiveGlass += vec3(0.75, 0.95, 1.0) * inactiveSpecV6 * 0.25;
+        } else if (abs(uDistortStrength - 31.0) < 0.1) {
+            // V7 Calibration Variant B: Increased Scene Transmission (90%, 12.5px) + Restrained Blue Body Tint
+            inactiveGlass = computeV7InactiveGlass(
+                tRefraction, ruv, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
+                12.5, 0.90, vec3(0.092, 0.148, 0.186), vec3(0.68, 0.85, 0.94), 0.50, 0.36, 0.045, 0.10
+            );
+        } else if (abs(uDistortStrength - 32.0) < 0.1) {
+            // V7 Calibration Variant C: Moderate Scene Transmission (76%, 15.5px) + Richer Cyan-Blue Body Tint
+            inactiveGlass = computeV7InactiveGlass(
+                tRefraction, ruv, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
+                15.5, 0.76, vec3(0.118, 0.222, 0.285), vec3(0.50, 0.84, 0.96), 0.76, 0.48, 0.060, 0.16
+            );
+        } else {
+            // V7 Calibration Variant D (33.0 & Default): Softly Diffused Transmission (84%, 19.0px) + Balanced Cyan-Blue Body Tint
+            inactiveGlass = computeV7InactiveGlass(
+                tRefraction, ruv, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
+                19.0, 0.84, vec3(0.130, 0.200, 0.242), vec3(0.63, 0.85, 0.93), 0.68, 0.36, 0.052, 0.13
+            );
+        }
+    }
 
     vec3 inactiveTextColor = vec3(1.0, 1.0, 1.0); // Pure brilliant crisp neutral white
 
     // =========================================================================
     // 3. BLUE-TO-WHITE MATERIAL & TYPOGRAPHY ORBITAL TRANSITION
+    // Preserves crisp white contrast on cyan-blue states and crisp dark navy on light glass states
     // =========================================================================
-    vec3 glassBody = mix(inactiveGlass, activeGlass, uAhead);
-    float textBlend = smoothstep(0.25, 0.75, uAhead);
+    vec3 glassBody = (uAhead > 0.9999) ? activeGlass : ((uAhead < 0.0001) ? inactiveGlass : mix(inactiveGlass, activeGlass, uAhead));
+    float textBlend = smoothstep(0.47, 0.53, uAhead);
     vec3 textColor = mix(inactiveTextColor, activeTextColor, textBlend);
 
     // =========================================================================

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V7 — Recreate Original Translucent Cyan-Blue Inactive Glass Cards</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --border: rgba(56, 189, 248, 0.22);
+      --border-strong: rgba(56, 189, 248, 0.44);
+      --accent: #38bdf8;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --mint: #34d399;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      line-height: 1.55;
+      padding-bottom: 90px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.96) 0%, rgba(3, 7, 18, 0.96) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 36px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.16);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: rgba(56, 189, 248, 0.16);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border-color: #38bdf8;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+    .main-wrap {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 32px 36px 0;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(11, 19, 41, 0.92) 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 36px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+    .hero-banner h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .hero-banner p {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 1180px;
+      margin-bottom: 18px;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .metric-card {
+      background: rgba(7, 13, 25, 0.78);
+      border: 1px solid rgba(56, 189, 248, 0.20);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .metric-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .metric-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .part-divider {
+      margin: 46px 0 22px;
+      padding: 14px 20px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.16) 0%, rgba(15, 23, 42, 0.4) 100%);
+      border-left: 4px solid var(--cyan);
+      border-radius: 8px;
+    }
+    .part-divider h2 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+    .part-divider p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .section-block {
+      margin-bottom: 42px;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .section-head h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .section-head .num {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--mint);
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    .section-head span.meta {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .panel-frame {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+    }
+    .panel-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      cursor: zoom-in;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+      gap: 22px;
+    }
+    @media (max-width: 760px) {
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+    .tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .tile-head {
+      padding: 12px 16px;
+      background: rgba(5, 10, 20, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tile-head .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--cyan);
+    }
+    .tile img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+    }
+    .treat-pair {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 2px;
+      background: #02060d;
+    }
+    .treat-pair img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .archive-bar {
+      margin-top: 48px;
+      padding: 20px 24px;
+      background: rgba(11, 19, 41, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .archive-bar strong {
+      font-size: 13px;
+      margin-right: 8px;
+      color: var(--mint);
+    }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.94);
+      backdrop-filter: blur(14px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: 96vw;
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          Nexus Motion
+          <span class="stage-pill">Pass 2 V7 · Translucent Cyan-Blue Inactive Glass</span>
+          <span class="status-pill">Awaiting External Visual Review</span>
+        </div>
+        <div class="subtitle">Isolated neighboring-card optical transmission, diffusion &amp; cyan-blue glass calibration · Pass 2 V6 Active Glass &amp; Pass 1 V19 Typography 100% Preserved</div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn primary" target="_blank">Open Live /work ↗</a>
+        <a href="/gallery/pass2-v6" class="nav-btn">Pass 2 V6 Baseline</a>
+        <a href="/gallery/pass2-v5" class="nav-btn">Pass 2 V5</a>
+        <a href="/gallery/pass1-v19" class="nav-btn">Pass 1 V19 Typography</a>
+        <a href="/gallery" class="nav-btn">All Galleries</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <section class="hero-banner">
+      <h2>Pass 2 V7 Optical Summary — Scene-Responsive Translucent Cyan-Blue Inactive Glass</h2>
+      <p>
+        Diagnosed and resolved the root cause of V6's dark opaque blue neighboring cards: <code>WorkRefraction</code> MRT previously captured only the 3D Spine and additive bokeh particles while omitting the studio radial atmosphere synthesized later in <code>GlobalComposite.fs</code>, causing off-spine card pixels to mix black <code>0.0</code> with dark sapphire <code>#19476b</code> (resulting in flat <code>#0d283a</code> panels). Pass 2 V7 reconstructs the full scene behind each inactive card inside a 32-sample golden-angle Fermat diffusion kernel with 3D front-vs-rear spine depth gating, Beer-Lambert cool cyan-blue spectral filtering, 3D spine-column radiometric scatter, and 3D camera-depth response — strictly isolated to <code>uAhead &lt; 1.0</code> so the approved Pass 2 V6 active card remains unchanged.
+      </p>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Selected Calibration</div>
+          <div class="metric-val">Variant D (Mode 33 / Default)</div>
+          <div class="metric-sub">Radius 19.0px · 84% Scene Transmission</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Cyan-Blue Glass Balance</div>
+          <div class="metric-val">Filter (0.63, 0.85, 0.93)</div>
+          <div class="metric-sub">Body (0.130, 0.200, 0.242) · 202°–204° Hue</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Measured Face Photometry</div>
+          <div class="metric-val">#38566a → #42687f → #4d7b96</div>
+          <div class="metric-sub">Matches Original Reference (L=32%→38%→48%+)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">V6 Active Card Protection</div>
+          <div class="metric-val">0.00% Material Drift</div>
+          <div class="metric-sub">uAhead == 1.0 executes exact V6 branch</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Protected Scope</div>
+          <div class="metric-val">V8 Edges &amp; V9 Rim Deferred</div>
+          <div class="metric-sub">Geometry, bevels, perimeter &amp; V19 text untouched</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART A: INACTIVE-GLASS MATERIAL COMPARISONS (ITEMS 1 - 7) -->
+    <div class="part-divider">
+      <h2>A. Inactive-Glass Material Comparisons (Items 01 – 07)</h2>
+      <p>Direct comparisons against the Original Nexus Motion Reference and Pass 2 V6 Baseline at matching framing and preserved aspect ratios.</p>
+    </div>
+
+    <section class="section-block" id="item-01">
+      <div class="section-head">
+        <h3><span class="num">01 //</span>ORIGINAL Reference vs Pass 2 V6 vs Pass 2 V7 — Complete Multi-Card Composition</h3>
+        <span class="meta">Full spatial viewport context</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_hero_comparison.png" alt="Original Reference vs V6 vs V7 Complete Multi-Card Composition" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-02">
+      <div class="section-head">
+        <h3><span class="num">02 //</span>ORIGINAL Reference vs Pass 2 V6 vs Pass 2 V7 — Individual Inactive-Card Face at Matching Scale</h3>
+        <span class="meta">Identical displayed card width &amp; preserved aspect ratio</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_inactive_face_comparison.png" alt="Individual Inactive-Card Face at Matching Scale" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-03">
+      <div class="section-head">
+        <h3><span class="num">03 //</span>Controlled Inactive-Card Material Calibration Sheet — Variants A, B, C &amp; D (Two Card Angles)</h3>
+        <span class="meta">Same card, camera, orientation &amp; frozen 3D scene · Repeated across Angle 1 (T02 Left) &amp; Angle 2 (T08 Right)</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_calibration_sheet.png" alt="Inactive-Card Calibration Sheet Variants A B C D" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-04">
+      <div class="section-head">
+        <h3><span class="num">04 //</span>Matched Frontal Inactive-Card Comparison (Pass 2 V6 vs Pass 2 V7)</h3>
+        <span class="meta">Nearly frontal orbital viewing angles over central cyan halo &amp; bokeh field</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_frontal_inactive_comparison.png" alt="Matched Frontal Inactive-Card Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-05">
+      <div class="section-head">
+        <h3><span class="num">05 //</span>Matched Oblique Inactive-Card Comparison (Original Reference vs V6 vs V7)</h3>
+        <span class="meta">Moderate &amp; steep side-facing orbital angles · Coherent tint &amp; restrained dielectric Fresnel</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_oblique_inactive_comparison.png" alt="Matched Oblique Inactive-Card Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-06">
+      <div class="section-head">
+        <h3><span class="num">06 //</span>Close-Up: Actual Background &amp; Bokeh Transmission Through Cyan-Blue Glass</h3>
+        <span class="meta">4-stage optical proof: Raw 3D Scene (-4.0) → 19px Diffused (-5.0) → V6 Opaque Fill → V7 Translucent Cyan-Blue Glass</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_background_transmission_zoom.png" alt="Close-up Background Transmission Through Cyan-Blue Glass" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-07">
+      <div class="section-head">
+        <h3><span class="num">07 //</span>3D Anatomical Spine Transmitted Through an Inactive Card</h3>
+        <span class="meta">Softened vertebral &amp; transverse-process silhouettes transmitted through cyan-blue glass without self-sampling</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_spine_transmission_comparison.png" alt="3D Spine Transmitted Through Inactive Card" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <!-- PART B: ACTIVE-GLASS & TYPOGRAPHY REGRESSION PROTECTION (ITEMS 8 - 10) -->
+    <div class="part-divider">
+      <h2>B. Active-Glass &amp; Typography Regression Protection (Items 08 – 10)</h2>
+      <p>Verification that Pass 2 V6 approved pearl-white active glass and Pass 1 V19 approved typography remain 100% untouched.</p>
+    </div>
+
+    <section class="section-block" id="item-08">
+      <div class="section-head">
+        <h3><span class="num">08 //</span>Pass 2 V6 vs Pass 2 V7 Active Foreground Card Comparison in Scene Context</h3>
+        <span class="meta">Foreground pearl-white active card preserved while neighboring inactive cards gain translucent cyan-blue glass</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_active_regression_hero.png" alt="V6 vs V7 Active Foreground Card in Context" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-09">
+      <div class="section-head">
+        <h3><span class="num">09 //</span>Matching-Scale Foreground Card Capture Proving V6 Active Material Has Not Changed</h3>
+        <span class="meta">1:1 native 580×380 active crop + quantitative pixel audit</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_active_matching_scale_proof.png" alt="Matching-Scale Active Foreground Card Proof" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-10">
+      <div class="section-head">
+        <h3><span class="num">10 //</span>Pass 1 V19 Approved Typography Regression Comparison</h3>
+        <span class="meta">Active dark navy text, inactive crisp white text &amp; intermediate transitions · Zero cyan bleed or washout</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_typography_regression_audit.png" alt="Pass 1 V19 Typography Regression Audit" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <!-- PART C: FULL IMPLEMENTATION & FUNCTIONALITY (ITEMS 11 - 15) -->
+    <div class="part-divider">
+      <h2>C. Full Implementation &amp; Functionality Verification (Items 11 – 15)</h2>
+      <p>Complete browser verification across Treatments 01–14, 1920×1080 &amp; 1440×900 viewports, intermediate transitions, and multi-angle orbital positions.</p>
+    </div>
+
+    <section class="section-block" id="item-11">
+      <div class="section-head">
+        <h3><span class="num">11 //</span>Key Treatment Full Compositions — Treatments 01, 02, 07 &amp; 14</h3>
+        <span class="meta">1920 × 1080 full compositions across cervical, thoracic, ribcage &amp; post-surgical states</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v7/pass2_v7_key_treatments_compositions.png" alt="Treatments 01 02 07 14 Full Compositions" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-13">
+      <div class="section-head">
+        <h3><span class="num">13 //</span>Responsive Laptop Viewports — Initial, Mid-Scroll &amp; Deep-Scroll (1440 × 900)</h3>
+        <span class="meta">Treatments 01, 07 &amp; 14 at 1440 × 900</span>
+      </div>
+      <div class="grid-3">
+        <div class="tile">
+          <div class="tile-head"><span>Initial (Treatment 01)</span><span class="tag">1440 × 900</span></div>
+          <img src="/gallery/pass2-v7/viewport-1440x900-initial.png" alt="1440x900 Initial" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>Mid-Scroll (Treatment 07)</span><span class="tag">1440 × 900</span></div>
+          <img src="/gallery/pass2-v7/viewport-1440x900-mid.png" alt="1440x900 Mid-Scroll" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>Deep-Scroll (Treatment 14)</span><span class="tag">1440 × 900</span></div>
+          <img src="/gallery/pass2-v7/viewport-1440x900-deep.png" alt="1440x900 Deep-Scroll" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="item-14">
+      <div class="section-head">
+        <h3><span class="num">14 //</span>Intermediate Active / Inactive Orbital Transition Screenshots</h3>
+        <span class="meta">Continuous blue-to-white glass transitions · Crisp text legibility throughout intermediate uAhead states</span>
+      </div>
+      <div class="panel-frame" style="margin-bottom: 18px;">
+        <img src="/gallery/pass2-v7/pass2_v7_transitions_audit.png" alt="Intermediate Transitions Composite Audit" onclick="openLightbox(this.src)">
+      </div>
+      <div class="grid-2">
+        <div class="tile">
+          <div class="tile-head"><span>Mid-Late Orbital Transition (T01 → T02, Card 02 Light Glass)</span><span class="tag">1920 × 1080</span></div>
+          <img src="/gallery/pass2-v7/transition-k03.png" alt="Transition k03" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>Midpoint Orbital Transition (T01 ↔ T02, Cyan-Blue + Pure White Text)</span><span class="tag">1920 × 1080</span></div>
+          <img src="/gallery/pass2-v7/transition-k05.png" alt="Transition k05" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>Mid-Sequence Transition (T06 → T07)</span><span class="tag">1920 × 1080</span></div>
+          <img src="/gallery/pass2-v7/transition-k55.png" alt="Transition k55" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>Deep-Sequence Transition (T13 → T14)</span><span class="tag">1920 × 1080</span></div>
+          <img src="/gallery/pass2-v7/transition-k125.png" alt="Transition k125" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="item-15">
+      <div class="section-head">
+        <h3><span class="num">15 //</span>Multi-Angle &amp; Varied-Background Inactive Card Captures</h3>
+        <span class="meta">Nearly frontal · Moderate oblique · Steep side-facing · Spine behind face · Dark studio background behind face · Dragged perspective</span>
+      </div>
+      <div class="panel-frame" style="margin-bottom: 18px;">
+        <img src="/gallery/pass2-v7/pass2_v7_multi_angle_audit.png" alt="Multi-Angle Inactive Card Audit" onclick="openLightbox(this.src)">
+      </div>
+      <div class="grid-3">
+        <div class="tile">
+          <div class="tile-head"><span>1. Nearly Frontal Inactive Cards</span><span class="tag">T08 Upper / Rear</span></div>
+          <img src="/gallery/pass2-v7/angle-1-nearly-frontal.png" alt="Nearly Frontal Inactive Card" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>2. Moderate Oblique Neighboring Cards</span><span class="tag">T02 Card 01 &amp; 03</span></div>
+          <img src="/gallery/pass2-v7/angle-2-moderate-oblique.png" alt="Moderate Oblique Inactive Card" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>3. Steep Side-Facing Orbital Card</span><span class="tag">T08 Card 07</span></div>
+          <img src="/gallery/pass2-v7/angle-3-steep-side.png" alt="Steep Side Inactive Card" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>4. 3D Spine Directly Behind Inactive Face</span><span class="tag">Orbital Overlap</span></div>
+          <img src="/gallery/pass2-v7/angle-4-spine-behind.png" alt="Spine Behind Inactive Card" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>5. Dark Studio Background Behind Face</span><span class="tag">Peripheral Depth</span></div>
+          <img src="/gallery/pass2-v7/angle-5-dark-bg-behind.png" alt="Dark Background Behind Inactive Card" onclick="openLightbox(this.src)">
+        </div>
+        <div class="tile">
+          <div class="tile-head"><span>6. Interactive Pointer-Dragged Orbit View</span><span class="tag">1920 × 1080</span></div>
+          <img src="/gallery/pass2-v7/angled-card-view.png" alt="Dragged Angled Orbit View" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="item-12">
+      <div class="section-head">
+        <h3><span class="num">12 //</span>All 14 Treatment States at 1920 × 1080 (Full Scene + Foreground Active Card Crop)</h3>
+        <span class="meta">Complete forward &amp; bidirectional reverse verification</span>
+      </div>
+      <div class="grid-2" id="allTreatmentsGrid"></div>
+    </section>
+
+    <div class="archive-bar">
+      <strong>Preserved Versioned Galleries:</strong>
+      <a href="/gallery/pass2-v6" class="nav-btn">Pass 2 V6 (Approved Active Glass)</a>
+      <a href="/gallery/pass2-v5" class="nav-btn">Pass 2 V5</a>
+      <a href="/gallery/pass2-v4" class="nav-btn">Pass 2 V4</a>
+      <a href="/gallery/pass2-v3" class="nav-btn">Pass 2 V3</a>
+      <a href="/gallery/pass2-v2" class="nav-btn">Pass 2 V2</a>
+      <a href="/gallery/pass2-v1" class="nav-btn">Pass 2 V1</a>
+      <a href="/gallery/pass1-v19" class="nav-btn">Pass 1 V19 (Approved Typography)</a>
+    </div>
+  </main>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
+    <img id="lightboxImg" src="" alt="Full Resolution Inspection" onclick="event.stopPropagation()">
+  </div>
+
+  <script>
+    const treatments = [
+      { id: '01', name: 'Cervical Decompression', region: '01 · C1–C7 CERVICAL' },
+      { id: '02', name: 'Manual Joint Therapy', region: '02 · T1–T12 THORACIC' },
+      { id: '03', name: 'Myofascial Release', region: '03 · MYOFASCIAL' },
+      { id: '04', name: 'Dry Needling Therapy', region: '04 · TRIGGER POINT' },
+      { id: '05', name: 'Postural Realignment', region: '05 · T1–T6 POSTURE' },
+      { id: '06', name: 'Rotator Cuff Rehab', region: '06 · GLENOHUMERAL' },
+      { id: '07', name: 'Thoracic Mobility Therapy', region: '07 · THORACIC CAGE' },
+      { id: '08', name: 'Sciatica & Nerve Therapy', region: '08 · L4–S1 SCIATICA' },
+      { id: '09', name: 'Lumbar Disc Rehab', region: '09 · L1–L5 LUMBAR' },
+      { id: '10', name: 'Spinal Stabilization', region: '10 · CORE STABILIZATION' },
+      { id: '11', name: 'SI Joint & Pelvic Rehab', region: '11 · SACROILIAC JOINT' },
+      { id: '12', name: 'Hip Mobility Rehab', region: '12 · COXOFEMORAL' },
+      { id: '13', name: 'Sports Injury & ACL Rehab', region: '13 · SPORTS MEDICINE' },
+      { id: '14', name: 'Post-Surgical Rehabilitation', region: '14 · RECOVERY PROTOCOL' }
+    ];
+
+    document.getElementById('allTreatmentsGrid').innerHTML = treatments.map(t => `
+      <div class="tile">
+        <div class="tile-head">
+          <span>${t.id} / 14 — ${t.name}</span>
+          <span class="tag">${t.region}</span>
+        </div>
+        <div class="treat-pair">
+          <img src="/gallery/pass2-v7/treatment-${t.id}-full.png" alt="Treatment ${t.id} Full 1920x1080" onclick="openLightbox(this.src)">
+          <img src="/gallery/pass2-v7/treatment-${t.id}-card.png" alt="Treatment ${t.id} Active Card" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+    `).join('');
+
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+</html>
