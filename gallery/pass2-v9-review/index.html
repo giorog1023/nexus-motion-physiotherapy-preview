@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V9 Review — Visual Evidence Correction Gallery</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --border: rgba(56, 189, 248, 0.22);
+      --border-strong: rgba(56, 189, 248, 0.44);
+      --accent: #38bdf8;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --mint: #34d399;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      line-height: 1.55;
+      padding-bottom: 90px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.96) 0%, rgba(3, 7, 18, 0.96) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 36px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1540px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(52, 211, 153, 0.16);
+      color: var(--mint);
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30, 41, 59, 0.72);
+      color: #e2e8f0;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      transition: all 0.2s ease;
+    }
+    .nav-btn:hover {
+      background: rgba(51, 65, 85, 0.9);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .nav-btn.primary {
+      background: rgba(52, 211, 153, 0.18);
+      border-color: var(--mint);
+      color: #6ee7b7;
+    }
+    .container {
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 32px 36px;
+    }
+    .notice-box {
+      background: rgba(52, 211, 153, 0.08);
+      border: 1px solid rgba(52, 211, 153, 0.32);
+      border-radius: 14px;
+      padding: 18px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .notice-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--mint);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .notice-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin: 36px 0 16px 0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title span {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(680px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .grid-1 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .evidence-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .evidence-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+    }
+    .evidence-header {
+      padding: 14px 20px;
+      background: rgba(11, 19, 41, 0.7);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .evidence-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .evidence-badge {
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .evidence-body {
+      padding: 16px;
+      background: #050914;
+    }
+    .evidence-body img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: zoom-in;
+    }
+    .evidence-footer {
+      padding: 12px 20px;
+      background: rgba(11, 19, 41, 0.5);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    /* Modal / Lightbox */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(2, 6, 18, 0.94);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+    }
+    .modal.active { display: flex; }
+    .modal-img {
+      max-width: 95vw;
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px; right: 28px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 24px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          Nexus Motion · Pass 2 V9 Review
+          <span class="stage-pill">Visual Evidence Correction</span>
+          <span class="status-pill">Awaiting External Review</span>
+        </div>
+        <div class="subtitle">
+          Recaptured comparison captures with matching camera, scale, framing, and zero clipping. Strictly evidence-only; production implementation 100% untouched.
+        </div>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn primary" target="_blank">Live 3D Website ↗</a>
+        <a href="/gallery/pass2-v9" class="nav-btn">Original V9 Gallery ↗</a>
+        <a href="/gallery/pass2-v8" class="nav-btn">V8 Approved Geometry ↗</a>
+        <a href="/gallery" class="nav-btn">Master Portal ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="notice-box">
+      <div class="notice-title">
+        <span>🛡️</span> Visual Evidence Correction Specification &amp; Integrity Confirmation
+      </div>
+      <div class="notice-desc">
+        This gallery corrects the comparison evidence for Pass 2 V9 visual review. All captures are framed with identical camera position, scale, viewport (1920×1080), scroll state, and aspect ratio across the Original Reference, Pass 2 V8, and Pass 2 V9.
+        <br>
+        <strong>Strict Production Freezing:</strong> No shaders, geometry, materials, lighting constants, spine, particles, typography, or UI files were modified. Pass 2 V10 has NOT been started.
+      </div>
+    </div>
+
+    <!-- Section 1: Core Comparison Suite -->
+    <h2 class="section-title">
+      Core Comparison Suite
+      <span>Items 01 – 03 · Identical Scale &amp; Zero Clipping</span>
+    </h2>
+
+    <div class="grid-1">
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">01. Complete Foreground Active Card (Zero Bottom/Side Clipping)</span>
+          <span class="evidence-badge">01_foreground_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/01_foreground_comparison.png" alt="01 Foreground Comparison" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Complete active card showing entire 3D volume, all 4 rounded corners, curved front bevel, and perimeter lighting. Native reference crop [350, 70, 324, 432] and 1920x1080 crop [660, 130, 600, 800] share identical 3:4 aspect ratio.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">02. Complete Inactive Oblique Card (Card 02 Top-Right)</span>
+          <span class="evidence-badge">02_inactive_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/02_inactive_comparison.png" alt="02 Inactive Comparison" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Complete inactive translucent cyan-blue card showing legible clinical text, front bevel, and visible 3D side wall at identical oblique angle. Shows authentic mint sheen on right side wall in Reference and V9.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">03. Full Hero Scene Composition Comparison (1920 × 1080 Viewport)</span>
+          <span class="evidence-badge">03_hero_composition_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/03_hero_composition_comparison.png" alt="03 Hero Composition" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Complete clinical scene composition: 3D Spine, soft bokeh particles, foreground active card, and neighboring orbiting cards at matching scroll position.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: 3D Surface Geometry & Lighting Close-Ups -->
+    <h2 class="section-title">
+      3D Surface Geometry &amp; Lighting Close-Ups
+      <span>Items 04 – 11 · Centered Edge &amp; Bevel Inspection</span>
+    </h2>
+
+    <div class="grid-2">
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">04. Front Bevel Profile &amp; Double-Stripe Elimination</span>
+          <span class="evidence-badge">04_front_bevel_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/04_front_bevel_comparison.png" alt="04 Front Bevel" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Verifies single unified Fresnel curvature glaze replacing V8's double parallel highlight line defect.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">05. Cool Cyan-Blue Left Edge Close-Up</span>
+          <span class="evidence-badge">05_cyan_left_edge_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/05_cyan_left_edge_comparison.png" alt="05 Cyan Left Edge" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Cropped directly on the active card's physical left edge. Reveals cool icy cyan-blue rim (#1fcfeb / #38bdf8).
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">06. Luminous Mint-Green Right Edge Close-Up</span>
+          <span class="evidence-badge">06_mint_right_edge_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/06_mint_right_edge_comparison.png" alt="06 Mint Right Edge" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Cropped directly on the active card's physical right edge. Clearly reveals the distinctive luminous mint-green rim (#34d399 / #6ee7b7).
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">07. Turquoise Transition on Physical Perimeter</span>
+          <span class="evidence-badge">07_turquoise_transition_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/07_turquoise_transition_comparison.png" alt="07 Turquoise Transition" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Top rail bevel inspection. Proves smooth organic bridge (#26e0cc) linking left cyan to right mint.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">08. Rounded Upper Corners Comparison</span>
+          <span class="evidence-badge">08_rounded_upper_corners_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/08_rounded_upper_corners_comparison.png" alt="08 Rounded Upper Corners" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Upper corner arcs (R = 0.032): left corner reflects cyan, right corner reflects mint.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">09. Rounded Lower Corners Comparison</span>
+          <span class="evidence-badge">09_rounded_lower_corners_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/09_rounded_lower_corners_comparison.png" alt="09 Rounded Lower Corners" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Lower corner arcs: smooth light continuity connecting side walls into bottom rail.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">10. Top &amp; Bottom Rail Surfaces &amp; Dimensional Lighting</span>
+          <span class="evidence-badge">10_top_bottom_surfaces_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/10_top_bottom_surfaces_comparison.png" alt="10 Top Bottom Surfaces" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Full-width rails showing rounded 3D curvature, specular response, and cyan-to-mint transition.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">11. Visible 3D Side-Wall Thickness Illumination</span>
+          <span class="evidence-badge">11_side_wall_illumination_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/11_side_wall_illumination_comparison.png" alt="11 Side Wall Illumination" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Modeled 3D side wall on Inactive Card 02 from identical oblique angle. Shows authentic mint sheen on wall thickness.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Regression Proofs -->
+    <h2 class="section-title">
+      Architectural &amp; Material Regression Proofs
+      <span>Items 12 – 15, 20 · 100% Preserved Milestones</span>
+    </h2>
+
+    <div class="grid-2">
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">12. Active Pearl-White Face Material Preservation Proof</span>
+          <span class="evidence-badge">12_active_pearl_white_regression.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/12_active_pearl_white_regression.png" alt="12 Active Face Preservation" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          100% frozen Pass 2 V6 frosted milky-white balance (#ebf0f5 / #c7dbe6) on central flat face.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">13. Inactive Cyan-Blue Face Material Preservation Proof</span>
+          <span class="evidence-badge">13_inactive_blue_glass_regression.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/13_inactive_blue_glass_regression.png" alt="13 Inactive Face Preservation" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          100% frozen Pass 2 V7 diffusion (19.0px) and 84% scene transmission of spine and background particles.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">14. V8 3D Geometry Unchanged Proof</span>
+          <span class="evidence-badge">14_v8_v9_geometry_unchanged_proof.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/14_v8_v9_geometry_unchanged_proof.png" alt="14 Geometry Unchanged" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Runtime buffer telemetry: physical thickness 0.136, 3,134 vertices, 6,264 triangles, shared buffer instancing.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">15. Pass 1 V19 Typography Preservation Proof</span>
+          <span class="evidence-badge">15_pass1_v19_typography_regression.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/15_pass1_v19_typography_regression.png" alt="15 Typography Preservation" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Approved typography: title font NB Architekt, letter spacing, font size, and text canvas position frozen.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">20. Spine Lighting &amp; Soft Bokeh Particles Preservation</span>
+          <span class="evidence-badge">20_spine_particles_regression.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/20_spine_particles_regression.png" alt="20 Spine Particles Preservation" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          View-space pearl-white spine lighting and soft bokeh particle counts (~25-35 visible particles) intact.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">18. Oblique Viewing Angles Comparison (35° vs 60°)</span>
+          <span class="evidence-badge">18_oblique_angles_comparison.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/18_oblique_angles_comparison.png" alt="18 Oblique Angles" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Proves normal-guided lighting maintains stable glass appearance at moderate and extreme angles.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Clinical Treatment Matrix -->
+    <h2 class="section-title">
+      Clinical Treatment Matrix &amp; Viewports
+      <span>Items 16, 17, 19 · Production Verification</span>
+    </h2>
+
+    <div class="grid-1">
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">16. All 14 Clinical Treatments Comprehensive Grid</span>
+          <span class="evidence-badge">16_all_14_treatments_grid.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/16_all_14_treatments_grid.png" alt="16 All Treatments Grid" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Full-scene forward pass across all 14 clinical treatments in production. Strict lockstep synchronization.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">17. Viewport 1440 × 900 Responsive Scroll States</span>
+          <span class="evidence-badge">17_viewport_1440x900_scroll_states.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/17_viewport_1440x900_scroll_states.png" alt="17 Viewport States" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Initial, mid, and deep scroll states verified at 1440 × 900 resolution.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">19. Forward &amp; Reverse Scroll Directional Transition Symmetry</span>
+          <span class="evidence-badge">19_forward_reverse_scroll_transitions.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/19_forward_reverse_scroll_transitions.png" alt="19 Scroll Transitions" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Verifies smooth orbital transitions and zero shader snapping when scrolling forward and reverse.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Calibration Suite & Mathematical Formulations -->
+    <h2 class="section-title">
+      Calibration Suite &amp; Mathematical Specification
+      <span>Items 21 – 23 · Section 9 Calibration Evidence</span>
+    </h2>
+
+    <div class="grid-1">
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">21. Section 9 Calibration Matrix Sheet (Variants A, B, C, D)</span>
+          <span class="evidence-badge">21_calibration_matrix_sheet.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/21_calibration_matrix_sheet.png" alt="21 Calibration Matrix" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          4-variant calibration suite. Confirms Variant C as the balanced winner matching the original reference.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">22. Calibration Shader Values &amp; GLSL Mathematics</span>
+          <span class="evidence-badge">22_calibration_shader_values.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/22_calibration_shader_values.png" alt="22 Shader Values" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Exact GLSL color constants, spatial spline formulation, and Fresnel curvature functions.
+        </div>
+      </div>
+
+      <div class="evidence-card">
+        <div class="evidence-header">
+          <span class="evidence-name">23. Pass 2 V9 Winning Candidate vs Original Nexus Motion Reference</span>
+          <span class="evidence-badge">23_selected_winner_vs_reference.png</span>
+        </div>
+        <div class="evidence-body">
+          <img src="gallery/pass2-v9-review/23_selected_winner_vs_reference.png" alt="23 Selected Winner" onclick="openModal(this.src)">
+        </div>
+        <div class="evidence-footer">
+          Side-by-side full hero comparison proving authentic two-tone optical glass lighting recreation.
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div id="modal" class="modal" onclick="closeModal()">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <img id="modalImg" class="modal-img" src="" alt="Full Resolution Evidence" onclick="event.stopPropagation()">
+  </div>
+
+  <script>
+    function openModal(src) {
+      document.getElementById('modalImg').src = src;
+      document.getElementById('modal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+
+</body>
+</html>
