@@ -5316,6 +5316,7 @@ void main() {
         gl_FragColor = texture2D(tDiffuse, vUv);
     }
 }{@}WorkItemShader.glsl{@}#!ATTRIBUTES
+attribute vec4 aSurfaceInfo;
 
 #!UNIFORMS
 uniform sampler2D tMap;
@@ -5345,6 +5346,8 @@ varying vec3 vReflection;
 varying vec3 vRefraction;
 varying vec3 vPos;
 varying float vDist;
+varying vec4 vSurfaceInfo;
+varying vec3 vLocalNormal;
 
 #!SHADER: Vertex
 
@@ -5354,11 +5357,17 @@ void main() {
     vec3 pos = position;
 
     // Planar front-face UV mapping directly from local Euclidean Cartesian coordinates:
-    // cube.bin front face has pos.x and pos.y in [-0.37982, +0.37982] (span: 0.75964)
+    // Preserves exact Pass 1 V19 / Pass 2 V7 card coordinate space [-0.37982, +0.37982] (span: 0.75964)
     vCardUV = vec2(0.5 - pos.x / 0.75964, 0.5 - pos.y / 0.75964);
     vFrontFace = normal.z > 0.5 ? 1.0 : 0.0;
+    vSurfaceInfo = aSurfaceInfo;
+    vLocalNormal = normal;
 
-    pos.z += sin(time * 0.5 + abs(0.5-pos.x) * 3.0) * 0.05 + uHover * 0.1;
+    if (aSurfaceInfo.w > 1.5) {
+        pos.z += uHover * 0.1;
+    } else {
+        pos.z += sin(time * 0.5 + abs(0.5-pos.x) * 3.0) * 0.05 + uHover * 0.1;
+    }
 
     vec4 worldPos = modelMatrix * vec4(pos, 1.0);
 
@@ -5373,8 +5382,10 @@ void main() {
     vDist = vWorldPos.x - cameraPosition.x;
 
     if (normal.z < 0.0) {
-        vUv.x = 1.0 - vUv.x;
+        if (aSurfaceInfo.w < 1.5) vUv.x = 1.0 - vUv.x;
         vBackface = 1.0;
+    } else {
+        vBackface = 0.0;
     }
     vSide = max(abs(normal.x), abs(normal.y));
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -5620,17 +5631,22 @@ void main() {
     vec2 q = abs(cardCoord) - halfExtents + vec2(cornerRadius);
     float d = min(max(q.x, q.y), 0.0) + length(max(q, vec2(0.0))) - cornerRadius;
 
-    // Discard fragments protruding outside the rounded corner silhouette
+    bool isV8Solid = (vSurfaceInfo.w > 1.5);
     float edgeWidth = max(fwidth(d), 0.0015);
-    float edgeAlpha = clamp(1.0 - d / edgeWidth, 0.0, 1.0);
-    if (edgeAlpha < 0.02) discard;
+    float edgeAlpha = 1.0;
+    if (!isV8Solid) {
+        // Legacy V7 2D SDF silhouette discard (only for Stage A cube.bin baseline)
+        edgeAlpha = clamp(1.0 - d / edgeWidth, 0.0, 1.0);
+        if (edgeAlpha < 0.02) discard;
+    }
 
-    // Sample card texture using planar front-face coordinates
+    // Sample front-face typography texture strictly on flat front-face coordinates;
+    // bevels, sides, top, bottom and rear have vSurfaceInfo.x == 0.0 (and dedicated non-stretched vUv)
     vec2 cardUV = clamp(vCardUV, 0.0, 1.0);
     vec4 cardTex = texture2D(tMap, cardUV);
 
-    // Front-facing mask to keep typography strictly on the front face of the 3D card slab
-    float frontFacing = vFrontFace;
+    // Front-facing mask keeps Pass 1 V19 typography strictly on the flat central front face
+    float frontFacing = isV8Solid ? smoothstep(0.75, 0.99, vSurfaceInfo.x) : vFrontFace;
     float textMask = cardTex.a * frontFacing;
 
     // Optical frosted refraction of the spine and atmosphere behind the card
@@ -5812,8 +5828,14 @@ void main() {
     // Selected Winning Calibration: Option D (Combined Subtle Diffusion & Pearl Refinement)
     // Radius 21.5px soft diffusion + 33% trans + luminous pearl-white ivory + mint shadow variation
     // =========================================================================
+    float edgeZoneV8 = isV8Solid
+        ? (1.0 - smoothstep(0.50, 0.98, vSurfaceInfo.x)) * (1.0 - smoothstep(0.96, 1.00, vSurfaceInfo.y))
+        : 0.0;
+    vec2 ruvActive = clamp(ruv - norm.xy * (0.022 * edgeZoneV8), 0.002, 0.998);
+    vec2 ruvInactive = clamp(ruv - norm.xy * (0.012 * edgeZoneV8), 0.002, 0.998);
+
     vec3 activeGlass = (uAhead > 0.0001)
-        ? computeV6Glass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12)
+        ? computeV6Glass(tRefraction, ruvActive, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12)
         : vec3(0.0);
     vec3 activeTextColor = cardTex.rgb;
 
@@ -5847,19 +5869,19 @@ void main() {
         } else if (abs(uDistortStrength - 31.0) < 0.1) {
             // V7 Calibration Variant B: Increased Scene Transmission (90%, 12.5px) + Restrained Blue Body Tint
             inactiveGlass = computeV7InactiveGlass(
-                tRefraction, ruv, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
+                tRefraction, ruvInactive, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
                 12.5, 0.90, vec3(0.092, 0.148, 0.186), vec3(0.68, 0.85, 0.94), 0.50, 0.36, 0.045, 0.10
             );
         } else if (abs(uDistortStrength - 32.0) < 0.1) {
             // V7 Calibration Variant C: Moderate Scene Transmission (76%, 15.5px) + Richer Cyan-Blue Body Tint
             inactiveGlass = computeV7InactiveGlass(
-                tRefraction, ruv, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
+                tRefraction, ruvInactive, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
                 15.5, 0.76, vec3(0.118, 0.222, 0.285), vec3(0.50, 0.84, 0.96), 0.76, 0.48, 0.060, 0.16
             );
         } else {
             // V7 Calibration Variant D (33.0 & Default): Softly Diffused Transmission (84%, 19.0px) + Balanced Cyan-Blue Body Tint
             inactiveGlass = computeV7InactiveGlass(
-                tRefraction, ruv, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
+                tRefraction, ruvInactive, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
                 19.0, 0.84, vec3(0.130, 0.200, 0.242), vec3(0.63, 0.85, 0.93), 0.68, 0.36, 0.052, 0.13
             );
         }
@@ -5876,32 +5898,97 @@ void main() {
     vec3 textColor = mix(inactiveTextColor, activeTextColor, textBlend);
 
     // =========================================================================
-    // 4. DIMENSIONAL GLASS EDGES & CYAN-LEFT / MINT-RIGHT LIGHTING
-    // (Requirement Sections 7 & 8: Polished glass slab thickness, physical bevel)
+    // 4. DIMENSIONAL 3D GLASS SURFACES (FRONT BEVEL, TOP/BOTTOM/SIDE WALLS, REAR)
+    // Preserves V6/V7 face materials & existing perimeter color palette (V9 deferred)
     // =========================================================================
-    // Continuous perimeter arc: cyan on left, mint on right
     vec3 perimeterColor = ambientGlow;
-
-    // SDF edge bevel & perimeter glow
-    float distFromEdge = -d;
-    // Crisp polished glass rim highlight (0.002 to 0.024)
-    float perimeterGlow = smoothstep(0.024, 0.002, distFromEdge) * frontFacing;
-    float cornerBevel = smoothstep(0.045, 0.006, distFromEdge) * (1.0 - smoothstep(0.006, 0.030, distFromEdge)) * frontFacing;
-
     vec3 finalGlass = glassBody;
-    // Edge lighting with strong cyan-left / mint-right contrast
-    finalGlass = mix(finalGlass, perimeterColor, perimeterGlow * (0.68 - 0.20 * uAhead));
-    finalGlass += perimeterColor * cornerBevel * 0.32;
 
-    // 3D Slab side faces (vSide): thick polished glass reflection - strictly on side faces
-    float sideThickness = pow(vSide, 1.8) * (1.0 - frontFacing);
-    // Side face receives transmitted scene + edge illumination, making it a coherent glass slab!
-    vec3 sideColor = mix(glassBody * 0.85, perimeterColor, 0.45);
-    finalGlass = mix(finalGlass, sideColor, sideThickness * 0.75);
+    if (!isV8Solid) {
+        // Legacy V7 flat SDF outline & side shading (Stage A baseline)
+        float distFromEdge = -d;
+        float perimeterGlow = smoothstep(0.024, 0.002, distFromEdge) * frontFacing;
+        float cornerBevel = smoothstep(0.045, 0.006, distFromEdge) * (1.0 - smoothstep(0.006, 0.030, distFromEdge)) * frontFacing;
+        finalGlass = mix(finalGlass, perimeterColor, perimeterGlow * (0.68 - 0.20 * uAhead));
+        finalGlass += perimeterColor * cornerBevel * 0.32;
+        float sideThickness = pow(vSide, 1.8) * (1.0 - frontFacing);
+        vec3 sideColor = mix(glassBody * 0.85, perimeterColor, 0.45);
+        finalGlass = mix(finalGlass, sideColor, sideThickness * 0.75);
+        float edgeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
+        finalGlass += (vec3(0.96, 0.99, 1.0) * 0.75 + perimeterColor * 0.25) * edgeSpec * (perimeterGlow + sideThickness) * 0.65;
+    } else {
+        float prof = clamp(vSurfaceInfo.y, 0.0, 1.0);
+        float v8Stage = vSurfaceInfo.w;
+        float nv = clamp(dot(norm, viewDir), 0.0, 1.0);
+        float fresnel3D = pow(1.0 - nv, 2.25);
 
-    // High-exponent specular reflection along polished glass edge & bevel
-    float edgeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
-    finalGlass += (vec3(0.96, 0.99, 1.0) * 0.75 + perimeterColor * 0.25) * edgeSpec * (perimeterGlow + sideThickness) * 0.65;
+        // Secondary studio fill light strictly for 3D bevels & side walls so bottom/left edges polish evenly
+        vec3 fillLightDir = normalize(vec3(-0.45, -0.62, 0.64));
+        vec3 fillHalfVec = normalize(fillLightDir + viewDir);
+        float specKey = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 30.0);
+        float specFill = pow(clamp(dot(norm, fillHalfVec), 0.0, 1.0), 22.0);
+        vec3 envRefl = envColorEqui(tEnv, normalize(vReflection)).rgb;
+        float envLumEdge = clamp(dot(envRefl, vec3(0.299, 0.587, 0.114)), 0.10, 0.85);
+
+        // Subtle inner bevel shoulder optical step right where flat front face curves into front bevel
+        float innerShoulder = smoothstep(0.00, 0.06, prof) * (1.0 - smoothstep(0.06, 0.15, prof));
+        // Rounded 3D front bevel crest (prof 0.03 -> 0.30)
+        float frontBevelMask = smoothstep(0.01, 0.09, prof) * (1.0 - smoothstep(0.25, 0.36, prof));
+        float frontCrest = smoothstep(0.05, 0.22, prof) * (1.0 - smoothstep(0.24, 0.35, prof));
+        // Modeled top, bottom, left, right side wall core (prof 0.30 -> 0.70)
+        float sideWallMask = smoothstep(0.27, 0.36, prof) * (1.0 - smoothstep(0.64, 0.73, prof));
+        // Rounded 3D rear bevel crest (prof 0.70 -> 0.99)
+        float rearBevelMask = smoothstep(0.65, 0.75, prof) * (1.0 - smoothstep(0.92, 0.995, prof));
+        float rearCrest = smoothstep(0.67, 0.80, prof) * (1.0 - smoothstep(0.82, 0.97, prof));
+
+        if (v8Stage < 2.5) {
+            // Stage B: Un-beveled rounded extruded solid with intended physical depth
+            float rawSide = smoothstep(0.05, 0.25, prof) * (1.0 - smoothstep(0.75, 0.95, prof));
+            finalGlass = mix(finalGlass, glassBody * 1.04 + perimeterColor * 0.14, rawSide * 0.55);
+            finalGlass += perimeterColor * fresnel3D * rawSide * 0.22;
+        } else {
+            // Stages C, D, E: Continuous 3D Rounded Front Bevel Integration
+            float frontRimWeight = clamp(frontCrest * 0.72 + frontBevelMask * fresnel3D * 0.52, 0.0, 1.0);
+            vec3 iceSheen = mix(vec3(0.82, 0.94, 0.99), vec3(0.95, 0.99, 1.0), uAhead);
+            vec3 frontBevelTint = mix(perimeterColor, iceSheen, 0.22 + 0.16 * uAhead);
+
+            // Delicate translucent step at inner bevel shoulder + smooth curved bevel rim
+            finalGlass = mix(finalGlass, finalGlass * 0.94 + iceSheen * 0.10, innerShoulder * 0.45);
+            finalGlass = mix(finalGlass, frontBevelTint, frontRimWeight * (0.64 - 0.16 * uAhead));
+            finalGlass += (iceSheen * 0.72 + perimeterColor * 0.28) * (specKey * 0.72 + specFill * 0.36) * frontBevelMask;
+
+            if (v8Stage > 3.5) {
+                // Stages D & E: Modeled Top, Bottom, Left & Right Translucent Polished Glass Walls
+                float dirStudio = 0.88 + 0.22 * clamp(dot(norm, lightDir) * 0.5 + 0.5, 0.0, 1.0);
+                vec3 activeWallGlass = mix(glassBody, vec3(0.84, 0.92, 0.96), 0.26) * dirStudio
+                    + perimeterColor * (0.14 + 0.18 * fresnel3D)
+                    + vec3(0.88, 0.96, 1.0) * envLumEdge * 0.12;
+                vec3 inactiveWallGlass = (glassBody * 1.14 + vec3(0.055, 0.125, 0.175)) * dirStudio
+                    + perimeterColor * (0.15 + 0.22 * fresnel3D)
+                    + vec3(0.60, 0.82, 0.92) * envLumEdge * 0.14;
+                vec3 wallGlass = mix(inactiveWallGlass, activeWallGlass, uAhead);
+                wallGlass += (iceSheen * 0.70 + perimeterColor * 0.30) * (specKey * 0.42 + specFill * 0.26);
+                finalGlass = mix(finalGlass, clamp(wallGlass, 0.0, 1.0), sideWallMask);
+            } else {
+                // Stage C: Front bevel added, prior to full side-wall optical integration
+                finalGlass = mix(finalGlass, glassBody * 1.02 + perimeterColor * 0.10, sideWallMask * 0.45);
+            }
+
+            if (v8Stage > 4.5) {
+                // Stage E (Complete Integrated Construction): Rounded Rear Bevel & Coherent Rear Surface
+                float rearRimWeight = clamp(rearCrest * 0.56 + rearBevelMask * fresnel3D * 0.44, 0.0, 1.0);
+                vec3 rearBevelTint = mix(perimeterColor, iceSheen, 0.28 + 0.14 * uAhead);
+                finalGlass = mix(finalGlass, rearBevelTint, rearRimWeight * (0.50 - 0.14 * uAhead));
+                finalGlass += (iceSheen * 0.72 + perimeterColor * 0.28) * (specKey * 0.48 + specFill * 0.28) * rearBevelMask;
+
+                // Ensure rear flat surface (when an orbital card turns > 90 deg) reads as coherent polished glass
+                float rearFlatMask = smoothstep(0.94, 0.995, prof);
+                vec3 rearPolish = glassBody * 1.05 + perimeterColor * (0.06 + 0.14 * fresnel3D) + vec3(0.68, 0.88, 0.96) * envLumEdge * 0.06;
+                finalGlass = mix(finalGlass, clamp(rearPolish, 0.0, 1.0), rearFlatMask);
+            }
+        }
+    }
+
     finalGlass += vec3(0.06, 0.20, 0.30) * uHover;
 
     // =========================================================================

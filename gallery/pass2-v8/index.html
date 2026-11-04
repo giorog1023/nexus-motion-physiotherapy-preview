@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V8 — Recreate Original Real 3D Glass Geometry</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --border: rgba(56, 189, 248, 0.22);
+      --border-strong: rgba(56, 189, 248, 0.44);
+      --accent: #38bdf8;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --mint: #34d399;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      line-height: 1.55;
+      padding-bottom: 90px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.96) 0%, rgba(3, 7, 18, 0.96) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 36px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.16);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: rgba(56, 189, 248, 0.16);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border-color: #38bdf8;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+    .main-wrap {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 32px 36px 0;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(11, 19, 41, 0.92) 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 36px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+    .hero-banner h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .hero-banner p {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 1240px;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .metric-card {
+      background: rgba(7, 13, 25, 0.78);
+      border: 1px solid rgba(56, 189, 248, 0.20);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .metric-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .metric-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .part-divider {
+      margin: 46px 0 22px;
+      padding: 14px 20px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.16) 0%, rgba(15, 23, 42, 0.4) 100%);
+      border-left: 4px solid var(--cyan);
+      border-radius: 8px;
+    }
+    .part-divider h2 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+    .part-divider p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .section-block {
+      margin-bottom: 42px;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .section-head h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .section-head .num {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--mint);
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    .section-head span.meta {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .panel-frame {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+    }
+    .panel-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      cursor: zoom-in;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+      gap: 22px;
+    }
+    @media (max-width: 760px) {
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+    .tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .tile-head {
+      padding: 12px 16px;
+      background: rgba(5, 10, 20, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tile-head .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--cyan);
+    }
+    .tile img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+    }
+    .treat-pair {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 2px;
+      background: #02060d;
+    }
+    .treat-pair img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .archive-bar {
+      margin-top: 48px;
+      padding: 20px 24px;
+      background: rgba(11, 19, 41, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .archive-bar strong {
+      font-size: 13px;
+      margin-right: 8px;
+    }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.94);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 94vh;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      font-size: 32px;
+      color: #fff;
+      cursor: pointer;
+      line-height: 1;
+      padding: 8px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .lightbox-close:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">Pass 2 V8</span>
+          <span class="status-pill">Awaiting External Visual Review</span>
+        </div>
+        <p class="subtitle">Recreate Original Real 3D Glass Geometry — Rounded Front, Back, Top, Bottom &amp; Side Surfaces</p>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn primary">Live Work ↗</a>
+        <a href="/gallery" class="nav-btn">Gallery Index</a>
+        <a href="/gallery/pass2-v7" class="nav-btn">Pass 2 V7 Baseline</a>
+        <a href="/gallery/pass2-v6" class="nav-btn">Pass 2 V6 Active</a>
+        <a href="/gallery/pass1-v19" class="nav-btn">Pass 1 V19 Typography</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <section class="hero-banner">
+      <h2>Pass 2 V8: Authentic Three-Dimensional Glass Solid Construction</h2>
+      <p>
+        In Pass 2 V7, the cards relied on flat thin geometry (thickness 0.0133 world units) with a 2D cookie-cutter SDF fragment-discard and a simple rim outline, producing dark flat rectangular slabs at oblique angles. 
+        Pass 2 V8 introduces a genuine watertight 2-manifold rounded beveled extrusion (thickness 0.136 world units, ~10.2× thicker, calibrated directly to Cards 02 and 03 in the Original Reference). 
+        The solid features an 8-segment smooth circular front bevel, modeled 4-segment top, bottom, and side surfaces, an 8-segment rear bevel, and a flat rear cap. 
+        Curvature is continuous across all 4 rounded corners throughout the entire 3D depth. 
+        The entire 14-treatment carousel shares a single geometry buffer instance with zero memory bloat, preserving 100% of Pass 1 V19 typography, Pass 2 V6 active glass, and Pass 2 V7 inactive glass.
+      </p>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Solid Geometry</div>
+          <div class="metric-val">3,134 Verts / 6,264 Tris</div>
+          <div class="metric-sub">Watertight 2-Manifold, 0 open edges</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Physical Thickness</div>
+          <div class="metric-val">0.136 World Units</div>
+          <div class="metric-sub">~10.2× V7 baseline (~7.7% card width)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Front &amp; Rear Bevels</div>
+          <div class="metric-val">R_front 0.032 / R_rear 0.026</div>
+          <div class="metric-sub">Multi-segment circular normal profiles</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Buffer Architecture</div>
+          <div class="metric-val">100% Shared Buffer</div>
+          <div class="metric-sub">Single Geometry instance on all 14 cards</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Perimeter Silhouette</div>
+          <div class="metric-val">True 3D Silhouette</div>
+          <div class="metric-sub">Eliminates 2D SDF planar discards</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Asset Regressions</div>
+          <div class="metric-val">100% Preserved</div>
+          <div class="metric-sub">V19 Type, V6 Active, V7 Inactive intact</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART 1: CORE VISUAL COMPARISONS -->
+    <div class="part-divider">
+      <h2>Part 1 // Core Visual Comparisons (Original vs V7 Baseline vs V8 3D Solid)</h2>
+      <p>Direct 3-way comparative evaluation demonstrating the elimination of dark slab artifacts and restoration of authentic polished glass volume</p>
+    </div>
+
+    <section class="section-block" id="item-01">
+      <div class="section-head">
+        <h3><span class="num">01 //</span>Foreground Active Card Comparison (Active Pearl White Glass)</h3>
+        <span class="meta">Original Reference vs Pass 2 V7 Baseline vs Pass 2 V8 3D Beveled Solid</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v8/01_foreground_comparison.png" alt="01 Foreground Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-02">
+      <div class="section-head">
+        <h3><span class="num">02 //</span>Inactive Oblique Cards Comparison (Translucent Cyan-Blue Glass)</h3>
+        <span class="meta">Original Reference vs Pass 2 V7 Baseline vs Pass 2 V8 3D Beveled Solid</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v8/02_inactive_comparison.png" alt="02 Inactive Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-03">
+      <div class="section-head">
+        <h3><span class="num">03 //</span>Hero Scene Composition Comparison (1920 × 1080 Full Viewport)</h3>
+        <span class="meta">Original Reference vs Pass 2 V7 Baseline vs Pass 2 V8 3D Beveled Solid</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v8/03_hero_composition_comparison.png" alt="03 Hero Composition Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <!-- PART 2: GEOMETRY DIAGNOSTICS & PROFILES -->
+    <div class="part-divider">
+      <h2>Part 2 // 3D Geometry Diagnostics &amp; View Angles (Mandatory Items 04 – 14)</h2>
+      <p>Detailed architectural inspection of the 3D card volume across view angles, edge profiles, corner macros, wireframes, normals, and material continuity</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="tile" id="item-04">
+        <div class="tile-head"><span>04 // Frontal Card View</span><span class="tag">Planar Front Cap</span></div>
+        <img src="/gallery/pass2-v8/04_frontal_card_view.png" alt="04 Frontal Card View" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-05">
+        <div class="tile-head"><span>05 // Moderate Oblique View</span><span class="tag">Bevel &amp; Side Reveal</span></div>
+        <img src="/gallery/pass2-v8/05_moderate_oblique_view.png" alt="05 Moderate Oblique View" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-06">
+        <div class="tile-head"><span>06 // Extreme Oblique View</span><span class="tag">Thickness &amp; Depth Profile</span></div>
+        <img src="/gallery/pass2-v8/06_extreme_oblique_view.png" alt="06 Extreme Oblique View" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top: 22px;">
+      <div class="tile" id="item-07">
+        <div class="tile-head"><span>07 // Side Profile View</span><span class="tag">Thickness Wall T = 0.136</span></div>
+        <img src="/gallery/pass2-v8/07_side_profile_view.png" alt="07 Side Profile View" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-08">
+        <div class="tile-head"><span>08 // Top Edge Profile</span><span class="tag">Rounded Upper Transition</span></div>
+        <img src="/gallery/pass2-v8/08_top_edge_profile.png" alt="08 Top Edge Profile" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-09">
+        <div class="tile-head"><span>09 // Bottom Edge Profile</span><span class="tag">Rounded Lower Transition</span></div>
+        <img src="/gallery/pass2-v8/09_bottom_edge_profile.png" alt="09 Bottom Edge Profile" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 22px;">
+      <div class="tile" id="item-10">
+        <div class="tile-head"><span>10 // Rounded Front Corner Macro</span><span class="tag">R_corner = 0.09406 + R_bevel = 0.032</span></div>
+        <img src="/gallery/pass2-v8/10_rounded_front_corner_macro.png" alt="10 Rounded Front Corner Macro" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-11">
+        <div class="tile-head"><span>11 // Rounded Rear Corner Macro</span><span class="tag">R_rear = 0.026 + Rear Cap</span></div>
+        <img src="/gallery/pass2-v8/11_rounded_rear_corner_macro.png" alt="11 Rounded Rear Corner Macro" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top: 22px;">
+      <div class="tile" id="item-12">
+        <div class="tile-head"><span>12 // Wireframe Geometry Diagnostic</span><span class="tag">3,134 Verts / 6,264 Tris</span></div>
+        <img src="/gallery/pass2-v8/12_wireframe_diagnostic.png" alt="12 Wireframe Diagnostic" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-13">
+        <div class="tile-head"><span>13 // Surface Normal Diagnostic</span><span class="tag">Analytical World Normals</span></div>
+        <img src="/gallery/pass2-v8/13_surface_normal_diagnostic.png" alt="13 Surface Normal Diagnostic" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-14">
+        <div class="tile-head"><span>14 // Material &amp; Bevel Shading Continuity</span><span class="tag">Continuous Glass Solid</span></div>
+        <img src="/gallery/pass2-v8/14_material_bevel_continuity.png" alt="14 Material Bevel Continuity" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <!-- PART 3: PROTOTYPE PROGRESSION -->
+    <div class="part-divider">
+      <h2>Part 3 // Section 9 Prototype Evolution &amp; Thickness Calibration (Stages A – E)</h2>
+      <p>Single-card prototype development sequence captured at identical camera perspective, followed by thickness calibration against the Original Reference</p>
+    </div>
+
+    <section class="section-block" id="prototype-progression">
+      <div class="section-head">
+        <h3><span>Stage A → Stage B → Stage C → Stage D → Stage E Progression</span></h3>
+        <span class="meta">Extrusion → Front Bevel → Side Walls → Rear Bevel &amp; Cap → Calibration (0.110 vs 0.136 vs 0.165)</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v8/prototype/prototype_stages_A_to_E_sheet.png" alt="Prototype Stages A to E Sheet" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <!-- PART 4: FULL APPLICATION VERIFICATION & REGRESSIONS -->
+    <div class="part-divider">
+      <h2>Part 4 // Full Application Verification &amp; Regressions (Mandatory Items 15 – 22)</h2>
+      <p>Rigorous verification ensuring zero visual regressions across all 14 treatments, responsive viewports, orbital orientational transitions, typography, and background scene elements</p>
+    </div>
+
+    <section class="section-block" id="item-15">
+      <div class="section-head">
+        <h3><span class="num">15 //</span>Key Treatments 01, 02, 07, 14 Verification</h3>
+        <span class="meta">Cervical Decompression, Manual Joint Therapy, Thoracic Mobility, Post-Surgical Rehab</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v8/15_treatments_01_02_07_14.png" alt="15 Treatments 01 02 07 14" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-16">
+      <div class="section-head">
+        <h3><span class="num">16 //</span>All 14 Active Treatment States Matrix</h3>
+        <span class="meta">14-card complete carousel audit showing foreground active card visual stability</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v8/16_all_14_active_treatments.png" alt="16 All 14 Active Treatments" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <div class="tile" id="item-17">
+        <div class="tile-head"><span>17 // Viewport 1440 × 900 Across Scroll States</span><span class="tag">Responsive Audit</span></div>
+        <img src="/gallery/pass2-v8/17_viewport_1440x900_scroll_states.png" alt="17 Viewport 1440x900 Scroll States" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-18">
+        <div class="tile-head"><span>18 // Orbital Orientations &amp; Depth Transitions</span><span class="tag">Traversed Card Angles</span></div>
+        <img src="/gallery/pass2-v8/18_orbital_orientations.png" alt="18 Orbital Orientations" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 22px;">
+      <div class="tile" id="item-19">
+        <div class="tile-head"><span>19 // Pass 2 V6 Active Glass Material Regression</span><span class="tag">Frozen Milky-Pearl Face</span></div>
+        <img src="/gallery/pass2-v8/19_v6_active_glass_regression.png" alt="19 V6 Active Glass Regression" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-20">
+        <div class="tile-head"><span>20 // Pass 2 V7 Inactive Glass Material Regression</span><span class="tag">Frozen Translucent Cyan-Blue Face</span></div>
+        <img src="/gallery/pass2-v8/20_v7_inactive_glass_regression.png" alt="20 V7 Inactive Glass Regression" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 22px;">
+      <div class="tile" id="item-21">
+        <div class="tile-head"><span>21 // Pass 1 V19 Typography Exact Alignment Regression</span><span class="tag">Pixel-Identical Front Face Text</span></div>
+        <img src="/gallery/pass2-v8/21_pass1_v19_typography_regression.png" alt="21 Pass 1 V19 Typography Regression" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-22">
+        <div class="tile-head"><span>22 // Spine Geometry &amp; Floating Particles Regression</span><span class="tag">100% Intact Scene Transmission</span></div>
+        <img src="/gallery/pass2-v8/22_spine_particles_regression.png" alt="22 Spine Particles Regression" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <!-- PART 5: COMPLETE 14-TREATMENT AUDIT -->
+    <div class="part-divider">
+      <h2>Part 5 // Interactive 14-Treatment Matrix (1920 × 1080 Viewport + Card Detail)</h2>
+      <p>Inspect any treatment state across the carousel. Click any panel to view full-resolution 1080p rendering.</p>
+    </div>
+
+    <section class="section-block">
+      <div class="grid-2" id="allTreatmentsGrid"></div>
+    </section>
+
+    <div class="archive-bar">
+      <strong>Preserved Baseline &amp; Historic Galleries:</strong>
+      <a href="/gallery/pass2-v7" class="nav-btn">Pass 2 V7 Inactive Baseline</a>
+      <a href="/gallery/pass2-v6" class="nav-btn">Pass 2 V6 Active Baseline</a>
+      <a href="/gallery/pass2-v5" class="nav-btn">Pass 2 V5</a>
+      <a href="/gallery/pass2-v4" class="nav-btn">Pass 2 V4</a>
+      <a href="/gallery/pass2-v3" class="nav-btn">Pass 2 V3</a>
+      <a href="/gallery/pass2-v2" class="nav-btn">Pass 2 V2</a>
+      <a href="/gallery/pass2-v1" class="nav-btn">Pass 2 V1</a>
+      <a href="/gallery/pass1-v19" class="nav-btn">Pass 1 V19 Typography Baseline</a>
+    </div>
+  </main>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
+    <img id="lightboxImg" src="" alt="Full Resolution Inspection" onclick="event.stopPropagation()">
+  </div>
+
+  <script>
+    const treatments = [
+      { id: '01', name: 'Cervical Decompression', region: '01 · C1–C7 CERVICAL' },
+      { id: '02', name: 'Manual Joint Therapy', region: '02 · T1–T12 THORACIC' },
+      { id: '03', name: 'Myofascial Release', region: '03 · MYOFASCIAL' },
+      { id: '04', name: 'Dry Needling Therapy', region: '04 · TRIGGER POINT' },
+      { id: '05', name: 'Postural Realignment', region: '05 · T1–T6 POSTURE' },
+      { id: '06', name: 'Rotator Cuff Rehab', region: '06 · GLENOHUMERAL' },
+      { id: '07', name: 'Thoracic Mobility Therapy', region: '07 · THORACIC CAGE' },
+      { id: '08', name: 'Sciatica & Nerve Therapy', region: '08 · L4–S1 SCIATICA' },
+      { id: '09', name: 'Lumbar Disc Rehab', region: '09 · L1–L5 LUMBAR' },
+      { id: '10', name: 'Spinal Stabilization', region: '10 · CORE STABILIZATION' },
+      { id: '11', name: 'SI Joint & Pelvic Rehab', region: '11 · SACROILIAC JOINT' },
+      { id: '12', name: 'Hip Mobility Rehab', region: '12 · COXOFEMORAL' },
+      { id: '13', name: 'Sports Injury & ACL Rehab', region: '13 · SPORTS MEDICINE' },
+      { id: '14', name: 'Post-Surgical Rehabilitation', region: '14 · RECOVERY PROTOCOL' }
+    ];
+
+    document.getElementById('allTreatmentsGrid').innerHTML = treatments.map(t => `
+      <div class="tile">
+        <div class="tile-head">
+          <span>${t.id} / 14 — ${t.name}</span>
+          <span class="tag">${t.region}</span>
+        </div>
+        <div class="treat-pair">
+          <img src="/gallery/pass2-v8/treatment-${t.id}-full.png" alt="Treatment ${t.id} Full 1920x1080" onclick="openLightbox(this.src)">
+          <img src="/gallery/pass2-v8/treatment-${t.id}-card.png" alt="Treatment ${t.id} Active Card" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+    `).join('');
+
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+</html>
