@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V9 — Original Cyan-to-Mint Dimensional Glass Lighting</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/meta/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: rgba(15, 23, 42, 0.78);
+      --border: rgba(56, 189, 248, 0.22);
+      --border-strong: rgba(56, 189, 248, 0.44);
+      --accent: #38bdf8;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --mint: #34d399;
+      --cyan: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      line-height: 1.55;
+      padding-bottom: 90px;
+    }
+    .header {
+      background: linear-gradient(180deg, rgba(11, 19, 41, 0.96) 0%, rgba(3, 7, 18, 0.96) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 36px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .header-content {
+      max-width: 1480px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.16);
+      color: var(--mint);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: rgba(56, 189, 248, 0.16);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      border-color: #38bdf8;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+    .main-wrap {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 32px 36px 0;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(11, 19, 41, 0.92) 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 36px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+    .hero-banner h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .hero-banner p {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 1260px;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .metric-card {
+      background: rgba(7, 13, 25, 0.78);
+      border: 1px solid rgba(56, 189, 248, 0.20);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .metric-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .metric-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .part-divider {
+      margin: 46px 0 22px;
+      padding: 14px 20px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.16) 0%, rgba(15, 23, 42, 0.4) 100%);
+      border-left: 4px solid var(--mint);
+      border-radius: 8px;
+    }
+    .part-divider h2 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+    .part-divider p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .section-block {
+      margin-bottom: 42px;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .section-head h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .section-head .num {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--mint);
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    .section-head span.meta {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .panel-frame {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+    }
+    .panel-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      cursor: zoom-in;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+      gap: 22px;
+    }
+    @media (max-width: 760px) {
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+    .tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .tile-head {
+      padding: 12px 16px;
+      background: rgba(5, 10, 20, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tile-head .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--cyan);
+    }
+    .tile img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+    }
+    .treat-pair {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 2px;
+      background: #02060d;
+    }
+    .treat-pair img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .archive-bar {
+      margin-top: 48px;
+      padding: 20px 24px;
+      background: rgba(11, 19, 41, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .archive-bar strong {
+      font-size: 13px;
+      margin-right: 8px;
+    }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.94);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 94vh;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      font-size: 32px;
+      color: #fff;
+      cursor: pointer;
+      line-height: 1;
+      padding: 8px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .lightbox-close:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div>
+        <div class="brand-title">
+          <span>Nexus Motion</span>
+          <span class="stage-pill">Pass 2 V9</span>
+          <span class="status-pill">Awaiting External Visual Review</span>
+        </div>
+        <p class="subtitle">Original Cyan-to-Mint Dimensional Glass Lighting — Two-Tone Optical Illumination on 3D Geometry</p>
+      </div>
+      <div class="header-links">
+        <a href="/work" class="nav-btn primary">Live Work ↗</a>
+        <a href="/gallery" class="nav-btn">Gallery Index</a>
+        <a href="/gallery/pass2-v8" class="nav-btn">Pass 2 V8 Geometry</a>
+        <a href="/gallery/pass2-v7" class="nav-btn">Pass 2 V7 Inactive</a>
+        <a href="/gallery/pass2-v6" class="nav-btn">Pass 2 V6 Active</a>
+        <a href="/gallery/pass1-v19" class="nav-btn">Pass 1 V19 Typography</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <section class="hero-banner">
+      <h2>Pass 2 V9: Two-Tone Cyan-to-Mint Dimensional Glass Lighting</h2>
+      <p>
+        Pass 2 V8 established the approved watertight 3D solid geometry baseline (0.136 world units thickness, 8-segment front/rear bevels, continuous corner arcs). 
+        Pass 2 V9 delivers the definitive optical lighting correction from the Original Reference: **cool icy cyan-blue on the left perimeter (#1fcfeb), a natural organic turquoise connecting bridge (#26e0cc), and fresh luminous mint-green on the right perimeter (#34d399)**.
+        The lighting is strictly attached to card-local 3D geometry coordinates and surface normals, creating differentiated optical responses across the front bevel, left/right side walls, top/bottom rails, and all four rounded corners.
+        The artificial double-parallel stripe artifact from V8 has been eliminated in favor of a unified curvature-driven Fresnel and specular glaze.
+        V8 solid geometry, Pass 2 V6 active frosted pearl face, Pass 2 V7 inactive cyan-blue glass, Pass 1 V19 typography, spine, camera, and particles remain 100% frozen.
+      </p>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Left Perimeter</div>
+          <div class="metric-val">Cool Icy Cyan-Blue</div>
+          <div class="metric-sub">#1fcfeb / #38bdf8 · Normal-guided</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Right Perimeter</div>
+          <div class="metric-val">Luminous Mint-Green</div>
+          <div class="metric-sub">#34d399 / #6ee7b7 · Specular sheen</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Connecting Bridge</div>
+          <div class="metric-val">Organic Turquoise</div>
+          <div class="metric-sub">#26e0cc / #2dd4bf · Top & bottom rails</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Bevel Character</div>
+          <div class="metric-val">Continuous Curvature</div>
+          <div class="metric-sub">Zero double-stripe parallel artifact</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">V8 Geometry Baseline</div>
+          <div class="metric-val">100% Preserved</div>
+          <div class="metric-sub">3,134 verts / 6,264 tris · T = 0.136</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Material Baselines</div>
+          <div class="metric-val">100% Preserved</div>
+          <div class="metric-sub">V6 pearl face · V7 inactive core · V19 type</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART 1: CORE VISUAL COMPARISONS -->
+    <div class="part-divider">
+      <h2>Part 1 // Core Visual Comparisons (Original Reference vs Pass 2 V8 vs Pass 2 V9)</h2>
+      <p>Direct 3-way evaluation demonstrating the transformation from V8 uniform cyan into authentic two-tone dimensional lighting</p>
+    </div>
+
+    <section class="section-block" id="item-01">
+      <div class="section-head">
+        <h3><span class="num">01 //</span>Complete Foreground Active-Card Comparison (Cervical Decompression)</h3>
+        <span class="meta">Original Reference vs Pass 2 V8 Baseline vs Pass 2 V9 Two-Tone Glass</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v9/01_foreground_comparison.png" alt="01 Foreground Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-02">
+      <div class="section-head">
+        <h3><span class="num">02 //</span>Complete Inactive-Card Comparison (Oblique Card 02 Manual Joint Therapy)</h3>
+        <span class="meta">Corrected non-black reference crop · Mint side wall reflection · Translucent cyan-blue core</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v9/02_inactive_comparison.png" alt="02 Inactive Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-03">
+      <div class="section-head">
+        <h3><span class="num">03 //</span>Full Hero Composition Comparison (1920 × 1080 Viewport)</h3>
+        <span class="meta">Overall scene balance: Spine, floating bokeh particles, and dual-tone illuminated cards</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v9/03_hero_composition_comparison.png" alt="03 Hero Composition Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-04">
+      <div class="section-head">
+        <h3><span class="num">04 //</span>Matching-Scale Front-Bevel Macro Comparison</h3>
+        <span class="meta">Continuous curvature glaze · Eliminates V8 artificial double parallel lines</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v9/04_front_bevel_comparison.png" alt="04 Front Bevel Comparison" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <!-- PART 2: TWO-TONE LIGHTING -->
+    <div class="part-divider">
+      <h2>Part 2 // Two-Tone Optical Glass Lighting (Items 05 – 11)</h2>
+      <p>Detailed verification of cyan-left, mint-right, turquoise transition, corner continuity, and 3D side-wall illumination</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="tile" id="item-05">
+        <div class="tile-head"><span>05 // Cool Cyan-Blue Left Edge</span><span class="tag">#1fcfeb / #38bdf8</span></div>
+        <img src="/gallery/pass2-v9/05_cyan_left_edge_comparison.png" alt="05 Cyan Left Edge" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-06">
+        <div class="tile-head"><span>06 // Luminous Mint-Green Right Edge</span><span class="tag">#34d399 / #6ee7b7</span></div>
+        <img src="/gallery/pass2-v9/06_mint_right_edge_comparison.png" alt="06 Mint Right Edge" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-07">
+        <div class="tile-head"><span>07 // Dedicated Turquoise Transition</span><span class="tag">#26e0cc Bridge</span></div>
+        <img src="/gallery/pass2-v9/07_turquoise_transition_comparison.png" alt="07 Turquoise Transition" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 22px;">
+      <div class="tile" id="item-08">
+        <div class="tile-head"><span>08 // Rounded Upper-Left &amp; Upper-Right Corners</span><span class="tag">Continuous Curvature</span></div>
+        <img src="/gallery/pass2-v9/08_rounded_upper_corners_comparison.png" alt="08 Rounded Upper Corners" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-09">
+        <div class="tile-head"><span>09 // Rounded Lower-Left &amp; Lower-Right Corners</span><span class="tag">Seamless Blending</span></div>
+        <img src="/gallery/pass2-v9/09_rounded_lower_corners_comparison.png" alt="09 Rounded Lower Corners" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 22px;">
+      <div class="tile" id="item-10">
+        <div class="tile-head"><span>10 // Top and Bottom Surface Illumination</span><span class="tag">Modeled 3D Profile</span></div>
+        <img src="/gallery/pass2-v9/10_top_bottom_surfaces_comparison.png" alt="10 Top Bottom Surfaces" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-11">
+        <div class="tile-head"><span>11 // Left Wall (Cyan) vs Right Wall (Mint)</span><span class="tag">Normal-Guided Walls</span></div>
+        <img src="/gallery/pass2-v9/11_side_wall_illumination_comparison.png" alt="11 Side Wall Illumination" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <!-- PART 3: MATERIAL & GEOMETRY PRESERVATION -->
+    <div class="part-divider">
+      <h2>Part 3 // Material Baselines &amp; Geometry Preservation (Items 12 – 15)</h2>
+      <p>Rigorous proof that Pass 2 V6 active pearl face, Pass 2 V7 inactive glass, Pass 1 V19 typography, and V8 geometry remain 100% frozen</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="tile" id="item-12">
+        <div class="tile-head"><span>12 // Active Pearl-White Face Regression</span><span class="tag">V6 Baseline Locked</span></div>
+        <img src="/gallery/pass2-v9/12_active_pearl_white_regression.png" alt="12 Active Pearl White Regression" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-13">
+        <div class="tile-head"><span>13 // Inactive Translucent Cyan-Blue Regression</span><span class="tag">V7 Baseline Locked</span></div>
+        <img src="/gallery/pass2-v9/13_inactive_blue_glass_regression.png" alt="13 Inactive Blue Glass Regression" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 22px;">
+      <div class="tile" id="item-14">
+        <div class="tile-head"><span>14 // V8 vs V9 Geometry Architecture Proof</span><span class="tag">3,134 Verts / T = 0.136</span></div>
+        <img src="/gallery/pass2-v9/14_v8_v9_geometry_unchanged_proof.png" alt="14 Geometry Unchanged Proof" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-15">
+        <div class="tile-head"><span>15 // Pass 1 V19 Typography Alignment Regression</span><span class="tag">Pixel-Identical Text</span></div>
+        <img src="/gallery/pass2-v9/15_pass1_v19_typography_regression.png" alt="15 Typography Regression" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <!-- PART 4: APPLICATION & ANIMATION -->
+    <div class="part-divider">
+      <h2>Part 4 // Application &amp; Animation Verification (Items 16 – 20)</h2>
+      <p>Full 14-treatment audit, responsive viewports, dynamic orbital orientations, bidirectional transitions, and scene regressions</p>
+    </div>
+
+    <section class="section-block" id="item-16">
+      <div class="section-head">
+        <h3><span class="num">16 //</span>All 14 Active Treatment States Matrix</h3>
+        <span class="meta">14-card carousel audit showing two-tone edge consistency and typography freezing</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v9/16_all_14_treatments_grid.png" alt="16 All 14 Treatments Grid" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <div class="tile" id="item-17">
+        <div class="tile-head"><span>17 // Viewport 1440 × 900 Across Scroll States</span><span class="tag">Responsive Audit</span></div>
+        <img src="/gallery/pass2-v9/17_viewport_1440x900_scroll_states.png" alt="17 Viewport 1440x900" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-18">
+        <div class="tile-head"><span>18 // Moderate &amp; Extreme Oblique Card Views</span><span class="tag">Card-Local Attachment</span></div>
+        <img src="/gallery/pass2-v9/18_oblique_angles_comparison.png" alt="18 Oblique Angles" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top: 22px;">
+      <div class="tile" id="item-19">
+        <div class="tile-head"><span>19 // Bidirectional Forward &amp; Reverse Scroll</span><span class="tag">Zero Hysteresis</span></div>
+        <img src="/gallery/pass2-v9/19_forward_reverse_scroll_transitions.png" alt="19 Forward Reverse Transitions" onclick="openLightbox(this.src)">
+      </div>
+      <div class="tile" id="item-20">
+        <div class="tile-head"><span>20 // Spine Bone &amp; Bokeh Particles Regression</span><span class="tag">Scene Lighting Intact</span></div>
+        <img src="/gallery/pass2-v9/20_spine_particles_regression.png" alt="20 Spine Particles Regression" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+
+    <!-- PART 5: CALIBRATION EVIDENCE -->
+    <div class="part-divider">
+      <h2>Part 5 // Section 9 Calibration Evidence (Items 21 – 23)</h2>
+      <p>Direct 4-variant comparative calibration against the Original Reference across active and inactive glass states</p>
+    </div>
+
+    <section class="section-block" id="item-21">
+      <div class="section-head">
+        <h3><span class="num">21 //</span>Full Section 9 Two-Tone Lighting Calibration Matrix Sheet</h3>
+        <span class="meta">Variants A, B, C, D evaluated across active foreground and inactive oblique cards</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v9/21_calibration_matrix_sheet.png" alt="21 Calibration Matrix Sheet" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-22">
+      <div class="section-head">
+        <h3><span class="num">22 //</span>Technical Parameter Breakdown for Variants A, B, C, D</h3>
+        <span class="meta">Exact GLSL shader constants and optical coefficients</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v9/22_calibration_shader_values.png" alt="22 Calibration Shader Values" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <section class="section-block" id="item-23">
+      <div class="section-head">
+        <h3><span class="num">23 //</span>Winning Variant C Detailed Comparison against Original Reference</h3>
+        <span class="meta">Side-by-side verification: cool cyan left rim, turquoise center, luminous mint right rim</span>
+      </div>
+      <div class="panel-frame">
+        <img src="/gallery/pass2-v9/23_selected_winner_vs_reference.png" alt="23 Selected Winner vs Reference" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+    <!-- PART 6: COMPLETE 14-TREATMENT AUDIT -->
+    <div class="part-divider">
+      <h2>Part 6 // Interactive 14-Treatment Matrix (1920 × 1080 Viewport + Card Detail)</h2>
+      <p>Inspect any treatment state across the carousel. Click any panel to view full-resolution 1080p rendering.</p>
+    </div>
+
+    <section class="section-block">
+      <div class="grid-2" id="allTreatmentsGrid"></div>
+    </section>
+
+    <div class="archive-bar">
+      <strong>Preserved Baseline &amp; Historic Galleries:</strong>
+      <a href="/gallery/pass2-v8" class="nav-btn">Pass 2 V8 Geometry Baseline</a>
+      <a href="/gallery/pass2-v7" class="nav-btn">Pass 2 V7 Inactive Baseline</a>
+      <a href="/gallery/pass2-v6" class="nav-btn">Pass 2 V6 Active Baseline</a>
+      <a href="/gallery/pass2-v5" class="nav-btn">Pass 2 V5</a>
+      <a href="/gallery/pass2-v4" class="nav-btn">Pass 2 V4</a>
+      <a href="/gallery/pass2-v3" class="nav-btn">Pass 2 V3</a>
+      <a href="/gallery/pass2-v2" class="nav-btn">Pass 2 V2</a>
+      <a href="/gallery/pass2-v1" class="nav-btn">Pass 2 V1</a>
+      <a href="/gallery/pass1-v19" class="nav-btn">Pass 1 V19 Typography Baseline</a>
+    </div>
+  </main>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
+    <img id="lightboxImg" src="" alt="Full Resolution Inspection" onclick="event.stopPropagation()">
+  </div>
+
+  <script>
+    const treatments = [
+      { id: '01', name: 'Cervical Decompression', region: '01 · C1–C7 CERVICAL' },
+      { id: '02', name: 'Manual Joint Therapy', region: '02 · T1–T12 THORACIC' },
+      { id: '03', name: 'Myofascial Release', region: '03 · MYOFASCIAL' },
+      { id: '04', name: 'Dry Needling Therapy', region: '04 · TRIGGER POINT' },
+      { id: '05', name: 'Postural Realignment', region: '05 · T1–T6 POSTURE' },
+      { id: '06', name: 'Rotator Cuff Rehab', region: '06 · GLENOHUMERAL' },
+      { id: '07', name: 'Thoracic Mobility Therapy', region: '07 · THORACIC CAGE' },
+      { id: '08', name: 'Sciatica & Nerve Therapy', region: '08 · L4–S1 SCIATICA' },
+      { id: '09', name: 'Lumbar Disc Rehab', region: '09 · L1–L5 LUMBAR' },
+      { id: '10', name: 'Spinal Stabilization', region: '10 · CORE STABILIZATION' },
+      { id: '11', name: 'SI Joint & Pelvic Rehab', region: '11 · SACROILIAC JOINT' },
+      { id: '12', name: 'Hip Mobility Rehab', region: '12 · COXOFEMORAL' },
+      { id: '13', name: 'Sports Injury & ACL Rehab', region: '13 · SPORTS MEDICINE' },
+      { id: '14', name: 'Post-Surgical Rehabilitation', region: '14 · RECOVERY PROTOCOL' }
+    ];
+
+    document.getElementById('allTreatmentsGrid').innerHTML = treatments.map(t => `
+      <div class="tile">
+        <div class="tile-head">
+          <span>${t.id} / 14 — ${t.name}</span>
+          <span class="tag">${t.region}</span>
+        </div>
+        <div class="treat-pair">
+          <img src="/gallery/pass2-v9/treatment-${t.id}-full.png" alt="Treatment ${t.id} Full 1920x1080" onclick="openLightbox(this.src)">
+          <img src="/gallery/pass2-v9/treatment-${t.id}-card.png" alt="Treatment ${t.id} Active Card" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+    `).join('');
+
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+</html>
