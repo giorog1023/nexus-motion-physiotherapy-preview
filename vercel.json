@@ -43,6 +43,38 @@
       "destination": "/index.html"
     },
     {
+      "source": "/gallery/pass2-v13",
+      "destination": "/gallery/pass2-v13/index.html"
+    },
+    {
+      "source": "/gallery/pass2-v13/",
+      "destination": "/gallery/pass2-v13/index.html"
+    },
+    {
+      "source": "/gallery/pass2-v11",
+      "destination": "/gallery/pass2-v11/index.html"
+    },
+    {
+      "source": "/gallery/pass2-v11/",
+      "destination": "/gallery/pass2-v11/index.html"
+    },
+    {
+      "source": "/gallery/pass2-v10-visual-review",
+      "destination": "/gallery/pass2-v10-visual-review/index.html"
+    },
+    {
+      "source": "/gallery/pass2-v10-visual-review/",
+      "destination": "/gallery/pass2-v10-visual-review/index.html"
+    },
+    {
+      "source": "/gallery/pass2-v10",
+      "destination": "/gallery/pass2-v10/index.html"
+    },
+    {
+      "source": "/gallery/pass2-v10/",
+      "destination": "/gallery/pass2-v10/index.html"
+    },
+    {
       "source": "/gallery/pass2-v9-review",
       "destination": "/gallery/pass2-v9-review/index.html"
     },

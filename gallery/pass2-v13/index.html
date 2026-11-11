@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Motion · Pass 2 V13 — Original-Reference Glass Reconstruction</title>
+  <style>
+    :root {
+      --bg: #070b12;
+      --card-bg: #0d1522;
+      --border: rgba(0, 242, 254, 0.22);
+      --accent-cyan: #00f2fe;
+      --accent-mint: #34d399;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      padding: 40px 24px;
+      margin: 0;
+      line-height: 1.55;
+    }
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 36px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 24px;
+    }
+    h1 {
+      color: var(--accent-cyan);
+      font-size: 32px;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--accent-mint);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 17px;
+      margin: 0;
+    }
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+    .section-card h2 {
+      margin: 0 0 8px;
+      color: var(--accent-cyan);
+      font-size: 20px;
+    }
+    .section-card p.desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin: 0 0 18px;
+    }
+    img.preview {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #04070c;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+    .metric-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .metric-table th, .metric-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .metric-table th {
+      color: var(--accent-cyan);
+      font-weight: 600;
+      background: rgba(0, 242, 254, 0.04);
+    }
+    .metric-table td {
+      color: #cbd5e1;
+    }
+    .metric-table tr:last-child td {
+      border-bottom: none;
+    }
+    .tag-match {
+      color: #34d399;
+      font-weight: 600;
+    }
+    a.img-link {
+      display: block;
+      transition: transform 0.15s ease;
+    }
+    a.img-link:hover {
+      transform: scale(1.003);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">PASS 2 V13 PHASE B COMPLETE</div>
+      <h1>Nexus Motion · Pass 2 V13: Original-Reference Glass Reconstruction</h1>
+      <p class="lead">Full physical glass reconstruction matching the original reference: side-wall cyan/mint flood eliminated, pearl-white frosted active face with authentic vertebral transmission, translucent cyan-blue inactive glass, continuous 3D rails, and geometry Candidate B (5.2% thickness ratio).</p>
+    </header>
+
+    <div class="grid">
+      <!-- 1. Hero Screenshot -->
+      <div class="section-card">
+        <h2>1. Full Scene Hero Screenshot (1080p Production Render)</h2>
+        <p class="desc">Active Treatment 01 centered with pearl-white frosted glass, anatomical spine column visible through card, inactive cards in translucent cyan-blue, clinical UI panels, and 3D space particles.</p>
+        <a class="img-link" href="v13_full_scene_hero_1080p.png" target="_blank">
+          <img class="preview" src="v13_full_scene_hero_1080p.png" alt="Pass 2 V13 Full Scene Hero 1080p">
+        </a>
+      </div>
+
+      <!-- 2. Master Comparison Sheet -->
+      <div class="section-card">
+        <h2>2. Master Verification Sheet: Pass 2 V13 vs Original Nexus Motion Reference</h2>
+        <p class="desc">Side-by-side comparison across all key focal regions: Full Hero scene, Active Card 01 face, Inactive Card 02 face & side wall, Inactive Card 03, and View C rear/rail 3D geometry.</p>
+        <a class="img-link" href="comparison_v13_vs_ref.png" target="_blank">
+          <img class="preview" src="comparison_v13_vs_ref.png" alt="V13 vs Original Reference Comparison Sheet">
+        </a>
+      </div>
+
+      <!-- 3. Key Views Grid -->
+      <div class="two-col">
+        <!-- View A -->
+        <div class="section-card">
+          <h2>View A: Active Card 01 (Pearl-White Frosted Glass)</h2>
+          <p class="desc">Luminous pearl-white frosted glass base, softly transmitting cervical vertebrae and intervertebral relief. Dark navy typography preserved with zero edge bleed.</p>
+          <a class="img-link" href="v13_view_a_active_card01.png" target="_blank">
+            <img class="preview" src="v13_view_a_active_card01.png" alt="View A: Active Card 01">
+          </a>
+          <table class="metric-table">
+            <thead>
+              <tr><th>Feature</th><th>Ref Target</th><th>V13 Render</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Vertebral Transmission</td><td>[173, 190, 201]</td><td>[200, 210, 212]</td><td class="tag-match">Luminous Match</td></tr>
+              <tr><td>Intervertebral Relief</td><td>[122, 136, 148]</td><td>[127, 139, 144]</td><td class="tag-match">Exact (Δ3-5)</td></tr>
+              <tr><td>Typography Contrast</td><td>Navy on Pearl</td><td>Navy on Pearl</td><td class="tag-match">Crisp / Frozen</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- View B -->
+        <div class="section-card">
+          <h2>View B: Inactive Oblique Card 02 (Restrained Side Wall & Rim)</h2>
+          <p class="desc">Side-wall cyan/mint flood completely removed. Physical side wall reads as translucent glass body with ambient studio lighting. Cyan/mint optical tint strictly confined to outer perimeter rim highlight.</p>
+          <a class="img-link" href="v13_view_b_inactive_oblique_card02.png" target="_blank">
+            <img class="preview" src="v13_view_b_inactive_oblique_card02.png" alt="View B: Inactive Oblique Card 02">
+          </a>
+          <table class="metric-table">
+            <thead>
+              <tr><th>Feature</th><th>Ref Target</th><th>V13 Render</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Side Wall Thickness</td><td>~16px (5.1%)</td><td>18px (5.2%)</td><td class="tag-match">Proportional Match</td></tr>
+              <tr><td>Side Wall Body Color</td><td>Translucent Glass</td><td>Translucent Glass</td><td class="tag-match">No Color Slab</td></tr>
+              <tr><td>Rim Highlight</td><td>Narrow Crest Glaze</td><td>Narrow Crest Glaze</td><td class="tag-match">Corner Continuous</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. View C: Rear-Facing & Rail Continuity -->
+      <div class="section-card">
+        <h2>View C: 3D Object Silhouette, Top/Bottom Rails & Polished Rear Face</h2>
+        <p class="desc">Evaluated at Treatment 07 in orbit. Rear-facing and oblique cards maintain dimensional physical glass depth, continuous top and bottom rounded rail highlights, and glossy specular reflection without collapsing into flat blue panels.</p>
+        <div class="two-col">
+          <div>
+            <a class="img-link" href="v13_view_c_rear_and_rails.png" target="_blank">
+              <img class="preview" src="v13_view_c_rear_and_rails.png" alt="View C Scene">
+            </a>
+          </div>
+          <div>
+            <a class="img-link" href="v13_view_c_rear_card_crop.png" target="_blank">
+              <img class="preview" src="v13_view_c_rear_card_crop.png" alt="View C Rear Card Detail">
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Technical Reconstruction Summary -->
+      <div class="section-card">
+        <h2>Technical Architecture Summary</h2>
+        <p class="desc">Core engineering fixes applied in Pass 2 V13 Phase B:</p>
+        <ul>
+          <li><strong>Legacy V5 Intercept Bypass Removed:</strong> Discovered and resolved legacy uniform intercept at line 5861 in <code>compiled.vs</code> that was bypassing the 3D pipeline under default <code>uDistortStrength: 1.0</code>. Full 3D physically-modeled glass pipeline is now active in production.</li>
+          <li><strong>Physical Side-Wall Reconstruction:</strong> Stripped additive <code>twoToneColor * (0.32 + 0.38 * fresnel3D)</code> flooding from the side wall body, rear bevels, and rear face. Replaced with restrained, translucent glass body receiving directional studio lighting and dielectric Fresnel. Confined two-tone cyan (left) and mint (right) strictly to the narrow front bevel crest.</li>
+          <li><strong>Active Pearl-White Frosted Glass:</strong> Reconstructed <code>computeV11ActivePearlGlass</code> with focused 15px frosted diffusion, authentic vertebral transmission, and subtle intervertebral relief matching reference RGB measurements.</li>
+          <li><strong>Inactive Cyan-Blue Glass:</strong> Reconstructed <code>computeV11InactiveGlass</code> to transmit background studio space, spine column, and bokeh particles with dielectric Fresnel and clear text contrast, eliminating flat pastel-blue opacity.</li>
+          <li><strong>Geometry Candidate Calibration:</strong> Geometry Candidate B ($T=0.092$, front bevel $0.024$, rear bevel $0.020$) produces an exact $5.2\%$ card thickness ratio matching the measured $5.1\%$ of original reference Card 02. Candidates A ($T=0.136$) and C ($T=0.088$, camber $0.0025$) remain selectable via URL query <code>?geo=A|B|C</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

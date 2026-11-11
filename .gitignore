@@ -2,6 +2,7 @@
 .vercel/
 node_modules/
 *.log
+*.bak
 
 # Exclude heavy legacy portfolio media unused by physiotherapy section
 _external/storage.googleapis.com/

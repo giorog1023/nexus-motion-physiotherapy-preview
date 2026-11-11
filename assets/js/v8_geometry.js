@@ -17,11 +17,32 @@
     const stage = opts.stage || 'E'; // 'B', 'C', 'D', 'E'
     const stageNum = stage === 'B' ? 2.0 : (stage === 'C' ? 3.0 : (stage === 'D' ? 4.0 : 5.0));
 
-    // Physical dimensions matching Original Reference Card 02 & Card 03:
-    // Total physical thickness: 0.136 world units (~7.7% of card width, ~10x thicker than V7's 0.0133)
-    const thickness = typeof opts.thickness === 'number' ? opts.thickness : 0.136;
-    const frontBevelR = typeof opts.frontBevelR === 'number' ? opts.frontBevelR : 0.032;
-    const rearBevelR = typeof opts.rearBevelR === 'number' ? opts.rearBevelR : 0.026;
+    // Geometry Candidate Selection (Pass 2 V13 Phase B):
+    // Alternative A: Existing V12 baseline (thickness: 0.136, frontBevelR: 0.032, rearBevelR: 0.026)
+    // Alternative B: Moderately reduced thickness (thickness: 0.092, frontBevelR: 0.024, rearBevelR: 0.020) [Target: 5.2% ratio matching original reference]
+    // Alternative C: Refined profile with subtle camber (thickness: 0.088, frontBevelR: 0.024, rearBevelR: 0.018, camber: 0.003)
+    const urlParams = typeof window !== 'undefined' && window.location ? new URLSearchParams(window.location.search) : null;
+    const geoCandidate = (urlParams && urlParams.get('geo')) || (typeof window !== 'undefined' && window.__GEO_CANDIDATE) || 'B';
+
+    let defaultThickness = 0.092;
+    let defaultFrontBevelR = 0.024;
+    let defaultRearBevelR = 0.020;
+    let camber = 0.0;
+
+    if (geoCandidate === 'A') {
+      defaultThickness = 0.136;
+      defaultFrontBevelR = 0.032;
+      defaultRearBevelR = 0.026;
+    } else if (geoCandidate === 'C') {
+      defaultThickness = 0.088;
+      defaultFrontBevelR = 0.024;
+      defaultRearBevelR = 0.018;
+      camber = 0.0025;
+    }
+
+    const thickness = (opts.forceThickness !== undefined) ? opts.forceThickness : defaultThickness;
+    const frontBevelR = (opts.forceBevel !== undefined) ? opts.forceBevel : defaultFrontBevelR;
+    const rearBevelR = (opts.forceRearBevel !== undefined) ? opts.forceRearBevel : defaultRearBevelR;
 
     const cornerSegs = 20;
     const straightSegsX = 10;
@@ -144,11 +165,11 @@
       rings.push(ring);
     }
 
-    // Front Flat Center Vertex + Rings
+    // Front Flat Center Vertex + Rings (with optional subtle camber)
     const cUV = planarFrontUV(0, 0);
-    const frontCenterIdx = pushVertex(0, 0, zFront, 0, 0, 1, cUV[0], cUV[1], 1.0, 0.0, 0.0);
-    addScaleRing(0.32, zFront, 1, 1.0, 0.0, 0.0, true);
-    addScaleRing(0.66, zFront, 1, 1.0, 0.0, 0.0, true);
+    const frontCenterIdx = pushVertex(0, 0, zFront + camber, 0, 0, 1, cUV[0], cUV[1], 1.0, 0.0, 0.0);
+    addScaleRing(0.32, zFront + camber * 0.85, 1, 1.0, 0.0, 0.0, true);
+    addScaleRing(0.66, zFront + camber * 0.50, 1, 1.0, 0.0, 0.0, true);
     addScaleRing(1.00, zFront, 1, 1.0, 0.0, 0.0, true);
     addInsetRing(fbR + 0.004, zFront, 0, 1, 1.0, 0.0, 0.0, true);
 

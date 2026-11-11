@@ -5528,7 +5528,7 @@ vec3 sampleCompleteSceneBehindCard(sampler2D tex, vec2 sUV, float cardFrontOfSpi
     float pRatio = (mrt.g + mrt.b) / (2.0 * max(mrt.r, 0.0001));
     float isPart = (1.0 - smoothstep(0.016, 0.026, mrt.r)) * smoothstep(6.0, 12.0, pRatio);
     float maxMrt = max(mrt.r, max(mrt.g, mrt.b));
-    float spineMask = smoothstep(0.004, 0.025, maxMrt) * (1.0 - isPart) * cardFrontOfSpine;
+    float spineMask = smoothstep(0.004, 0.025, maxMrt) * (1.0 - isPart) * max(cardFrontOfSpine, 0.40);
     vec3 spaceCol = envBg + mrt * isPart;
     return clamp(mix(spaceCol, mrt, spineMask), 0.0, 1.0);
 }
@@ -5618,60 +5618,177 @@ vec3 computeV7InactiveGlass(
 }
 
 // =========================================================================
-// PASS 2 V9: TWO-TONE CYAN-BLUE TO MINT-GREEN OPTICAL GLASS ILLUMINATION
-// Left: Cool icy cyan-blue (#22d3ee / #38bdf8)
-// Center: Natural turquoise transition (#2dd4bf / #14b8a6)
-// Right: Luminous fresh mint-green (#34d399 / #6ee7b7)
-// Strictly attached to card-local geometry & surface normals
+// PASS 2 V11: ORIGINAL-REFERENCE GLASS MATERIAL REFINEMENT
+// Active Card: Premium Milky Pearl-White Porcelain Frosted Glass
+// Inactive Cards: Translucent Cyan-Blue Optical Glass with Visible Scene Transmission
 // =========================================================================
-vec3 computeV9TwoToneColor(vec2 localPos, vec3 localNorm, float variant) {
-    // localPos.x spans [-0.37982, +0.37982]
-    float uX = clamp(localPos.x / 0.37982, -1.0, 1.0);
-    // Incorporate local surface normal x so left/right corners & walls catch pure cyan/mint
-    float nX = clamp(localNorm.x, -1.0, 1.0);
-    
-    // Balanced edge coordinate: -1.0 (pure left) to +1.0 (pure right)
-    float edgeCoord = clamp(uX * 0.72 + nX * 0.28, -1.0, 1.0);
+vec3 computeV11ActivePearlGlass(
+    sampler2D tex,
+    vec2 ruv,
+    vec2 res,
+    vec2 cardCoord,
+    vec3 ambientGlow,
+    vec3 norm,
+    vec3 viewDir,
+    vec3 halfVec,
+    int configMode
+) {
+    // Pass 2 V13: Reconstructed Active Pearl-White Frosted Glass
+    // Focused frosted diffusion (radius 15.0px) preserving recognizable vertebral anatomy
+    float radiusPx = 15.0;
+    vec3 spineRefr = frostedDiffusion(tex, ruv, radiusPx, res);
+    float spineLum = dot(spineRefr, vec3(0.299, 0.587, 0.114));
+
+    // Neutral pearl-white frosted glass base (calibrated to original reference target [184, 207, 212])
+    vec3 pTop    = vec3(0.74, 0.81, 0.84);
+    vec3 pBottom = vec3(0.70, 0.78, 0.82);
+
+    // Subtle vertical studio falloff
+    float yGrad = clamp((cardCoord.y / 0.38) * 0.5 + 0.5, 0.0, 1.0);
+    vec3 basePearl = mix(pTop, pBottom, pow(yGrad, 1.15) * 0.25);
+
+    // Subtle horizontal studio balance: gentle light falloff across face
+    float xGrad = clamp((cardCoord.x / 0.70) * 0.5 + 0.5, 0.0, 1.0);
+    basePearl *= (0.98 + 0.04 * (1.0 - xGrad));
+
+    // Delicate ambient cyan/mint studio integration
+    basePearl = mix(basePearl, ambientGlow, 0.025);
+
+    // Authentic physical transmission of the anatomical spine:
+    // Softly diffuses vertebral shapes and contours through the pearl frosted glass matrix
+    vec3 spineColor = mix(vec3(spineLum), spineRefr, 0.60);
+    vec3 transSpine = mix(basePearl, spineColor * vec3(0.96, 1.02, 1.06), 0.38);
+    float transStrength = smoothstep(0.10, 0.78, spineLum) * 0.35;
+    vec3 glassFace = mix(basePearl, transSpine, transStrength);
+
+    // Soft luminous vertebral highlight (luminous relief of the vertebrae under frosted transmission)
+    float crest = smoothstep(0.32, 0.80, spineLum) * 0.10;
+    glassFace += vec3(0.90, 0.96, 1.00) * crest;
+
+    // Polished clearcoat specular highlight
+    float activeSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 36.0);
+    glassFace += vec3(0.97, 0.99, 1.0) * activeSpec * 0.08;
+
+    // Viewing-angle dielectric grazing reflection
+    float cosTheta = clamp(abs(dot(norm, viewDir)), 0.0, 1.0);
+    float edgeFresnel = pow(1.0 - cosTheta, 2.8);
+    glassFace = mix(glassFace, vec3(0.88, 0.95, 0.98), edgeFresnel * 0.12);
+
+    return clamp(glassFace, 0.0, 1.0);
+}
+
+vec3 computeV11InactiveGlass(
+    sampler2D tex,
+    vec2 ruv,
+    vec2 res,
+    vec2 cardCoord,
+    vec3 norm,
+    vec3 viewDir,
+    float camDist,
+    vec3 halfVec,
+    float cardFrontOfSpine,
+    int configMode
+) {
+    // Pass 2 V13: Reconstructed Translucent Cyan-Blue Optical Glass
+    // Focused frosted diffusion for inactive glass (radius 12.0px)
+    float radiusPx = 12.0;
+
+    // Physical Snell's refraction offset driven by surface normal
+    vec2 refractedUV = clamp(ruv - norm.xy * 0.015, 0.002, 0.998);
+
+    // Sample the complete scene behind the card (spine + bokeh particles + dark studio atmosphere)
+    vec3 sceneBehind = frostedInactiveScene(tex, refractedUV, radiusPx, res, cardFrontOfSpine);
+    float sceneLum = dot(sceneBehind, vec3(0.299, 0.587, 0.114));
+
+    // Physical Beer-Lambert cyan-blue glass spectral filtration:
+    // Transmits cyan and blue light while naturally absorbing red/yellow wavelengths
+    vec3 glassFilter = vec3(0.70, 0.82, 0.88);
+    vec3 transmitted = sceneBehind * glassFilter;
+
+    // Deep, rich translucent cyan-blue optical glass body (calibrated to original reference target [91, 124, 142])
+    // NOT a flat, opaque pastel blue coating!
+    float studioGrad = 0.95 + 0.15 * clamp(0.50 - cardCoord.y * 0.50 - cardCoord.x * 0.20, 0.0, 1.0);
+    vec3 glassBase = vec3(0.60, 0.74, 0.78) * studioGrad;
+
+    float nearField = smoothstep(12.2, 6.6, camDist);
+    vec3 ambientGlass = glassBase * (0.80 + 0.20 * nearField);
+
+    // Translucent glass composition:
+    // Scene behind card transmits through the glass; glass body provides translucent optical depth
+    vec3 glassFace = ambientGlass * (0.68 - 0.12 * sceneLum) + transmitted * 0.45;
+
+    // Volumetric transmission boost when spine column or studio glow is behind the card
+    glassFace += vec3(0.08, 0.14, 0.18) * smoothstep(0.12, 0.72, sceneLum);
+
+    // Equirectangular studio reflection
+    vec3 envRaw = envColorEqui(tEnv, normalize(vReflection)).rgb;
+    float envLum = dot(envRaw, vec3(0.299, 0.587, 0.114));
+    glassFace += vec3(0.40, 0.58, 0.68) * clamp(envLum, 0.08, 0.80) * 0.05;
+
+    // Dielectric viewing-angle Fresnel reflection
+    float cosTheta = clamp(abs(dot(norm, viewDir)), 0.0, 1.0);
+    float dielFresnel = pow(1.0 - cosTheta, 2.4);
+    glassFace = mix(glassFace, vec3(0.46, 0.66, 0.76), dielFresnel * 0.16);
+
+    // Crisp surface specular highlight
+    float inactiveSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 32.0);
+    glassFace += vec3(0.85, 0.96, 1.0) * inactiveSpec * 0.12;
+
+    return clamp(glassFace, 0.0, 1.0);
+}
+
+vec3 computeV10TwoToneColor(vec2 cardCoord, vec3 localNorm, float variant) {
+    if (abs(variant - 50.0) < 0.1) {
+        // Variant A: Exact V9 Baseline (for before/after comparison)
+        float uX = clamp(cardCoord.x / 0.37982, -1.0, 1.0);
+        float nX = clamp(localNorm.x, -1.0, 1.0);
+        float edgeCoord = clamp(uX * 0.72 + nX * 0.28, -1.0, 1.0);
+        float edgeT = edgeCoord * 0.5 + 0.5;
+        vec3 cyanCol = vec3(0.12, 0.78, 0.98);
+        vec3 turqCol = vec3(0.15, 0.88, 0.82);
+        vec3 mintCol = vec3(0.20, 0.95, 0.65);
+        return (edgeT < 0.50)
+            ? mix(cyanCol, turqCol, smoothstep(0.12, 0.50, edgeT))
+            : mix(turqCol, mintCol, smoothstep(0.50, 0.88, edgeT));
+    }
+
+    // In local card space, cardCoord.x spans [-0.7682, +0.7682] (negative on left, positive on right).
+    // Local normal on left perimeter points towards -x in card-aligned space (-localNorm.x < 0).
+    // Local normal on right perimeter points towards +x in card-aligned space (-localNorm.x > 0).
+    float normX = clamp(cardCoord.x / 0.76821, -1.0, 1.0);
+    float normN = clamp(-localNorm.x, -1.0, 1.0);
+
+    // Reinforcing coordinate: -1.0 (pure left edge) to +1.0 (pure right edge)
+    float edgeCoord = clamp(normX * 0.72 + normN * 0.28, -1.0, 1.0);
     float edgeT = edgeCoord * 0.5 + 0.5; // [0.0, 1.0]
 
-    // Base color anchors:
-    vec3 cyanCol = vec3(0.12, 0.78, 0.98); // Icy cyan (#22d3ee / #38bdf8)
-    vec3 turqCol = vec3(0.15, 0.88, 0.82); // Turquoise bridge (#2dd4bf)
-    vec3 mintCol = vec3(0.20, 0.95, 0.65); // Fresh luminous mint-green (#34d399)
-
-    if (abs(variant - 41.0) < 0.1) {
-        // Variant B: Stronger left cyan / softer right mint
-        cyanCol = vec3(0.08, 0.74, 1.00); // Electric cyan-blue
-        turqCol = vec3(0.14, 0.84, 0.86);
-        mintCol = vec3(0.26, 0.92, 0.72); // Softer mint
-        return (edgeT < 0.55)
-            ? mix(cyanCol, turqCol, smoothstep(0.20, 0.55, edgeT))
-            : mix(turqCol, mintCol, smoothstep(0.55, 0.88, edgeT));
-    } else if (abs(variant - 42.0) < 0.1) {
-        // Variant C: Balanced left cyan / right mint with broader turquoise transition
-        cyanCol = vec3(0.12, 0.78, 0.98);
-        turqCol = vec3(0.15, 0.89, 0.82);
-        mintCol = vec3(0.20, 0.95, 0.65);
-        return (edgeT < 0.50)
-            ? mix(cyanCol, turqCol, smoothstep(0.12, 0.50, edgeT))
-            : mix(turqCol, mintCol, smoothstep(0.50, 0.88, edgeT));
-    } else if (abs(variant - 43.0) < 0.1) {
-        // Variant D: Softer, more subtle color illumination with stronger view-dependent reflections
-        cyanCol = vec3(0.18, 0.76, 0.94);
-        turqCol = vec3(0.18, 0.86, 0.82);
-        mintCol = vec3(0.25, 0.92, 0.70);
-        return (edgeT < 0.50)
-            ? mix(cyanCol, turqCol, smoothstep(0.15, 0.50, edgeT))
-            : mix(turqCol, mintCol, smoothstep(0.50, 0.85, edgeT));
+    if (abs(variant - 51.0) < 0.1) {
+        // Variant B: Stronger Mint Right with Restrained Cyan Left
+        vec3 cyanCol = vec3(0.08, 0.76, 0.98); // Restrained icy cyan
+        vec3 turqCol = vec3(0.10, 0.88, 0.72); // Soft turquoise
+        vec3 mintCol = vec3(0.12, 0.98, 0.42); // High-saturation mint
+        return (edgeT < 0.42)
+            ? mix(cyanCol, turqCol, smoothstep(0.05, 0.42, edgeT))
+            : mix(turqCol, mintCol, smoothstep(0.42, 0.80, edgeT));
+    } else if (abs(variant - 53.0) < 0.1) {
+        // Variant D: Subtle Glass Reflections with Softened Emission
+        vec3 cyanCol = vec3(0.14, 0.76, 0.92); // Soft icy cyan
+        vec3 turqCol = vec3(0.15, 0.86, 0.78); // Muted turquoise
+        vec3 mintCol = vec3(0.20, 0.92, 0.56); // Refined mint
+        return (edgeT < 0.48)
+            ? mix(cyanCol, turqCol, smoothstep(0.10, 0.48, edgeT))
+            : mix(turqCol, mintCol, smoothstep(0.48, 0.86, edgeT));
     } else {
-        // Default / Winning Pass 2 V9 Two-Tone Illumination:
-        // Precise match to Original Reference:
-        // Left rim: #22d3ee / #38bdf8 (cool icy cyan)
-        // Turquoise: #2dd4bf (natural intermediate connecting bridge)
-        // Right rim: #34d399 (luminous mint-green)
-        return (edgeT < 0.50)
-            ? mix(cyanCol, turqCol, smoothstep(0.12, 0.50, edgeT))
-            : mix(turqCol, mintCol, smoothstep(0.50, 0.88, edgeT));
+        // Variant C (52.0 & Production Default): Balanced Polished Glass Glaze
+        // Left rim: Pure cool icy cyan-blue (#14c8fa / #38bdf8)
+        // Center bridge: True natural turquoise (#1fe0c7)
+        // Right rim: Fresh luminous mint-green (#2ef580 / #34d399)
+        vec3 cyanCol = vec3(0.09, 0.78, 0.98);
+        vec3 turqCol = vec3(0.12, 0.90, 0.75);
+        vec3 mintCol = vec3(0.15, 0.97, 0.48);
+        return (edgeT < 0.46)
+            ? mix(cyanCol, turqCol, smoothstep(0.06, 0.46, edgeT))
+            : mix(turqCol, mintCol, smoothstep(0.46, 0.84, edgeT));
     }
 }
 
@@ -5717,8 +5834,8 @@ void main() {
 
     // Normalized horizontal position across card face (-0.768 left to +0.768 right)
     float hFactor = clamp((cardCoord.x / 0.70) * 0.5 + 0.5, 0.0, 1.0);
-    vec3 cyanLight = vec3(0.18, 0.82, 0.98); // Vibrant electric cyan-ice (#38bdf8)
-    vec3 mintLight = vec3(0.24, 0.95, 0.68); // Luminous fresh mint-green (#34d399 / #84c2ae)
+    vec3 cyanLight = vec3(0.12, 0.78, 0.98); // Cool icy cyan (#22d3ee)
+    vec3 mintLight = vec3(0.16, 0.96, 0.52); // Luminous fresh mint-green (#34d399)
     vec3 ambientGlow = mix(cyanLight, mintLight, hFactor);
 
     // =========================================================================
@@ -5743,7 +5860,7 @@ void main() {
         #drawbuffer Color gl_FragColor = vec4(diagColor, edgeAlpha);
         #drawbuffer WorkRefraction gl_FragColor = vec4(0.0);
         return;
-    } else if (abs(uDistortStrength - 1.0) < 0.1) {
+    } else if (abs(uDistortStrength - 101.0) < 0.1) {
         // Matrix Var 1: D1 (14px) + T1 (Low Pearl / High Trans: 50%)
         vec3 diagColor = computeCalibratedGlass(tRefraction, ruv, resolution, cardCoord, ambientGlow, norm, halfVec, 14.0, 0.85, 0.50, 0.35);
         diagColor = mix(diagColor, cardTex.rgb, textMask);
@@ -5892,9 +6009,28 @@ void main() {
     vec2 ruvActive = clamp(ruv - norm.xy * (0.022 * edgeZoneV8), 0.002, 0.998);
     vec2 ruvInactive = clamp(ruv - norm.xy * (0.012 * edgeZoneV8), 0.002, 0.998);
 
-    vec3 activeGlass = (uAhead > 0.0001)
-        ? computeV6Glass(tRefraction, ruvActive, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12)
-        : vec3(0.0);
+    // =========================================================================
+    // PASS 2 V11 CONTROLLED CALIBRATION:
+    // Configuration A (60.0): Baseline V10 Material (V6 Active + V7 Inactive Variant D)
+    // Configuration B (61.0): Original-Reference-Biased Material (Stronger Pearl-White + Transparent Inactive)
+    // Configuration C (62.0 & Production Default): Balanced Premium Glass Material
+    // =========================================================================
+    bool isCalibA = (abs(uDistortStrength - 60.0) < 0.1);
+    bool isCalibB = (abs(uDistortStrength - 61.0) < 0.1);
+
+    vec3 activeGlass = vec3(0.0);
+    if (uAhead > 0.0001) {
+        if (isCalibA) {
+            // Configuration A: Unmodified Pass 2 V10 Baseline (V6)
+            activeGlass = computeV6Glass(tRefraction, ruvActive, resolution, cardCoord, ambientGlow, norm, halfVec, 21.5, 0.72, 0.33, 0.25, 0.025, vec3(0.92, 0.94, 0.96), vec3(0.78, 0.86, 0.90), 0.12);
+        } else if (isCalibB) {
+            // Configuration B: Original-Reference-Biased Pearl Glass (Mode 1)
+            activeGlass = computeV11ActivePearlGlass(tRefraction, ruvActive, resolution, cardCoord, ambientGlow, norm, viewDir, halfVec, 1);
+        } else {
+            // Configuration C (Default & 62.0): Balanced Premium Glass (Mode 2)
+            activeGlass = computeV11ActivePearlGlass(tRefraction, ruvActive, resolution, cardCoord, ambientGlow, norm, viewDir, halfVec, 2);
+        }
+    }
     vec3 activeTextColor = cardTex.rgb;
 
     // =========================================================================
@@ -5936,11 +6072,21 @@ void main() {
                 tRefraction, ruvInactive, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
                 15.5, 0.76, vec3(0.118, 0.222, 0.285), vec3(0.50, 0.84, 0.96), 0.76, 0.48, 0.060, 0.16
             );
-        } else {
-            // V7 Calibration Variant D (33.0 & Default): Softly Diffused Transmission (84%, 19.0px) + Balanced Cyan-Blue Body Tint
+        } else if (isCalibA || abs(uDistortStrength - 33.0) < 0.1) {
+            // Configuration A: Unmodified Pass 2 V10 Baseline (V7 Variant D)
             inactiveGlass = computeV7InactiveGlass(
                 tRefraction, ruvInactive, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine,
                 19.0, 0.84, vec3(0.130, 0.200, 0.242), vec3(0.63, 0.85, 0.93), 0.68, 0.36, 0.052, 0.13
+            );
+        } else if (isCalibB) {
+            // Configuration B: Original-Reference-Biased Inactive Glass (Mode 1)
+            inactiveGlass = computeV11InactiveGlass(
+                tRefraction, ruvInactive, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine, 1
+            );
+        } else {
+            // Configuration C (Default & 62.0): Balanced Premium Glass (Mode 2)
+            inactiveGlass = computeV11InactiveGlass(
+                tRefraction, ruvInactive, resolution, cardCoord, norm, viewDir, camDist, halfVec, cardFrontOfSpine, 2
             );
         }
     }
@@ -5960,7 +6106,7 @@ void main() {
     // Pass 2 V9: Integrated Two-Tone Cyan-to-Mint Illumination across 3D Geometry
     // =========================================================================
     bool isVarA = (abs(uDistortStrength - 40.0) < 0.1);
-    vec3 twoToneColor = isVarA ? ambientGlow : computeV9TwoToneColor(cardCoord, vLocalNormal, uDistortStrength);
+    vec3 twoToneColor = isVarA ? ambientGlow : computeV10TwoToneColor(cardCoord, vLocalNormal, uDistortStrength);
     vec3 perimeterColor = twoToneColor;
     vec3 finalGlass = glassBody;
 
@@ -6022,57 +6168,159 @@ void main() {
         vec3 rearPolish = glassBody * 1.05 + perimeterColor * (0.06 + 0.14 * fresnel3D) + vec3(0.68, 0.88, 0.96) * envLumEdge * 0.06;
         finalGlass = mix(finalGlass, clamp(rearPolish, 0.0, 1.0), rearFlatMask);
     } else {
-        // Pass 2 V9 Two-Tone 3D Glass Solid Illumination (Variants B, C, D & Selected Winner)
+        // =========================================================================
+        // PASS 2 V12: FULL 3D GLASS CARD DIMENSIONALITY
+        // Physically dimensional glass presentation across every viewing angle:
+        // 1. Continuous cylindrical front bevel highlights wrapping seamlessly into corners
+        // 2. Translucent top & bottom walls with directional studio illumination & glass depth
+        // 3. Defined rounded rear bevels catching studio rim reflections
+        // 4. Polished optical glass rear faces with dielectric Fresnel, glossy reflections & depth
+        // =========================================================================
         float prof = clamp(vSurfaceInfo.y, 0.0, 1.0);
-        float nv = clamp(dot(norm, viewDir), 0.0, 1.0);
-        float fresnel3D = pow(1.0 - nv, 2.2);
+        float nv = clamp(abs(dot(norm, viewDir)), 0.0, 1.0);
+        float fresnel3D = pow(1.0 - nv, 2.3);
 
-        // Studio fill lighting for smooth 3D bevel specular glints
-        vec3 fillLightDir = normalize(vec3(-0.45, -0.62, 0.64));
+        // Directional studio lighting vectors for 360-degree glass dimensionality
+        vec3 fillLightDir = normalize(vec3(-0.45, -0.62, 0.55));
         vec3 fillHalfVec = normalize(fillLightDir + viewDir);
-        float specKey = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 30.0);
-        float specFill = pow(clamp(dot(norm, fillHalfVec), 0.0, 1.0), 22.0);
-        vec3 envRefl = envColorEqui(tEnv, normalize(vReflection)).rgb;
+
+        // Studio overhead top-rim light for top bevel & wall depth
+        vec3 topLightDir = normalize(vec3(0.20, 0.95, 0.22));
+        vec3 topHalfVec = normalize(topLightDir + viewDir);
+
+        // Central spine studio rim light (radiates outward from spine column at x=0, z=0)
+        vec3 spineOutDir = normalize(vec3(vWorldPos.x, 0.15, vWorldPos.z));
+        vec3 spineHalfVec = normalize(-spineOutDir + viewDir);
+
+        bool isVar50 = (abs(uDistortStrength - 50.0) < 0.1);
+        bool isVar51 = (abs(uDistortStrength - 51.0) < 0.1);
+        bool isVar53 = (abs(uDistortStrength - 53.0) < 0.1);
+
+        float specPower = isVar53 ? 42.0 : (isVar50 ? 30.0 : 36.0);
+        float specKey   = pow(clamp(dot(norm, halfVec), 0.0, 1.0), specPower);
+        float specFill  = pow(clamp(dot(norm, fillHalfVec), 0.0, 1.0), specPower * 0.75);
+        float specTop   = pow(clamp(dot(norm, topHalfVec), 0.0, 1.0), specPower * 0.85);
+        float specSpine = pow(clamp(dot(norm, spineHalfVec), 0.0, 1.0), specPower * 0.70);
+
+        // Accurate equirectangular reflection vector driven by local surface normal
+        vec3 realReflectDir = reflect(-viewDir, norm);
+        vec3 envRefl = envColorEqui(tEnv, normalize(realReflectDir)).rgb;
         float envLumEdge = clamp(dot(envRefl, vec3(0.299, 0.587, 0.114)), 0.10, 0.85);
 
-        // Continuous curved front bevel profile (eliminates artificial double-parallel stripes)
-        float frontBevelMask = smoothstep(0.01, 0.08, prof) * (1.0 - smoothstep(0.24, 0.35, prof));
-        float bevelFresnel = pow(1.0 - nv, 2.1);
-        
-        // Specular weighting for variant D vs B/C
-        float isVarD = (abs(uDistortStrength - 43.0) < 0.1) ? 1.0 : 0.0;
-        float specMul = mix(0.72, 1.05, isVarD);
-        float toneMul = mix(0.68, 0.52, isVarD);
+        // Physical orientation weights based on local surface normal
+        float isTopWall    = clamp(vLocalNormal.y, 0.0, 1.0);
+        float isBottomWall = clamp(-vLocalNormal.y, 0.0, 1.0);
+        float isSideWall   = clamp(abs(vLocalNormal.x), 0.0, 1.0);
 
+        // Combined omnidirectional specular highlight with edge-colored reflection
+        vec3 rimSpecular = mix(twoToneColor, vec3(1.0), 0.65);
         vec3 sheenHighlight = mix(vec3(0.88, 0.96, 1.0), vec3(0.96, 0.99, 1.0), uAhead);
-        vec3 bevelTint = mix(twoToneColor, sheenHighlight, 0.28 + 0.12 * uAhead);
-        float bevelBlend = frontBevelMask * (toneMul - 0.18 * uAhead) * (0.40 + 0.60 * bevelFresnel);
-        finalGlass = mix(finalGlass, bevelTint, bevelBlend);
-        finalGlass += (sheenHighlight * 0.70 + twoToneColor * 0.30) * (specKey * 0.68 + specFill * 0.32) * frontBevelMask * specMul;
 
-        // Modeled translucent side/top/bottom walls (prof 0.28 -> 0.72)
+        // -------------------------------------------------------------------------
+        // 1. FRONT ROUNDED BEVEL (prof: 0.01 -> 0.30)
+        // Refined glass bevel with subtle, luminous optical rim highlight along its crest
+        // -------------------------------------------------------------------------
+        float frontBevelMask = smoothstep(0.01, 0.08, prof) * (1.0 - smoothstep(0.24, 0.35, prof));
+        float bevelCrest = smoothstep(0.06, 0.16, prof) * (1.0 - smoothstep(0.18, 0.30, prof));
+        float bevelFresnel = pow(1.0 - nv, 2.4);
+
+        // Subtle, elegant optical glaze along the bevel crest (cyan left, mint right, turquoise bridge)
+        vec3 bevelGlaze = mix(vec3(0.92, 0.97, 1.0), twoToneColor, 0.40 + 0.28 * bevelFresnel);
+        float bevelBlend = frontBevelMask * (0.16 + 0.28 * bevelFresnel) + bevelCrest * 0.26;
+        finalGlass = mix(finalGlass, bevelGlaze, clamp(bevelBlend, 0.0, 0.65));
+
+        // Cylindrical specular glint across the curved bevel (top, sides, bottom, corners)
+        float sideGlint = pow(clamp(dot(norm, normalize(vec3(vLocalNormal.x * 0.90, 0.25, 0.55) + viewDir)), 0.0, 1.0), specPower * 0.75);
+        float bevelSpec = specKey * 0.45 + specFill * 0.22 + specTop * (0.50 * isTopWall) + sideGlint * (0.52 * isSideWall);
+        finalGlass += mix(rimSpecular, vec3(1.0), 0.55) * bevelSpec * (frontBevelMask * 0.35 + bevelCrest * 0.45);
+
+        // Optical perimeter rim highlight along the outer crest (flowing seamlessly around corners)
+        vec3 rimEdgeColor = mix(twoToneColor, vec3(0.92, 0.98, 1.0), 0.35 + 0.25 * uAhead);
+        finalGlass += rimEdgeColor * (bevelCrest * 0.42 + frontBevelMask * bevelFresnel * 0.30);
+
+        // -------------------------------------------------------------------------
+        // 2. MODELED 3D WALLS: TOP, BOTTOM & SIDES (prof: 0.28 -> 0.72)
+        // Reveals true physical glass thickness with restrained, translucent glass body
+        // Strictly eliminates broad colored slab flooding (cyan/mint confined to edge)
+        // -------------------------------------------------------------------------
         float sideWallMask = smoothstep(0.26, 0.35, prof) * (1.0 - smoothstep(0.65, 0.74, prof));
-        float dirStudio = 0.88 + 0.22 * clamp(dot(norm, lightDir) * 0.5 + 0.5, 0.0, 1.0);
 
-        vec3 activeWallGlass = mix(glassBody, vec3(0.85, 0.93, 0.97), 0.24) * dirStudio
-            + twoToneColor * (0.16 + 0.20 * fresnel3D)
+        // Directional studio lighting on walls:
+        // Top wall catches overhead key light; side walls catch omnidirectional glass internal illumination
+        float dirTop = clamp(dot(norm, topLightDir), 0.0, 1.0);
+        float wallAmbient = 0.82 + 0.28 * clamp(dot(norm, lightDir) * 0.5 + 0.5, 0.0, 1.0)
+            + 0.22 * dirTop * isTopWall
+            + 0.12 * isBottomWall;
+
+        // Active card wall glass: restrained, neutral pearl-white frosted glass body with directional studio lighting
+        vec3 activeWallGlass = mix(glassBody, vec3(0.78, 0.86, 0.90), 0.22) * wallAmbient
             + vec3(0.88, 0.96, 1.0) * envLumEdge * 0.12;
-        vec3 inactiveWallGlass = (glassBody * 1.12 + vec3(0.045, 0.115, 0.165)) * dirStudio
-            + twoToneColor * (0.18 + 0.25 * fresnel3D)
-            + vec3(0.60, 0.82, 0.92) * envLumEdge * 0.14;
+
+        // Inactive card wall glass: rich, translucent cyan-blue optical glass continuing the body volume
+        vec3 inactiveWallGlass = mix(glassBody * 1.05, vec3(0.55, 0.70, 0.78), 0.35) * wallAmbient
+            + vec3(0.65, 0.88, 0.98) * envLumEdge * 0.18;
+
         vec3 wallGlass = mix(inactiveWallGlass, activeWallGlass, uAhead);
-        wallGlass += (sheenHighlight * 0.68 + twoToneColor * 0.32) * (specKey * 0.40 + specFill * 0.26);
+
+        // Confine optical color bleed strictly to the front boundary of the side wall (NOT flooding the whole thickness!)
+        float frontEdgeBleed = smoothstep(0.35, 0.27, prof) * 0.10;
+        wallGlass += twoToneColor * frontEdgeBleed;
+
+        // Dielectric Fresnel sheen at glancing angles on the glass wall
+        wallGlass += mix(vec3(0.65, 0.85, 0.95), vec3(0.92, 0.97, 1.0), uAhead) * (fresnel3D * 0.20);
+
+        // Top wall extra luminous highlight glint and specular sheen
+        float wallSpec = specKey * 0.28 + specFill * 0.16 + specTop * (0.45 * isTopWall) + specSpine * 0.12 + sideGlint * (0.35 * isSideWall);
+        wallGlass += mix(rimSpecular, vec3(1.0), 0.55) * wallSpec;
         finalGlass = mix(finalGlass, clamp(wallGlass, 0.0, 1.0), sideWallMask);
 
-        // Rear bevel & flat rear cap
-        float rearBevelMask = smoothstep(0.65, 0.75, prof) * (1.0 - smoothstep(0.92, 0.995, prof));
-        vec3 rearBevelTint = mix(twoToneColor, sheenHighlight, 0.30 + 0.12 * uAhead);
-        finalGlass = mix(finalGlass, rearBevelTint, rearBevelMask * (0.46 - 0.14 * uAhead) * (0.42 + 0.58 * fresnel3D));
-        finalGlass += (sheenHighlight * 0.70 + twoToneColor * 0.30) * (specKey * 0.46 + specFill * 0.26) * rearBevelMask;
+        // -------------------------------------------------------------------------
+        // 3. REAR ROUNDED BEVEL (prof: 0.68 -> 0.94)
+        // Defined physical rounded transition framing the back of the glass card
+        // -------------------------------------------------------------------------
+        float rearBevelMask = smoothstep(0.66, 0.75, prof) * (1.0 - smoothstep(0.92, 0.985, prof));
+        float rearBevelFresnel = pow(1.0 - nv, 2.0);
 
+        vec3 rearBevelGlass = glassBody * 1.05
+            + vec3(0.65, 0.85, 0.95) * (rearBevelFresnel * 0.22)
+            + envRefl * 0.08;
+        // Subtle optical edge accent (not painted neon!)
+        rearBevelGlass += twoToneColor * (0.05 + 0.07 * rearBevelFresnel);
+        finalGlass = mix(finalGlass, clamp(rearBevelGlass, 0.0, 1.0), rearBevelMask);
+
+        // Rear bevel specular response catching frontal, fill, and central spine rim light
+        float rearBevelSpec = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 24.0) * 0.45
+                            + pow(clamp(dot(norm, fillHalfVec), 0.0, 1.0), 20.0) * 0.28
+                            + pow(clamp(dot(norm, spineHalfVec), 0.0, 1.0), 22.0) * 0.35
+                            + specTop * (0.35 * isTopWall);
+        finalGlass += (sheenHighlight * 0.75 + mix(twoToneColor, vec3(1.0), 0.5) * 0.25) * rearBevelSpec * rearBevelMask;
+
+        // -------------------------------------------------------------------------
+        // 4. POLISHED REAR FLAT GLASS FACE (prof: 0.94 -> 1.00)
+        // Reverse side of the physical glass slab: translucent optical glass with
+        // dielectric Fresnel, glossy specular reflection, and studio environment integration
+        // -------------------------------------------------------------------------
         float rearFlatMask = smoothstep(0.94, 0.995, prof);
-        vec3 rearPolish = glassBody * 1.04 + twoToneColor * (0.07 + 0.13 * fresnel3D) + vec3(0.68, 0.88, 0.96) * envLumEdge * 0.06;
-        finalGlass = mix(finalGlass, clamp(rearPolish, 0.0, 1.0), rearFlatMask);
+
+        // Optical glass depth falloff from center to edge
+        float edgeDist = length(cardCoord * vec2(0.8, 1.2));
+        vec3 rearBody = mix(glassBody * 1.05, glassBody * 0.92, smoothstep(0.15, 0.65, edgeDist));
+
+        // Viewing-angle dielectric surface glaze
+        float rearFresnel = pow(1.0 - nv, 2.4);
+        vec3 rearDielectric = mix(vec3(0.55, 0.82, 0.95), vec3(0.92, 0.97, 1.0), uAhead);
+        vec3 rearSurface = mix(rearBody, rearDielectric, rearFresnel * 0.24);
+
+        // Studio environment reflection on the polished rear face
+        rearSurface += envRefl * (0.06 + 0.12 * rearFresnel);
+
+        // Smooth glossy specular highlight across the rear surface
+        float rearSpecHighlight = pow(clamp(dot(norm, halfVec), 0.0, 1.0), 18.0) * 0.16
+                                + pow(clamp(dot(norm, fillHalfVec), 0.0, 1.0), 16.0) * 0.10
+                                + pow(clamp(dot(norm, spineHalfVec), 0.0, 1.0), 16.0) * 0.14;
+        rearSurface += sheenHighlight * rearSpecHighlight;
+
+        finalGlass = mix(finalGlass, clamp(rearSurface, 0.0, 1.0), rearFlatMask);
     }
 
     finalGlass += vec3(0.06, 0.20, 0.30) * uHover;

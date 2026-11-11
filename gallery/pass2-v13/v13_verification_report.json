@@ -1,0 +1,110 @@
+{
+  "timestamp": "2026-11-11T08:44:21.474Z",
+  "geometryCandidate": "B (default calibrated, thickness=0.092, bevel=0.024)",
+  "viewA": "C:\\Users\\user\\OneDrive\\Desktop\\Spine 3D\\physiotherapy-version\\gallery\\pass2-v13\\v13_view_a_active_card01.png",
+  "viewB": "C:\\Users\\user\\OneDrive\\Desktop\\Spine 3D\\physiotherapy-version\\gallery\\pass2-v13\\v13_view_b_inactive_oblique_card02.png",
+  "viewC": "C:\\Users\\user\\OneDrive\\Desktop\\Spine 3D\\physiotherapy-version\\gallery\\pass2-v13\\v13_view_c_rear_and_rails.png",
+  "hero": "C:\\Users\\user\\OneDrive\\Desktop\\Spine 3D\\physiotherapy-version\\gallery\\pass2-v13\\v13_full_scene_hero_1080p.png",
+  "treatmentsTested": 14,
+  "treatmentResults": [
+    {
+      "treatmentIndex": 1,
+      "segmentRound": 0,
+      "navCounter": "01 / 14",
+      "navActiveItem": "01\nCervical Decompression",
+      "activeBlend": 0.9910148251444415
+    },
+    {
+      "treatmentIndex": 2,
+      "segmentRound": 1,
+      "navCounter": "02 / 14",
+      "navActiveItem": "02\nManual Joint Therapy",
+      "activeBlend": 0.995074202529012
+    },
+    {
+      "treatmentIndex": 3,
+      "segmentRound": 2,
+      "navCounter": "03 / 14",
+      "navActiveItem": "03\nMyofascial Release",
+      "activeBlend": 0.9913182727044392
+    },
+    {
+      "treatmentIndex": 4,
+      "segmentRound": 3,
+      "navCounter": "04 / 14",
+      "navActiveItem": "04\nDry Needling Therapy",
+      "activeBlend": 0.9972470689984662
+    },
+    {
+      "treatmentIndex": 5,
+      "segmentRound": 4,
+      "navCounter": "05 / 14",
+      "navActiveItem": "05\nPostural Realignment",
+      "activeBlend": 0.9979398376848156
+    },
+    {
+      "treatmentIndex": 6,
+      "segmentRound": 5,
+      "navCounter": "06 / 14",
+      "navActiveItem": "06\nRotator Cuff Rehab",
+      "activeBlend": 0.9995882994817535
+    },
+    {
+      "treatmentIndex": 7,
+      "segmentRound": 6,
+      "navCounter": "07 / 14",
+      "navActiveItem": "07\nThoracic Mobility Therapy",
+      "activeBlend": 0.9905328985629518
+    },
+    {
+      "treatmentIndex": 8,
+      "segmentRound": 7,
+      "navCounter": "08 / 14",
+      "navActiveItem": "08\nSciatica & Nerve Therapy",
+      "activeBlend": 0.9900725762925897
+    },
+    {
+      "treatmentIndex": 9,
+      "segmentRound": 8,
+      "navCounter": "09 / 14",
+      "navActiveItem": "09\nLumbar Disc Rehab",
+      "activeBlend": 0.9808557390072301
+    },
+    {
+      "treatmentIndex": 10,
+      "segmentRound": 9,
+      "navCounter": "10 / 14",
+      "navActiveItem": "10\nSpinal Stabilization",
+      "activeBlend": 0.9983658651816467
+    },
+    {
+      "treatmentIndex": 11,
+      "segmentRound": 10,
+      "navCounter": "11 / 14",
+      "navActiveItem": "11\nSI Joint & Pelvic Rehab",
+      "activeBlend": 0.9986743304748328
+    },
+    {
+      "treatmentIndex": 12,
+      "segmentRound": 11,
+      "navCounter": "12 / 14",
+      "navActiveItem": "12\nHip Mobility Rehab",
+      "activeBlend": 0.9922060819632909
+    },
+    {
+      "treatmentIndex": 13,
+      "segmentRound": 12,
+      "navCounter": "13 / 14",
+      "navActiveItem": "13\nSports Injury & ACL Rehab",
+      "activeBlend": 0.989112849304377
+    },
+    {
+      "treatmentIndex": 14,
+      "segmentRound": 13,
+      "navCounter": "14 / 14",
+      "navActiveItem": "14\nPost-Surgical Rehabilitation",
+      "activeBlend": 0.9907228521919351
+    }
+  ],
+  "browserErrors": []
+}
