@@ -35,6 +35,14 @@
   ],
   "rewrites": [
     {
+      "source": "/gallery/master-reconstruction-r1",
+      "destination": "/gallery/master-reconstruction-r1/index.html"
+    },
+    {
+      "source": "/gallery/master-reconstruction-r1/",
+      "destination": "/gallery/master-reconstruction-r1/index.html"
+    },
+    {
       "source": "/_external/us-central1-at-services.cloudfunctions.net/geo",
       "destination": "/_external/us-central1-at-services.cloudfunctions.net/geo.json"
     },

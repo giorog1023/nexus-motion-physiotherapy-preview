@@ -515,14 +515,14 @@
 	},
 	"GlobalComposite_tx_tNormal": {
 		"hotreload": true,
-		"src": "assets/images/pbr/damaged_road_normal.png?1704405937759-compressedKtx2"
+		"src": "assets/images/pbr/empty_normal.png?1704405937759-compressedKtx2"
 	},
 	"GlobalComposite_txtNormal": {
 		"compressed": false,
-		"filename": "damaged_road_normal.png",
+		"filename": "empty_normal.png",
 		"prefix": "assets/images",
 		"relative": "assets/images",
-		"src": "assets/images/pbr/damaged_road_normal.png",
+		"src": "assets/images/pbr/empty_normal.png",
 		"useCompressed": false
 	},
 	"GlobalComposite_txtContact": {
@@ -4678,7 +4678,7 @@
 	},
 	"SpineShader/SpineShader/Element_5_Work/_tx_tNormal": {
 		"hotreload": true,
-		"src": "assets/images/pbr/damaged_road_normal.png?1704405937759-compressedKtx2"
+		"src": "assets/images/pbr/empty_normal.png?1704405937759-compressedKtx2"
 	},
 	"SpineShader/SpineShader/Element_5_Work/_txtMRO": {
 		"compressed": "ktx2",
@@ -4698,10 +4698,10 @@
 	},
 	"SpineShader/SpineShader/Element_5_Work/_txtNormal": {
 		"compressed": "ktx2",
-		"filename": "damaged_road_normal.png",
+		"filename": "empty_normal.png",
 		"prefix": "assets/images",
 		"relative": "assets/images",
-		"src": "assets/images/pbr/damaged_road_normal.png",
+		"src": "assets/images/pbr/empty_normal.png",
 		"useCompressed": true
 	},
 	"SpineShader/SpineShader/Element_5_Work/_txtBaseColor": {
@@ -6221,10 +6221,10 @@
 	},
 	"TreeFBR/TreeFBR/Element_0_TreeScene/_tx_tNormal": {
 		"compressed": false,
-		"filename": "damaged_road_normal.png",
+		"filename": "empty_normal.png",
 		"prefix": "assets/images",
 		"relative": "assets/images",
-		"src": "assets/images/pbr/damaged_road_normal.png",
+		"src": "assets/images/pbr/empty_normal.png",
 		"useCompressed": false
 	},
 	"TreeFBR/TreeFBR/Element_0_TreeScene/_txtMRO": {
@@ -6245,10 +6245,10 @@
 	},
 	"TreeFBR/TreeFBR/Element_0_TreeScene/_txtNormal": {
 		"compressed": false,
-		"filename": "damaged_road_normal.png",
+		"filename": "empty_normal.png",
 		"prefix": "assets/images",
 		"relative": "assets/images",
-		"src": "assets/images/pbr/damaged_road_normal.png",
+		"src": "assets/images/pbr/empty_normal.png",
 		"useCompressed": false
 	},
 	"TreeFBR/TreeFBR/Element_0_TreeScene/_txtBaseColor": {
