@@ -505,34 +505,6 @@
 	"GlassShaderPBR/GlassShaderPBR/Element_1_glass_test/uTransparent": 0,
 	"GlassWallShader/GlassWallShader/Element_18_home_scene/uAlpha": 0.22999999999999998,
 	"GlassWallShader/GlassWallShader/Element_18_home_scene/uGradient": 0.63,
-	"GlobalComposite_tx_tContact": {
-		"compressed": false,
-		"filename": "contact.jpg",
-		"prefix": "assets/images",
-		"relative": "assets/images",
-		"src": "assets/images/_temp/contact.jpg",
-		"useCompressed": false
-	},
-	"GlobalComposite_tx_tNormal": {
-		"hotreload": true,
-		"src": "assets/images/pbr/empty_normal.png?1704405937759-compressedKtx2"
-	},
-	"GlobalComposite_txtNormal": {
-		"compressed": false,
-		"filename": "empty_normal.png",
-		"prefix": "assets/images",
-		"relative": "assets/images",
-		"src": "assets/images/pbr/empty_normal.png",
-		"useCompressed": false
-	},
-	"GlobalComposite_txtContact": {
-		"compressed": false,
-		"filename": "contact.jpg",
-		"prefix": "assets/images",
-		"relative": "assets/images",
-		"src": "assets/images/_temp/contact.jpg",
-		"useCompressed": false
-	},
 	"GlobalCompositeuNormalScale": 3,
 	"GlobalCompositeuRGBStrength": 1,
 	"FloorShader/FloorShader/Element_0_CleanRoom/uColor": "#454545",

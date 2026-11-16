@@ -601,7 +601,7 @@
       }
     }
 
-    // Attach interactive click navigation to focus list
+    // Attach interactive click navigation to focus list & forward wheel events over UI cards
     document.addEventListener('DOMContentLoaded', () => {
       const listEl = document.getElementById('focusList');
       if (listEl) {
@@ -609,17 +609,29 @@
           const item = e.target.closest('.focus-item');
           if (item && item.dataset.index !== undefined) {
             const targetIdx = parseInt(item.dataset.index);
-            if (window.WORK_SCENE && typeof window.WORK_SCENE.scrollProgress !== 'undefined') {
-              const offset = typeof Device !== 'undefined' && Device.mobile ? 0.1 : 0.06;
-              const targetScroll = (targetIdx / 13.0) * (1 - 2 * offset) + offset;
+            const offset = typeof Device !== 'undefined' && Device.mobile ? 0.1 : 0.06;
+            const targetScroll = (targetIdx / 13.0) * (1 - 2 * offset) + offset;
+            if (typeof window.SCROLL_TO_PROGRESS === 'function') {
+              window.SCROLL_TO_PROGRESS(targetScroll);
+            } else if (window.WORK_SCENE) {
               window.WORK_SCENE.scrollProgress = targetScroll;
-              if (window.WORK_SCENE.targetScrollProgress !== undefined) {
-                window.WORK_SCENE.targetScrollProgress = targetScroll;
-              }
+              window.PHYSIO_SCROLL = targetScroll;
             }
           }
         });
       }
+
+      // Ensure wheel/trackpad scrolling works seamlessly even when hovering over corner UI cards
+      const overlayEl = document.querySelector('.physio-ui-overlay');
+      if (overlayEl) {
+        overlayEl.addEventListener('wheel', (e) => {
+          const fxScroll = document.querySelector('.FXScroll');
+          if (fxScroll) {
+            fxScroll.scrollTop += e.deltaY;
+          }
+        }, { passive: true });
+      }
+
       updateFocusList(0);
     });
 
